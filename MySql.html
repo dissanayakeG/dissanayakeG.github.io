@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>MySql</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+</head>
+<body>
+<section id="querying-data" class="level1">
+<h1>Querying data</h1>
+<ul>
+<li>MySQL <strong>SELECT</strong> statement doesn’t require the <strong>FROM</strong> clause.</li>
+<li>When executing the SELECT statement, MySQL evaluates the FROM clause before the SELECT clause (if has)</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CONCAT</span>(“HI<span class="ot">&quot;,”MySql&quot;</span>) </span></code></pre></div>
+<ul>
+<li>Assign an alias to a column to make it more readable. (here, <strong>as</strong> is optional)</li>
+</ul>
+<section id="evaluation-order" class="level2">
+<h2>Evaluation Order</h2>
+<ul>
+<li>The evaluation order is so important because when we use aliases, sometimes it may not work if the relevant CLAUSE executes before the SELECT statement.</li>
+</ul>
+</section>
+</section>
+<section id="sorting-data" class="level1">
+<h1>Sorting data</h1>
+<ul>
+<li>By default, the ORDER BY clause uses ASC if you don’t explicitly specify any option</li>
+<li>The evaluation order <strong>FROM-&gt;SELECT-&gt;ORDER BY</strong></li>
+<li>In MySQL, NULL is lower than non-NULL values</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> contactLastname, contactFirstname</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> contactLastname <span class="kw">DESC</span> , contactFirstname <span class="kw">ASC</span>;</span></code></pre></div>
+<ul>
+<li>The ORDER BY clause sorts the result set by the last name in descending order first and then sorts the sorted result set by the first name in ascending order to make the final result set. (Guess here are multiple records with same lastName but with different firstName)</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>#The FIELD() <span class="kw">function</span> returns <span class="kw">the</span> position <span class="kw">of</span> <span class="kw">the</span> <span class="fu">value</span> <span class="kw">in</span> <span class="kw">the</span> <span class="kw">list</span> <span class="kw">of</span> <span class="kw">values</span> value1, value2, <span class="kw">and</span> so <span class="kw">on</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>#FIELD(<span class="fu">value</span>, value1, value2, <span class="op">..</span>.)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> orderNumber,status <span class="kw">FROM</span> orders </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span>  FIELD(status, <span class="st">&#39;In Process&#39;</span>, <span class="st">&#39;On Hold&#39;</span>, <span class="st">&#39;Cancelled&#39;</span>, <span class="st">&#39;Resolved&#39;</span>, <span class="st">&#39;Disputed&#39;</span>, <span class="st">&#39;Shipped&#39;</span>);</span></code></pre></div>
+</section>
+<section id="filtering-data" class="level1">
+<h1>Filtering data</h1>
+<ul>
+<li>Note that MySQL treats 1 as true and 0 as false.</li>
+<li>MySQL evaluates the WHERE clause after the FROM clause and before the SELECT and ORDER BY clauses. <strong>FROM-&gt;WHERE-&gt;SELECT-&gt;ORDER_BY</strong></li>
+<li>In the database world, NULL is a marker that indicates that a value is missing or unknown. NULL is not equivalent to the number 0 or an empty string. SO use <strong>IS NULL</strong> in where clauses instead of (=)</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> firstName, lastName <span class="kw">FROM</span> employees <span class="kw">WHERE</span> lastName <span class="kw">LIKE</span> <span class="st">&#39;%son&#39;</span> <span class="kw">ORDER</span> <span class="kw">BY</span> firstName;</span></code></pre></div>
+<ul>
+<li>Use the MySQL DISTINCT clause to remove duplicate rows from the result set returned by the SELECT clause.</li>
+<li>MySQL doesn’t have a built-in Boolean type. Instead, it uses the number zero as FALSE and non-zero values as TRUE.</li>
+<li>So,logical AND operator returns 1 or 0, and returns NULL if either operand is non-zero or both operands are NULL.</li>
+<li>MySQL evaluates the OR operator after the AND operator if an expression contains both AND and OR operators.
+<ul>
+<li>Use parentheses to change the order of evaluation.</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">OR</span> <span class="dv">0</span> <span class="kw">AND</span> <span class="dv">0</span>;</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> (<span class="dv">1</span> <span class="kw">OR</span> <span class="dv">0</span>) <span class="kw">AND</span> <span class="dv">0</span>;</span></code></pre></div>
+<ul>
+<li>Use the IN operator to check if a value is in a set of values.</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>#The <span class="fu">value</span> can be a <span class="kw">column</span> <span class="kw">or</span> an expression.</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.<span class="fu">value</span> <span class="kw">IN</span> (value1, value2, value3,<span class="op">..</span>.)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">IN</span> (<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>); #returns <span class="dv">1</span> because <span class="dv">1</span> <span class="kw">is</span> <span class="kw">in</span> <span class="kw">the</span> <span class="kw">list</span></span></code></pre></div>
+<ul>
+<li>Use the MySQL NOT IN to check if a value doesn’t match any value in a list.</li>
+</ul>
+<section id="wildcard-characters-_" class="level2">
+<h2>wildcard characters (%, _)</h2>
+<ul>
+<li>The percentage ( % ) wildcard matches any string of zero or more characters <strong>s% =&gt; sun, six | %on =&gt; Patterson,Thompson | %on% =&gt; Bondur,Bondur</strong></li>
+<li>The underscore ( _ ) wildcard matches any single character. <strong>se_ =&gt; see, sea | T_m =&gt; tom, tim</strong></li>
+<li>When the pattern contains the wildcard character and you want to treat it as a regular character, you can use the ESCAPE clause.</li>
+<li>To ensure the LIMIT clause returns an expected output, you should always use it with an ORDER BY clause</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> select_list</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> table_name</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span>  sort_expression <span class="kw">LIMIT</span> offset, row_count;</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>#from <span class="kw">row</span> <span class="op">*</span>offset <span class="op">*</span>row_count num <span class="kw">of</span> <span class="kw">rows</span> will be returned, <span class="dv">1</span>st <span class="kw">row</span> <span class="kw">is</span> <span class="dv">0</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>#alternative way <span class="op">-&gt;</span> <span class="kw">LIMIT</span> row_count OFFSET offset</span></code></pre></div>
+<ul>
+<li>When you use the LIMIT clause with one argument, mysql use this to determine the maximum number of rows to return from the first row of the result set</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.<span class="kw">LIMIT</span> row_count; <span class="op">===</span> <span class="kw">LIMIT</span> <span class="dv">0</span> , row_count;</span></code></pre></div>
+<ul>
+<li>The following finds the customer who has the second-highest credit (Note that this technique works when there are no two customers who have the same credit limits. To get a more accurate result, you should use the DENSE_RANK() window function.)</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customerName, creditLimit <span class="kw">FROM</span> customers <span class="kw">ORDER</span> <span class="kw">BY</span> creditLimit <span class="kw">DESC</span> <span class="kw">LIMIT</span> <span class="dv">1</span>,<span class="dv">1</span>;</span></code></pre></div>
+</section>
+</section>
+<section id="joining-tables" class="level1">
+<h1>Joining tables</h1>
+<ul>
+<li>You cannot use a column alias in the WHERE clause. The reason is that when MySQL evaluates the WHERE clause, the values of columns specified in the SELECT clause have not been evaluated yet</li>
+<li>MySQL hasn’t supported the FULL OUTER JOIN yet.</li>
+<li>The left table is the table mentioned before the LEFT/RIGHT JOIN clause.The right table is the table mentioned after the LEFT/RIGHT JOIN clause.</li>
+<li>To find the committee members who are not in the members table, you use this query</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> m.member_id,m.name <span class="kw">AS</span> <span class="kw">member</span>,c.committee_id, c.name <span class="kw">AS</span> committee</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> members m</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">RIGHT</span> <span class="kw">JOIN</span> committees c <span class="kw">USING</span>(name)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> m.member_id <span class="kw">IS</span> <span class="kw">NULL</span>;</span></code></pre></div>
+<ul>
+<li>These two are different, 2nd one returns all orders; However, only the order <code>10123</code> will have associated line items as shown in the query result</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.orderNumber, customerNumber, productCode <span class="kw">FROM</span> orders o <span class="kw">LEFT</span> <span class="kw">JOIN</span> orderDetails <span class="kw">USING</span>(orderNumber) <span class="kw">WHERE</span> orderNumber <span class="op">=</span> <span class="dv">10123</span>;</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> o.orderNumber, customerNumber, productCode <span class="kw">FROM</span> orders o <span class="kw">LEFT</span> <span class="kw">JOIN</span> orderDetails d <span class="kw">ON</span> o.orderNumber <span class="op">=</span> d.orderNumber <span class="kw">AND</span> o.orderNumber <span class="op">=</span> <span class="dv">10123</span>;</span></code></pre></div>
+<ul>
+<li>Notice that for INNER JOIN clause, the condition in the ON clause is equivalent to the condition in the WHERE clause.</li>
+<li>The RIGHT OUTER JOIN is the synonym of the RIGHT JOIN</li>
+<li>Use table aliases and inner join or left join to perform a self join in MySQL. //REFER MORE</li>
+</ul>
+</section>
+<section id="grouping-data" class="level1">
+<h1>Grouping data</h1>
+<section id="group-by" class="level2">
+<h2>Group By</h2>
+<ul>
+<li>The GROUP BY clause groups rows into summary rows based on column values or expressions. It returns one row for each group and reduces the number of rows in the result set.</li>
+<li>Place the GROUP BY clause after the FROM and WHERE clauses</li>
+</ul>
+<p><strong>FROM-&gt;WHERE-&gt;GROUP_BY-&gt;HAVING-&gt;SELECT-&gt;DISTINCT-&gt;ORDER_BY-&gt;LIMIT</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>#To obtain <span class="kw">the</span> <span class="dt">number</span> <span class="kw">of</span> orders <span class="kw">in</span> <span class="kw">each</span> status</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> status, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> orders <span class="kw">GROUP</span> <span class="kw">BY</span> status;</span></code></pre></div>
+<ul>
+<li>If you use the GROUP BY clause in the SELECT statement without using aggregate functions, the GROUP BY clause behaves like the DISTINCT clause.</li>
+</ul>
+</section>
+<section id="having" class="level2">
+<h2>Having</h2>
+<ul>
+<li>The HAVING clause applies the condition to groups of rows, while the WHERE clause applies the condition to individual rows.</li>
+<li>If you omit the GROUP BY clause, the HAVING clause behaves like the WHERE clause <strong>FROM-&gt;WHERE-&gt;GROUP_BY-&gt;HAVING-&gt;SELECT-&gt;DISTINCT-&gt;ORDER_BY-&gt;LIMIT</strong></li>
+<li>To filter the groups returned by GROUP BY clause, you use a HAVING clause.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">..</span>.<span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">year</span> <span class="kw">HAVING</span> <span class="dt">year</span> <span class="op">&gt;</span> <span class="dv">2003</span>;</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> ordernumber, <span class="fu">SUM</span>(quantityOrdered) <span class="kw">AS</span> itemsCount, <span class="fu">SUM</span>(quantityOrdered<span class="op">*</span>priceeach) <span class="kw">AS</span> total </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> orderdetails </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> ordernumber <span class="kw">HAVING</span> total <span class="op">&gt;</span> <span class="dv">1000</span>;</span></code></pre></div>
+<ul>
+<li>Use the HAVING COUNT clause to filter groups by the number of items in each group.</li>
+</ul>
+</section>
+</section>
+<section id="subqueries" class="level1">
+<h1>Subqueries</h1>
+<ul>
+<li>A query contain within another query like SELECT, INSERT, UPDATE, DELETE</li>
+<li>SubQuery evaluates first</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> lastName,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         officeCode</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> employees</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> officeCode <span class="kw">IN</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> officeCode</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> offices</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> country <span class="op">=</span> <span class="st">&#39;USA&#39;</span>);</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>#this <span class="kw">is</span> similar <span class="kw">to</span> <span class="kw">WHERE</span> officeCode <span class="kw">IN</span> (<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>#Operand should contain <span class="dv">1</span> <span class="kw">column</span>(s)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>#IN,<span class="kw">NOT</span> <span class="kw">IN</span>, comparison OPERATORS,<span class="kw">EXISTS</span> <span class="kw">and</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span></span></code></pre></div>
+<ul>
+<li>When a subquery is used with the EXISTS or NOT EXISTS operator, a subquery returns a Boolean value of TRUE or FALSE.</li>
+<li>When you use a subquery in the FROM clause, the result set returned from a subquery is used as a temporary table. This table is referred to as a derived table or materialized subquery.</li>
+</ul>
+<section id="correlated-subquery" class="level2">
+<h2>correlated subquery</h2>
+<ul>
+<li>Subqueries are independent as they are standalone.</li>
+<li>A correlated subquery is a subquery that uses the data from the outer query. In other words, a correlated subquery depends on the outer query. A correlated subquery is evaluated once for each row in the outer query.</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>#<span class="dv">1</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> productname,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>         buyprice</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> products <span class="kw">AS</span> p1</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> buyprice <span class="op">&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="fu">AVG</span>(buyprice)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> products</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> productline <span class="op">=</span> p1.productline)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>#<span class="dv">2</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customerNumber,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>         customerName</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">EXISTS</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> orderNumber,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">SUM</span>(priceEach <span class="op">*</span> quantityOrdered)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> orderdetails</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">INNER</span> <span class="kw">JOIN</span> orders</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">USING</span> (orderNumber)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> customerNumber <span class="op">=</span> customers.customerNumber</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span>  orderNumber</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">HAVING</span> <span class="fu">SUM</span>(priceEach <span class="op">*</span> quantityOrdered) <span class="op">&gt;</span> <span class="dv">60000</span>);</span></code></pre></div>
+</section>
+<section id="derived-tables" class="level2">
+<h2>derived tables</h2>
+<figure>
+<img role="img" aria-label="DerivedTables.png" src="data:image/png;base64,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" alt="DerivedTables.png" />
+<figcaption aria-hidden="true">DerivedTables.png</figcaption>
+</figure>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    customerGroup, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">COUNT</span>(cg.customerGroup) <span class="kw">AS</span> groupCount</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        customerNumber,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ROUND</span>(<span class="fu">SUM</span>(quantityOrdered <span class="op">*</span> priceEach)) sales,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            (<span class="cf">CASE</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="fu">SUM</span>(quantityOrdered <span class="op">*</span> priceEach) <span class="op">&lt;</span> <span class="dv">10000</span> <span class="cf">THEN</span> <span class="st">&#39;Silver&#39;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="fu">SUM</span>(quantityOrdered <span class="op">*</span> priceEach) <span class="kw">BETWEEN</span> <span class="dv">10000</span> <span class="kw">AND</span> <span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;Gold&#39;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="fu">SUM</span>(quantityOrdered <span class="op">*</span> priceEach) <span class="op">&gt;</span> <span class="dv">100000</span> <span class="cf">THEN</span> <span class="st">&#39;Platinum&#39;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">END</span>) customerGroup</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        orderdetails</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">INNER</span> <span class="kw">JOIN</span> orders <span class="kw">USING</span> (orderNumber)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">YEAR</span>(shippedDate) <span class="op">=</span> <span class="dv">2003</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> customerNumber) cg</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> cg.customerGroup;    </span></code></pre></div>
+<ul>
+<li>For some scenarios, both the <strong>IN</strong> and <strong>EXISTS</strong> clauses can be used, but since the <strong>EXISTS</strong> operator works based on the <strong>at least found</strong> principle, it is much faster.</li>
+<li>However, the query that uses the IN operator will perform faster if the result set returned from the subquery is very small.</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>#<span class="dv">1</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers c1</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> customerNumber <span class="kw">IN</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> customerNumber <span class="kw">FROM</span> orders );</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>#<span class="dv">2</span>    </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers c1</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="kw">EXISTS</span> </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="op">*</span>  <span class="kw">FROM</span> orders o  <span class="kw">WHERE</span> c1.customerNumber <span class="op">=</span> o.customerNumber );</span></code></pre></div>
+</section>
+</section>
+<section id="set-operators" class="level1">
+<h1>Set operators</h1>
+<ul>
+<li>To combine result set of two or more queries using the UNION operator.</li>
+<li>First, the number and the orders of columns that appear in all SELECT statements must be the same.</li>
+<li>Second, the data types of columns must be the same or compatible.</li>
+<li>By default, the UNION operator removes duplicate rows even if you don’t specify the DISTINCT operator explicitly. <strong>SELECT column_list UNION [DISTINCT | ALL]</strong></li>
+<li>A JOIN combines result sets horizontally, a UNION appends result set vertically.</li>
+<li>Use the MySQL <strong>EXCEPT</strong> operator to retrieve rows from one result set that do not appear in another result set. And it follows the same rules like in UNION operator.</li>
+<li>Use the MySQL <strong>INTERSECT</strong> operator to find the rows that are common to multiple query results. And it follows the same rules like in UNION operator.</li>
+</ul>
+</section>
+<section id="managing-databases" class="level1">
+<h1>Managing databases</h1>
+<ul>
+<li>Directly login MYSQL with a database name <strong>mysql -u root -D classicmodels -p</strong></li>
+<li>Review the created database <strong>SHOW CREATE DATABASE testdb;</strong></li>
+<li>Unlike MySQL, where schema and database are interchangeable, in standard SQL (and many RDBMS like PostgreSQL, SQL Server, or Oracle), they are distinct concepts.</li>
+<li>In standard SQL, CREATE DATABASE creates a new database, while CREATE SCHEMA organizes objects within an existing database.</li>
+</ul>
+</section>
+<section id="working-with-tables" class="level1">
+<h1>Working with tables</h1>
+<ul>
+<li><strong>CREATE TABLE [IF NOT EXISTS] table_name(column1 datatype constraints,…) ENGINE=storage_engine;</strong></li>
+<li>The <strong>SELECT LAST_INSERT_ID();</strong> query returns the last auto-increment value generated for the ID column.</li>
+<li>MySQL does not have the built-in BOOLEAN or BOOL data type. To represent boolean values, MySQL uses the smallest integer type which is TINYINT(1).</li>
+<li>CHAR and BINARY are fixed length while VARCHAR and VARBINARY are variable length string data types.</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>#Insert <span class="kw">data</span> <span class="kw">into</span> a tbale <span class="kw">from</span> other <span class="kw">tables</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> credits(customerNumber, creditLimit)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> customerNumber, creditLimit <span class="kw">FROM</span> customers <span class="kw">WHERE</span> creditLimit <span class="op">&gt;</span> <span class="dv">0</span>;</span></code></pre></div>
+<section id="alter-tables" class="level2">
+<h2>ALTER Table/s</h2>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> tbl <span class="kw">ADD</span> col1 column_definition  [<span class="fu">FIRST</span> | <span class="kw">AFTER</span> column_name], col2 column_definition  [<span class="fu">FIRST</span> | <span class="kw">AFTER</span> column_name]<span class="op">..</span>.</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>#Adding a <span class="kw">new</span> <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">columns</span> <span class="kw">to</span> an existing <span class="kw">table</span> will populated <span class="kw">with</span> <span class="kw">default</span> <span class="kw">values</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> tbl <span class="kw">MODIFY</span> col1 column_definition [ <span class="fu">FIRST</span> | <span class="kw">AFTER</span> column_name], col1 column_definition [ <span class="fu">FIRST</span> | <span class="kw">AFTER</span> column_name]<span class="op">..</span>.;</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> tbl <span class="kw">CHANGE</span> <span class="kw">COLUMN</span> original_name new_name column_definition [<span class="fu">FIRST</span> | <span class="kw">AFTER</span> column_name];</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">DROP</span> <span class="kw">COLUMN</span> column_name;</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>#The <span class="kw">COLUMN</span> keyword <span class="kw">in</span> <span class="kw">the</span> <span class="kw">DROP</span> <span class="kw">COLUMN</span> clause <span class="kw">is</span> optional</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>#Before droping, need <span class="kw">to</span> <span class="kw">check</span> <span class="kw">use</span> cases <span class="kw">of</span> <span class="kw">the</span> <span class="kw">column</span> <span class="kw">like</span> FKs,SPs,Views,<span class="kw">Triggers</span><span class="op">..</span>.</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">RENAME</span> <span class="kw">TO</span> new_table_name;</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>#Note:</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="kw">RENAME</span> <span class="kw">TABLE</span> table_name <span class="kw">TO</span> new_table_name;</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> [<span class="kw">TEMPORARY</span>] <span class="kw">TABLE</span> [<span class="cf">IF</span> <span class="kw">EXISTS</span>] tbl1,tbl2<span class="op">..</span>.;</span></code></pre></div>
+<ul>
+<li><p>Note that you cannot use the RENAME TABLE statement to rename a temporary table, but you can use the ALTER TABLE statement to rename a temporary table.</p></li>
+<li><p>Use <strong>DESCRIBE tabel_name; / DESC tabel_name;</strong> to get the list of columns in a table with their definitions.</p></li>
+<li><p>Use <strong>CHECK TABLE tbl_name;</strong> to check the status of the table/view.</p></li>
+<li><p>Use <strong>SHOW WARNINGS;</strong> to show the warning</p></li>
+<li><p>Use <strong>SHOW CREATE TABLE tabel_name;</strong> to shows the definition of the table.</p></li>
+<li><p>Use <strong>SHOW INDEX FROM tabel_name;</strong> to displays all indexes associated with the table.</p></li>
+<li><p>In terms of security, any existing privileges that you granted to the old table must be manually migrated to the new table when using RENAME TABLE.</p></li>
+<li><p>And you’ll need to manually adjust other database objects, including views, stored procedures, triggers, and foreign key constraints that reference the table.</p></li>
+<li><p>Check is a column exist in a table</p></li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="cf">IF</span>(<span class="fu">count</span>(<span class="op">*</span>) <span class="op">=</span> <span class="dv">1</span>, <span class="st">&#39;Exist&#39;</span>,<span class="st">&#39;Not Exist&#39;</span>) <span class="kw">AS</span> result</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">columns</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="st">&#39;classicmodels&#39;</span> <span class="kw">AND</span> table_name <span class="op">=</span> <span class="st">&#39;vendors&#39;</span> <span class="kw">AND</span> column_name <span class="op">=</span> <span class="st">&#39;phone&#39;</span>;</span></code></pre></div>
+<ul>
+<li>MySQL allows a table to have up to one auto-increment column and that column must be defined as a key.</li>
+<li>If we add new auto-increment id column to an existing table, it will add ids for existing rows as well.</li>
+<li>Note that the DROP TABLE statement only drops tables. It doesn’t remove specific user privileges associated with the tables. Therefore, if you create a table with the same name as the dropped one, MySQL will apply the existing privileges to the new table, which may pose a security risk.</li>
+<li>To execute the DROP TABLE statement, you must have DROP privileges for the table that you want to remove.</li>
+<li>If you want to drop multiple tables that have a specific pattern in a database, you can’t use the LIKE operator; instead, you have to write a separate mechanism or use SPs.</li>
+</ul>
+</section>
+<section id="temporary-tables" class="level2">
+<h2>Temporary tables</h2>
+<ul>
+<li>MySQL removes the temporary table automatically when the session ends or the connection is terminated.</li>
+<li>A temporary table is only available and accessible to the client that creates it.</li>
+<li>In the same session, two temporary tables cannot share the same name.</li>
+<li>If you create a temporary table named <strong>employees</strong> in the sample database, the existing <strong>employees</strong> table becomes <strong>inaccessible</strong>.</li>
+<li>To create a temporary table whose structure is based on an existing table, you cannot use the CREATE TEMPORARY TABLE … LIKE statement.</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TEMPORARY</span> <span class="kw">TABLE</span> temp_table_name</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> original_table <span class="kw">LIMIT</span> <span class="dv">0</span>;</span></code></pre></div>
+</section>
+<section id="truncateing-a-table" class="level2">
+<h2>Truncateing a Table</h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">TRUNCATE</span> [<span class="kw">TABLE</span>] table_name; #The <span class="kw">TABLE</span> keyword <span class="kw">is</span> optional, but <span class="kw">to</span> distinguish <span class="kw">TRUNCATE</span> <span class="kw">TABLE</span> <span class="kw">and</span> <span class="kw">TRUNCATE</span>() <span class="kw">use</span> it.</span></code></pre></div>
+<ul>
+<li>Truncating a table resets AUTO_INCREMENT values to zero.</li>
+<li>If there is any FOREIGN KEY constraints from other tables that reference the table that you truncate, the TRUNCATE TABLE statement will fail.</li>
+<li>It cannot be rolled back.</li>
+<li>TRUNCATE TABLE statement is more efficient than the DELETE statement because it drops and recreates the table instead of deleting rows one by one.</li>
+</ul>
+</section>
+<section id="generated-column" class="level2">
+<h2>Generated Column</h2>
+<ul>
+<li>Use a MySQL Generated column to store data computed from an expression or other columns.</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> contacts (</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span> <span class="dt">INT</span> AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    first_name <span class="dt">VARCHAR</span>(<span class="dv">50</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    last_name <span class="dt">VARCHAR</span>(<span class="dv">50</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    fullname <span class="dt">varchar</span>(<span class="dv">101</span>) <span class="kw">GENERATED</span> ALWAYS <span class="kw">AS</span> (<span class="fu">CONCAT</span>(first_name,<span class="st">&#39; &#39;</span>,last_name))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>column_name data_type [<span class="kw">GENERATED</span> ALWAYS] <span class="kw">AS</span> (expression) [VIRTUAL | STORED] [<span class="kw">UNIQUE</span> [<span class="kw">KEY</span>]]</span></code></pre></div>
+<ul>
+<li>MySQL provides two types of generated columns: stored and virtual. The virtual columns are calculated on the fly each time data is read whereas the stored columns are calculated and stored physically when the data is updated. default is VIRTUAL.</li>
+<li>The <strong>expression</strong> can contain literals, and built-in functions with no parameters, operators, or references to any column within the same table. If you use a function, it must be scalar and deterministic.</li>
+<li>If the generated column is <strong>stored</strong>, you can define a <strong>unique constraint</strong> for it.</li>
+</ul>
+</section>
+</section>
+<section id="mysql-constraints" class="level1">
+<h1>MySQL constraints</h1>
+<section id="primary-key" class="level2">
+<h2>Primary Key</h2>
+<ul>
+<li>Primary Key can be defined as a column constraint or a table constraint. If the PK consist with multiple column it should be defined as a table constraint</li>
+<li><strong>column1 datatype PRIMARY KEY, | column1 datatype,column2 datatype …, PRIMARY KEY(column1, column2)</strong></li>
+</ul>
+</section>
+<section id="foreign-key" class="level2">
+<h2>Foreign Key</h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>[<span class="kw">CONSTRAINT</span> constraint_name] #constraint_name <span class="kw">is</span> optional</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FOREIGN</span> <span class="kw">KEY</span> [foreign_key_name] (column_name, <span class="op">..</span>.) # foreign_key_name <span class="kw">is</span> optional</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">REFERENCES</span> parent_table(colunm_name,<span class="op">..</span>.)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>[<span class="kw">ON</span> <span class="kw">DELETE</span> reference_option]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>[<span class="kw">ON</span> <span class="kw">UPDATE</span> reference_option]</span></code></pre></div>
+<ul>
+<li>MySQL has five reference options: CASCADE, SET NULL, NO ACTION, RESTRICT, and SET DEFAULT.</li>
+</ul>
+<p><strong>CASCADE</strong>: if a row from the parent table is deleted or updated, the values of the matching rows in the child table are automatically deleted or updated. <strong>SET NULL</strong>: if a row from the parent table is deleted or updated, the values of the foreign key column (or columns) in the child table are set to NULL. <strong>RESTRICT</strong>: if a row from the parent table has a matching row in the child table, MySQL rejects deleting or updating rows in the parent table. <strong>NO ACTION</strong>: is the same as RESTRICT. <strong>SET DEFAULT</strong>: is recognized by the MySQL parser. However, this action is rejected by both InnoDB and NDB tables.</p>
+<ul>
+<li>MySQL fully supports three actions: RESTRICT, CASCADE and SET NULL. and If you don’t specify the ON DELETE and ON UPDATE clause, the default action is RESTRICT.</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>#Drop FK</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">DROP</span> <span class="kw">FOREIGN</span> <span class="kw">KEY</span> constraint_name;</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>#Disabling <span class="kw">and</span> Enabling FK. Important <span class="cf">for</span> csv imports kind <span class="kw">of</span> things <span class="kw">and</span> droping <span class="kw">tables</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>#Or <span class="cf">else</span> you wll have <span class="kw">to</span> import <span class="kw">parent</span> <span class="kw">table</span> <span class="kw">data</span> <span class="fu">first</span> <span class="kw">and</span> <span class="cf">then</span> import <span class="kw">child</span> <span class="kw">table</span> <span class="kw">data</span>, this <span class="kw">check</span> <span class="kw">each</span> <span class="kw">row</span> <span class="kw">in</span> <span class="kw">parent</span> <span class="kw">table</span> <span class="kw">and</span> <span class="dt">time</span> consuming</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> foreign_key_checks <span class="op">=</span> <span class="dv">0</span>;</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> foreign_key_checks <span class="op">=</span> <span class="dv">1</span>;</span></code></pre></div>
+</section>
+<section id="unique-key" class="level2">
+<h2>UNIQUE Key</h2>
+<ul>
+<li>In MySQL, NULL values are treated as distinct when it comes to unique constraints.</li>
+<li>When you define a unique constraint for a column or a group of columns, MySQL creates a corresponding UNIQUE index and uses this index to enforce the rule.</li>
+</ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> suppliers (</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    supplier_id <span class="dt">INT</span> AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    name <span class="dt">VARCHAR</span>(<span class="dv">255</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    phone <span class="dt">VARCHAR</span>(<span class="dv">15</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>, #column <span class="kw">constraint</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    address <span class="dt">VARCHAR</span>(<span class="dv">255</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CONSTRAINT</span> uc_name_address <span class="kw">UNIQUE</span> (name,address) #table <span class="kw">constraint</span>, Here name <span class="kw">is</span> optional</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>#Drop UK</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">INDEX</span> index_name <span class="kw">ON</span> table_name;</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">DROP</span> <span class="kw">INDEX</span> index_name;</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>#Add UK</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">ADD</span> <span class="kw">CONSTRAINT</span> constraint_name <span class="kw">UNIQUE</span> (column_list);</span></code></pre></div>
+</section>
+<section id="not-null" class="level2">
+<h2>NOT NULL</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>#Add <span class="kw">not</span> <span class="kw">null</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> tasks </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CHANGE</span> end_date end_date <span class="dt">DATE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>#Drop <span class="kw">not</span> <span class="kw">null</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> tasks </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="kw">MODIFY</span> end_date <span class="dt">DATE</span>;</span></code></pre></div>
+</section>
+<section id="default" class="level2">
+<h2>DEFAULT</h2>
+<div class="sourceCode" id="cb28"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>#Adddefault</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">COLUMN</span> column_name <span class="kw">SET</span> <span class="kw">DEFAULT</span> default_value;</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>#When inserting, you can pass <span class="kw">DEFAULT</span> <span class="kw">or</span> ignore passing <span class="fu">value</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> cart_items(name, quantity, price, sales_tax)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(<span class="st">&#39;Battery&#39;</span>,<span class="dv">4</span>, <span class="fl">0.25</span> , <span class="kw">DEFAULT</span>);</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>#Drop <span class="kw">default</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> column_name <span class="kw">DROP</span> <span class="kw">DEFAULT</span>;</span></code></pre></div>
+</section>
+<section id="check" class="level2">
+<h2>CHECK</h2>
+<ul>
+<li>Use CHECK constraints to ensure values stored in a column satisfy a Boolean condition.</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> parts (</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    part_no <span class="dt">VARCHAR</span>(<span class="dv">18</span>) <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    description <span class="dt">VARCHAR</span>(<span class="dv">40</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">cost</span> <span class="dt">DECIMAL</span>(<span class="dv">10</span>,<span class="dv">2</span> ) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">CONSTRAINT</span> constraint_name <span class="kw">CHECK</span> (<span class="kw">cost</span> <span class="op">&gt;=</span> <span class="dv">0</span>), #name <span class="kw">is</span> optional,this <span class="kw">is</span> a <span class="kw">column</span> <span class="kw">constraint</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    price <span class="dt">DECIMAL</span>(<span class="dv">10</span>,<span class="dv">2</span>) <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">CHECK</span> (price <span class="op">&gt;=</span> <span class="dv">0</span>), #column <span class="kw">constraint</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CONSTRAINT</span> parts_chk_price_gt_cost  <span class="kw">CHECK</span>(price <span class="op">&gt;=</span> <span class="kw">cost</span>) #table <span class="kw">constraint</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> parts(part_no, description,<span class="kw">cost</span>,price) </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(<span class="st">&#39;A-001&#39;</span>,<span class="st">&#39;Cooler&#39;</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">100</span>); <span class="op">//</span>Fail</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> parts(part_no, description,<span class="kw">cost</span>,price) </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(<span class="st">&#39;A-001&#39;</span>,<span class="st">&#39;Cooler&#39;</span>,<span class="dv">200</span>,<span class="dv">100</span>); <span class="op">//</span>Fail</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>#Add <span class="kw">CHECK</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">ADD</span> <span class="kw">CHECK</span> (expression);</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">ADD</span> <span class="kw">CONSTRAINT</span> contraint_name <span class="kw">CHECK</span> (expression);</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>#Drop <span class="kw">Check</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> table_name <span class="kw">DROP</span> <span class="kw">CHECK</span> constraint_name;</span></code></pre></div>
+</section>
+</section>
+<section id="mysql-data-types" class="level1">
+<h1>MySQL data types</h1>
+<ul>
+<li>BIT, INT, BOOLEAN, DECIMAL, CHAR, VARCHAR, TEXT, DATETIME, TIMESTAMP, DATE, TIME, BINARY, VARBINARY, BLOB, ENUM, JSON, UUID?</li>
+</ul>
+</section>
+<section id="modifying-data-in-mysql" class="level1">
+<h1>Modifying data in MySQL</h1>
+<ul>
+<li>When you insert multiple rows by a single statement and use the <strong>LAST_INSERT_ID()</strong> function to get the last inserted id of an <strong>AUTO_INCREMENT</strong> column, you will get the id of the first inserted row, not the id of the last inserted row. <strong>SELECT LAST_INSERT_ID();</strong></li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name(c1,c2,<span class="op">..</span>.)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(v1,v2,<span class="op">..</span>),(v1,v2,<span class="op">..</span>)<span class="op">..</span>.;</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>#Insert <span class="kw">using</span> a result <span class="kw">of</span> a <span class="kw">query</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name(column_list)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> select_list <span class="kw">FROM</span> another_table <span class="kw">WHERE</span> condition;</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>#This <span class="kw">is</span> also possible</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> stats(totalProduct, totalCustomer, totalOrder)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> products),</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> customers),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> orders)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<ul>
+<li><p>Use the <strong>ON DUPLICATE KEY UPDATE</strong> option of the INSERT statement to insert data into a table and update existing data if a duplicate error occurs.</p></li>
+<li><p>When you use the INSERT statement to add multiple rows to a table and if an error occurs during the processing, MySQL terminates the statement and returns an error. Consequently, the table remains unchanged with no inserted rows.</p></li>
+<li><p><strong>INSERT IGNORE INTO</strong> allows you to enter only valid rows and issue a WARNING instead of an ERROR for invalid rows.</p></li>
+</ul>
+<div class="sourceCode" id="cb31"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> IGNORE <span class="kw">INTO</span> subscribers(email)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span>(<span class="st">&#39;john.doe@gmail.com&#39;</span>), </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>      (<span class="st">&#39;jane.smith@ibm.com&#39;</span>);</span></code></pre></div>
+<ul>
+<li>If you use this under STRICT MODE, MySQL will try to adjust them before ignoring… e.g., inserting a 7-digit value into a varchar(6) column will ignore the last digit and insert the first 6.</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>#Converting a datetime string <span class="kw">into</span> a DATETIME (YYYY<span class="op">-</span>MM<span class="op">-</span>DD HH<span class="ch">:MM:SS</span>) <span class="kw">using</span> STR_TO_DATE()</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">events</span> (event_name, event_time) <span class="kw">VALUES</span> (<span class="st">&#39;MySQL Party&#39;</span>, STR_TO_DATE(<span class="st">&#39;10/28/2023 20:00:00&#39;</span>, <span class="st">&#39;%m/%d/%Y %H:%i:%s&#39;</span>));</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>#Converting a <span class="dt">date</span> string <span class="kw">into</span> <span class="kw">the</span> <span class="dt">DATE</span> <span class="kw">type</span> (YYYY<span class="op">-</span>MM<span class="op">-</span>DD) format <span class="kw">using</span> STR_TO_DATE()</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="kw">events</span> (event_name, event_date) <span class="kw">VALUES</span> (<span class="st">&#39;MySQL Innovate&#39;</span>, STR_TO_DATE(<span class="st">&#39;10/29/2023&#39;</span>, <span class="st">&#39;%m/%d/%Y&#39;</span>));</span></code></pre></div>
+<ul>
+<li><p><strong>CURRENT_DATE</strong> gives the current date of the database server in ‘YYYY-MM-DD’ format.</p></li>
+<li><p><strong>UTC_DATE()</strong> gives the current date in UTC in ‘YYYY-MM-DD’ format.</p></li>
+<li><p>In UPDATE statement WHERE clause is so important, it is optional, But if we foget it, mysql update all the rows.</p></li>
+<li><p>LOW_PRIORITY and IGNORE statements are optional. IGNORE perform same as in INSERT statement.</p></li>
+<li><p>Can be updated from rows returned by a SELECT statement.</p></li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>#UPDATE <span class="kw">to</span> <span class="kw">replace</span> string </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> employees</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> email <span class="op">=</span> <span class="kw">REPLACE</span>(email,<span class="st">&#39;@classicmodelcars.com&#39;</span>,<span class="st">&#39;@mysqltutorial.org&#39;</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>   jobTitle <span class="op">=</span> <span class="st">&#39;Sales Rep&#39;</span> <span class="kw">AND</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>   officeCode <span class="op">=</span> <span class="dv">6</span>;</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>#Update <span class="kw">by</span> a result <span class="kw">of</span> a <span class="kw">select</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> customers </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span>  salesRepEmployeeNumber <span class="op">=</span> (<span class="kw">SELECT</span><span class="op">..</span>.<span class="kw">FROM</span><span class="op">..</span>.<span class="kw">WHERE</span><span class="op">..</span>.<span class="kw">ORDER</span> <span class="kw">BY</span><span class="op">..</span>.<span class="kw">LIMIT</span> <span class="dv">1</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> salesRepEmployeeNumber <span class="kw">IS</span> <span class="kw">NULL</span>;</span></code></pre></div>
+<ul>
+<li>Use the MySQL UPDATE JOIN with the INNER JOIN or LEFT JOIN clauses to perform cross-table updates.</li>
+</ul>
+<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> T1</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>[<span class="kw">INNER</span> <span class="kw">JOIN</span> | <span class="kw">LEFT</span> <span class="kw">JOIN</span>] T2 <span class="kw">ON</span> T1.C1 <span class="op">=</span> T2.C1</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> T1.C2 <span class="op">=</span> T2.C2,  T2.C3 <span class="op">=</span> expr</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> condition;</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>#This</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> T1</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> T1.c2 <span class="op">=</span> T2.c2,T2.c3 <span class="op">=</span> expr</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> T1.c1 <span class="op">=</span> T2.c1 <span class="kw">AND</span> condition;</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>#Is equel <span class="kw">to</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> T1</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> T2 <span class="kw">ON</span> T1.C1 <span class="op">=</span> T2.C1</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> T1.C2 <span class="op">=</span> T2.C2, T2.C3 <span class="op">=</span> expr</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> condition;</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> employees </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">INNER</span> <span class="kw">JOIN</span> merits <span class="kw">ON</span> employees.performance <span class="op">=</span> merits.performance </span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> salary <span class="op">=</span> salary <span class="op">+</span> salary <span class="op">*</span> percentage;</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> employees </span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">LEFT</span> <span class="kw">JOIN</span> merits <span class="kw">ON</span> employees.performance <span class="op">=</span> merits.performance </span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> salary <span class="op">=</span> salary <span class="op">+</span> salary <span class="op">*</span> <span class="fu">COALESCE</span>(percentage, <span class="fl">0.015</span>);</span></code></pre></div>
+<ul>
+<li>In DELETE statement, If you omit the WHERE clause, the DELETE statement will delete all rows in the table.</li>
+<li>To delete rows from both T1 and T2 tables that meet a specified condition, you use the following statement:</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>#if T! <span class="kw">or</span> T@ omit, this <span class="kw">query</span> <span class="kw">delete</span> records <span class="kw">only</span> <span class="kw">in</span> other <span class="kw">table</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> T1, T2 <span class="kw">FROM</span> T1</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> T2 <span class="kw">ON</span> T1.<span class="kw">key</span> <span class="op">=</span> T2.<span class="kw">key</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> condition;</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>#This clause <span class="kw">delete</span> <span class="kw">rows</span> <span class="kw">from</span> T1 <span class="kw">table</span> that does <span class="kw">not</span> have corresponding <span class="kw">rows</span> <span class="kw">in</span> <span class="kw">the</span> T2 <span class="kw">table</span>:</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> T1 <span class="kw">FROM</span> T1 </span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> T2 <span class="kw">ON</span> T1.<span class="kw">key</span> <span class="op">=</span> T2.<span class="kw">key</span> </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> T2.<span class="kw">key</span> <span class="kw">IS</span> <span class="kw">NULL</span>;</span></code></pre></div>
+<section id="replace" class="level2">
+<h2>Replace</h2>
+<ul>
+<li>The MySQL REPLACE statement is an extension to the SQL Standard. The MySQL REPLACE statement works as follows: <strong>Step 1</strong>. Insert a new row into the table, if a duplicate key error occurs. <strong>Step 2</strong>. If the insertion fails due to a duplicate-key error occurs: Delete the conflicting row that causes the duplicate key error from the table. Insert the new row into the table again.</li>
+<li>To use the REPLACE statement, you need to have at least both INSERT and DELETE privileges for the table.</li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>#Insert</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">REPLACE</span> <span class="kw">INTO</span> cities(<span class="kw">id</span>,population) <span class="kw">VALUES</span>(<span class="dv">2</span>,<span class="dv">3696820</span>);</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>#Update</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="kw">REPLACE</span> <span class="kw">INTO</span> cities <span class="kw">SET</span> <span class="kw">id</span> <span class="op">=</span> <span class="dv">4</span>,name <span class="op">=</span> <span class="st">&#39;Phoenix&#39;</span>,population <span class="op">=</span> <span class="dv">1768980</span>;</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>#Select <span class="kw">and</span> <span class="kw">update</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="kw">REPLACE</span> <span class="kw">INTO</span> cities(name,population)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> name,population <span class="kw">FROM</span> cities <span class="kw">WHERE</span> <span class="kw">id</span> <span class="op">=</span> <span class="dv">1</span>;</span></code></pre></div>
+<ul>
+<li>In INSERT, if no value spefified, it sets to NULL.</li>
+<li>Unlike the UPDATE statement, if column value not specified in the SET clause, the REPLACE statement will use the default value of that column.</li>
+</ul>
+</section>
+</section>
+<section id="common-table-expressions" class="level1">
+<h1>Common Table Expressions</h1>
+<ul>
+<li>Use MySQL CTEs to break down complex queries into simpler, more manageable queries. Each CTE represents a temporary result set that can be referenced within the main query.</li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>#syntax</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> cte_name (column_list) <span class="kw">AS</span> ( <span class="kw">query</span> ) </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> cte_name;</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>#<span class="dv">1</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> customers_in_usa <span class="kw">AS</span> (</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> customerName, state <span class="kw">FROM</span> customers <span class="kw">WHERE</span>  country <span class="op">=</span> <span class="st">&#39;USA&#39;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    customerName</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> customers_in_usa <span class="kw">WHERE</span>  state <span class="op">=</span> <span class="st">&#39;CA&#39;</span> <span class="kw">ORDER</span> <span class="kw">BY</span> customerName;</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>#<span class="dv">2</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> topsales2003 <span class="kw">AS</span> (<span class="op">..</span>.<span class="kw">query</span> <span class="kw">with</span> complex joins)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> column_list</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> another_table <span class="kw">JOIN</span> topsales2003</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>#<span class="dv">3</span> <span class="kw">Using</span> multiple CTEs</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> salesrep <span class="kw">AS</span> (<span class="op">..</span>.<span class="kw">query</span>),</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>customer_salesrep <span class="kw">AS</span> (<span class="op">..</span>.<span class="kw">query</span>)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customer_salesrep <span class="kw">ORDER</span> <span class="kw">BY</span> customerName;</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>#<span class="dv">4</span> Joining two CTEs example</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> e <span class="kw">AS</span> (<span class="op">..</span>.<span class="kw">query</span>),</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>o <span class="kw">AS</span> (<span class="op">..</span>.<span class="kw">query</span>)</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> e <span class="kw">INNER</span> <span class="kw">JOIN</span> o <span class="kw">USING</span> (colum)</span></code></pre></div>
+<ul>
+<li>Use MySQL recursive CTE to traverse hierarchical data.</li>
+</ul>
+</section>
+<section id="table-locking" class="level1">
+<h1>Table Locking</h1>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">LOCK</span> <span class="kw">TABLES</span> table_name1 [<span class="kw">READ</span> | <span class="kw">WRITE</span>], </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>            table_name2 [<span class="kw">READ</span> | <span class="kw">WRITE</span>],</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>             <span class="op">..</span>. ;</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>#Unlock</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="kw">UNLOCK</span> <span class="kw">TABLES</span>;</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>#If <span class="kw">the</span> <span class="kw">session</span> <span class="kw">is</span> terminated, MySQL will release <span class="kw">all</span> <span class="kw">the</span> locks implicitly.</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>#Get connection <span class="kw">ID</span> <span class="kw">of</span> <span class="kw">the</span> <span class="kw">current</span> <span class="kw">session</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> CONNECTION_ID();</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>#Show <span class="kw">the</span> processlist that are waiting <span class="cf">for</span> <span class="kw">execute</span> once a particular <span class="kw">lock</span> <span class="kw">is</span> released</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>SHOW PROCESSLIST;</span></code></pre></div>
+<ul>
+<li>If a session locks a table as READ, the table can be read or data stored within that session. Other sessions can only read the table but will be in a waiting state for insert operations until the table is unlocked.</li>
+<li>If a session locks a table as WRITE, the table can be read or data stored within that session. Other sessions cannot read or write to the table and are placed in a waiting state until the table is unlocked.</li>
+</ul>
+</section>
+<section id="mysql-globalization" class="level1">
+<h1>MySQL globalization</h1>
+<ul>
+<li>A character set is a collection of characters with a unique encoding. It defines the set of characters that can be used in a text column, such as letters, numbers, symbols, and special characters.</li>
+<li>Use the CONVERT() or CAST() function to convert between character sets.</li>
+</ul>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>SHOW <span class="dt">CHARACTER</span> <span class="kw">SET</span>; #To <span class="kw">list</span> <span class="kw">all</span> <span class="dt">character</span> sets <span class="kw">in</span> <span class="kw">the</span> <span class="kw">current</span> MySQL server</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>#Ex: utf8, utf8mb4, latin1, utf16</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>#Setting <span class="dt">character</span> sets <span class="cf">for</span> client connections</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>#<span class="dv">1</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> NAMES <span class="st">&#39;utf8mb4&#39;</span>;</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>#<span class="dv">2</span> <span class="kw">in</span> configuration <span class="kw">file</span> (<span class="cf">If</span> <span class="kw">the</span> application supports <span class="kw">the</span> <span class="co">--default-character-set  option)</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>[mysql]</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">-</span><span class="dt">character</span><span class="op">-</span><span class="kw">set</span><span class="op">=</span>utf8mb4</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>#<span class="dv">3</span> <span class="kw">Using</span> <span class="kw">the</span> charset <span class="kw">in</span> connection strings ( connectors allow you <span class="kw">to</span> specify )</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>$dsn <span class="op">=</span><span class="ot">&quot;mysql:host=$host;dbname=$db;charset=utf8mb4&quot;</span>;</span></code></pre></div>
+<ul>
+<li>A MySQL collation is a set of rules used to compare characters in a particular character set.</li>
+<li>Each character set has a default collation. It can have more than one collation. However, two character sets cannot have the same collation.</li>
+<li>MySQL allows you to specify character sets and collations at four levels:</li>
+</ul>
+<blockquote>
+<p>Server | Database | Table | Column</p>
+</blockquote>
+</section>
+<section id="user-defined-variables" class="level1">
+<h1>User-defined variables</h1>
+<ul>
+<li>Use the MySQL user-defined variables in the SQL statements to pass data between statements within a session.</li>
+<li><span class="citation" data-cites="variable_name">(<strong>variable_name?</strong>)</span>, case-insensitive and MySQL-specific extension to SQL standard</li>
+</ul>
+<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>#variable assignment</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> @variable_name <span class="op">=</span> <span class="fu">value</span>; <span class="kw">OR</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> @variable_name <span class="op">:=</span> <span class="fu">value</span>; <span class="kw">OR</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">value</span> <span class="kw">INTO</span> @variable_name;</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c1, c2, c3, <span class="op">..</span>.</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INTO</span> @v1, @v2, @v3,<span class="op">..</span>.</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> table_name <span class="kw">WHERE</span> condition;</span></code></pre></div>
+<ul>
+<li>A user-defined variable can hold a single value. If the SELECT statement returns multiple values, MySQL will issue an error and the variable will take the value of the first row in the result set: (LIMIT 1; – ensure maximum one row returned)</li>
+</ul>
+</section>
+<section id="mysql-import-export-csv" class="level1">
+<h1>MySQL import &amp; export CSV</h1>
+<ul>
+<li>Use the LOAD DATA INFILE statement to import a CSV file into a table.</li>
+<li>Use the SELECT … INTO OUTFILE statement to export a table to a CSV file on the MySQL Server.</li>
+</ul>
+</section>
+<section id="advanced-techniques" class="level1">
+<h1>Advanced techniques</h1>
+<section id="natural-sorting" class="level2">
+<h2>Natural Sorting</h2>
+<ul>
+<li>MySQL does not provide any built-in natural sorting syntax or function.</li>
+<li>So, 1,10Z,1C,2,20D,2A,3C like results will be returned from the MySQL order by statement even if we expect a result like 1,1C,2,2A,3C,10Z,20D</li>
+<li>natural sorting follows these principles:
+<ol type="1">
+<li>Sort Numerical Values First.</li>
+<li>Then sort Text Values Second.</li>
+<li>Ignore letter cases and leading zeros.</li>
+<li>Finally, sort symbols and special Characters using their ASCII or Unicode values.</li>
+</ol></li>
+<li>Split data into parts and sort the parts to achieve natural sorting in MySQL. //<strong>REGEXP_SUBSTR(name, ‘^\d+’) AS SIGNED</strong></li>
+</ul>
+</section>
+<section id="comparing-two-tables" class="level2">
+<h2>Comparing two tables</h2>
+<ul>
+<li>Thus query returns no row if there are no unmatched records.</li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> pk, c1</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a> (</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>   <span class="kw">SELECT</span> t1.pk, t1.c1</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>   <span class="kw">FROM</span> t1</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>   <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>   <span class="kw">SELECT</span> t2.pk, t2.c1</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>   <span class="kw">FROM</span> t2</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>)  t</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> pk, c1</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> pk</span></code></pre></div>
+</section>
+<section id="find-duplicate-rowsvalues" class="level2">
+<h2>Find Duplicate Rows/Values</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    first_name, <span class="fu">COUNT</span>(first_name),last_name,  <span class="fu">COUNT</span>(last_name),email,<span class="fu">COUNT</span>(email)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> contacts</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> first_name , last_name , email</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span>  <span class="fu">COUNT</span>(first_name) <span class="op">&gt;</span> <span class="dv">1</span> <span class="kw">AND</span> <span class="fu">COUNT</span>(last_name) <span class="op">&gt;</span> <span class="dv">1</span> <span class="kw">AND</span> <span class="fu">COUNT</span>(email) <span class="op">&gt;</span> <span class="dv">1</span>;</span></code></pre></div>
+</section>
+<section id="delete-duplicate-rows" class="level2">
+<h2>Delete Duplicate Rows</h2>
+<ol type="1">
+<li>using the DELETE JOIN statement - refer above</li>
+<li>using an intermediate table (create an intermediate table with same structure-&gt;insert distinct records-&gt;delete original table-&gt;rename intermediate table to the origianl tabel )</li>
+<li>using the ROW_NUMBER() function (from version 8.02)</li>
+</ol>
+</section>
+<section id="copy-table" class="level2">
+<h2>Copy Table</h2>
+<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>#Copy <span class="kw">only</span> <span class="kw">data</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> offices_bk </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices;</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices_bk;</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>#copy <span class="kw">data</span> <span class="kw">and</span> <span class="kw">all</span> <span class="kw">database</span> objects associated <span class="kw">with</span> <span class="kw">the</span> offices <span class="kw">table</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a># <span class="kw">indexes</span>, <span class="kw">primary</span> <span class="kw">key</span> <span class="kw">constraints</span>, <span class="kw">foreign</span> <span class="kw">key</span> <span class="kw">constraints</span>, <span class="kw">triggers</span>, <span class="kw">and</span> so <span class="kw">on</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> offices2 <span class="kw">LIKE</span> offices;</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> offices2</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices;</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>#Copying <span class="kw">tables</span> across databases</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> destination_db.new_table </span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="kw">LIKE</span> source_db.existing_table;</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> destination_db.new_table </span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> source_db.existing_table;</span></code></pre></div>
+</section>
+<section id="interval" class="level2">
+<h2>Interval</h2>
+<ul>
+<li><strong>INTERVAL expr unit</strong></li>
+</ul>
+<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="st">&#39;2020-01-01&#39;</span> <span class="op">+</span> <span class="dt">INTERVAL</span> <span class="op">-</span><span class="dv">1</span> <span class="dt">DAY</span>; # <span class="dv">2019</span><span class="op">-</span><span class="dv">12</span><span class="op">-</span><span class="dv">31</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_ADD(<span class="st">&#39;2020-01-01&#39;</span>, <span class="dt">INTERVAL</span> <span class="dv">1</span> <span class="dt">MONTH</span>) <span class="dv">1</span>_MONTH_LATER, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>       DATE_SUB(<span class="st">&#39;2020-01-01&#39;</span>,<span class="dt">INTERVAL</span> <span class="dv">1</span> <span class="dt">MONTH</span>) <span class="dv">1</span>_MONTH_BEFORE; # <span class="dv">2020</span><span class="op">-</span><span class="dv">02</span><span class="op">-</span><span class="dv">01</span> | <span class="dv">2019</span><span class="op">-</span><span class="dv">12</span><span class="op">-</span><span class="dv">01</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> TIMESTAMPADD(<span class="kw">MINUTE</span>,<span class="dv">30</span>,<span class="st">&#39;2020-01-01&#39;</span>) <span class="dv">30</span>_MINUTES_LATER; # | <span class="dv">2020</span><span class="op">-</span><span class="dv">01</span><span class="op">-</span><span class="dv">01</span> <span class="dv">00</span><span class="ch">:30:00</span></span></code></pre></div>
+</section>
+<section id="commands" class="level2">
+<h2>Commands</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>#Connect</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u username <span class="op">-</span>p # <span class="kw">Connect</span> <span class="kw">to</span> a <span class="kw">Local</span> MySQL server</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u username <span class="op">-</span>p db_name # <span class="kw">Connect</span> <span class="kw">to</span> <span class="kw">Local</span> MySQL server <span class="kw">with</span> <span class="kw">database</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>h remote_host <span class="op">-</span>u username <span class="op">-</span>p # <span class="kw">Connect</span> <span class="kw">to</span> Remote MySQL Server</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>h remote_host <span class="op">-</span>u username <span class="op">-</span>p db_name # <span class="kw">Connect</span> <span class="kw">to</span> Remote MySQL Server <span class="kw">with</span> <span class="kw">Database</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>h remote_host <span class="op">-</span>P port <span class="op">-</span>u username <span class="op">-</span>p # Specify MySQL server port</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>mysql <span class="co">--login-path=mypath # Connect to a MySQL server using a login path</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>h remote_host <span class="op">-</span>u username <span class="op">-</span>p <span class="co">--ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem # Connect to MySQL Server with SSL</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>#Exit</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>\q <span class="kw">OR</span> quit <span class="kw">OR</span> exit Alternatively Ctrl<span class="op">+</span>D <span class="kw">in</span> Unix <span class="kw">and</span> Ctrl<span class="op">+</span>Z <span class="kw">in</span> windows  #Exit MySQL client</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>#Read</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>#If <span class="kw">the</span> <span class="dt">number</span> <span class="kw">of</span> <span class="kw">columns</span> <span class="kw">is</span> high, <span class="kw">the</span> output will <span class="kw">not</span> be readable. <span class="kw">To</span> fix it, you can </span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>#display <span class="kw">the</span> <span class="kw">query</span> results <span class="kw">in</span> a vertical format <span class="kw">using</span> <span class="kw">the</span> \G <span class="kw">instead</span> <span class="kw">of</span> <span class="kw">the</span> semicolon (;):</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> firstName, lastName <span class="kw">FROM</span> employees <span class="kw">ORDER</span> <span class="kw">BY</span> firstName <span class="kw">LIMIT</span> <span class="dv">2</span>\G</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>#Execute</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u username <span class="op">-</span>p <span class="op">-</span>e <span class="ot">&quot;SELECT * FROM table_name;&quot;</span> db_name # <span class="kw">Execute</span> a command <span class="kw">and</span> exit</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u username <span class="op">-</span>p db_name <span class="op">&lt;</span> script.sql # <span class="kw">Execute</span> queries <span class="kw">from</span> a <span class="kw">file</span>, This can be used <span class="kw">to</span> import a <span class="fu">dump</span> db <span class="kw">as</span> well</span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>#use <span class="kw">the</span> result <span class="kw">of</span> another command <span class="kw">as</span> an input <span class="cf">for</span> mysql <span class="kw">using</span> <span class="kw">the</span> | <span class="kw">operator</span>:</span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>#works <span class="kw">on</span> Unix<span class="op">-</span><span class="kw">like</span> systems such <span class="kw">as</span> macOS <span class="kw">and</span> Ubuntu</span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>cat <span class="kw">query</span>.sql | mysql <span class="op">-</span>u root <span class="op">-</span>p classicmodels</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u username <span class="op">-</span>p db_name <span class="op">-</span>e <span class="ot">&quot;select * from tblName&quot;</span> <span class="op">&gt;</span> path<span class="op">/</span><span class="kw">to</span><span class="op">/</span><span class="kw">file</span> # <span class="kw">Write</span> a <span class="kw">query</span> result <span class="kw">to</span> a <span class="kw">file</span>,</span>
+<span id="cb45-28"><a href="#cb45-28" aria-hidden="true" tabindex="-1"></a># This can be used <span class="cf">for</span> export a db <span class="kw">as</span> a <span class="fu">dump</span> <span class="kw">file</span> <span class="kw">as</span> well <span class="cf">if</span> <span class="kw">the</span> <span class="kw">file</span> <span class="kw">is</span> .sql</span>
+<span id="cb45-29"><a href="#cb45-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-30"><a href="#cb45-30" aria-hidden="true" tabindex="-1"></a>Ex) writes <span class="kw">the</span> <span class="kw">data</span> <span class="kw">to</span> <span class="kw">the</span> employee.txt <span class="kw">file</span></span>
+<span id="cb45-31"><a href="#cb45-31" aria-hidden="true" tabindex="-1"></a>mysql <span class="op">-</span>u root <span class="op">-</span>p classicmodels <span class="op">-</span>e <span class="ot">&quot;select * from employees&quot;</span> <span class="op">&gt;</span> employees.txt</span></code></pre></div>
+</section>
+</section>
+</body>
+</html>
