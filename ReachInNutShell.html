@@ -107,8 +107,8 @@ background-color: transparent;
 overflow: visible;
 }
 hr {
-background-color: #1a1a1a;
 border: none;
+border-top: 1px solid #1a1a1a;
 height: 1px;
 margin: 1em 0;
 }
@@ -165,8 +165,9 @@ margin: 0 0.8em 0.2em -1.6em;
 vertical-align: middle;
 }
 
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -177,7 +178,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -364,9 +365,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 <section id="responding-to-events" class="level2">
 <h2>Responding to Events</h2>
 <ul>
-<li><p>Functions passed to event handlers must be passed, not called. For example: <code>javascript     &lt;button onClick={handleClick}&gt; //passing a function (correct)     &lt;button onClick={handleClick()}&gt;//calling a function (incorrect)</code></p></li>
+<li><p>Functions passed to event handlers must be passed, not called. For example: <code>javascript   &lt;button onClick={handleClick}&gt; //passing a function (correct)   &lt;button onClick={handleClick()}&gt;//calling a function (incorrect)</code></p></li>
 <li><p>This tells React to remember it and only call your function when the user clicks the button.</p></li>
-<li><p>In the second example, the () at the end of handleClick() fires the function immediately during rendering, without any clicks <code>javascript     &lt;button onClick={() =&gt; alert(&#39;...&#39;)}&gt; //passing a function (correct)     &lt;button onClick={alert(&#39;...&#39;)}&gt; //calling a function (incorrect)</code></p></li>
+<li><p>In the second example, the () at the end of handleClick() fires the function immediately during rendering, without any clicks <code>javascript   &lt;button onClick={() =&gt; alert(&#39;...&#39;)}&gt; //passing a function (correct)   &lt;button onClick={alert(&#39;...&#39;)}&gt; //calling a function (incorrect)</code></p></li>
 <li><p>In both cases, what you want to pass is a function:</p></li>
 <li><p>Because event handlers are declared inside of a component, they have access to the component’s props.</p></li>
 <li><p>All events propagate in React except onScroll, which only works on the JSX tag you attach it to. ```javascript export default function Toolbar() { const handleClick = () =&gt; { alert(‘You clicked on the toolbar!’); };</p>
@@ -859,18 +860,18 @@ Use refs when your component needs to interact with external APIs (like browser 
 <section id="you-might-not-need-an-effect" class="level2">
 <h2>You Might Not Need an Effect</h2>
 <ul>
-<li><p>useEffect is intended for synchronizing your component with external systems (like browser APIs, network requests, or third-party libraries). If you’re not interacting with such systems, you likely don’t need useEffect.</p></li>
-<li><p>If you can calculate something during render, you don’t need an Effect.</p></li>
-<li><p>To cache expensive calculations, add useMemo instead of useEffect.</p></li>
-<li><p>To reset the state of an entire component tree, pass a different key to it.</p></li>
-<li><p>To reset a particular bit of state in response to a prop change, set it during rendering.</p></li>
-<li><p>Code that runs because a component was displayed should be in Effects, the rest should be in events.</p></li>
-<li><p>If you need to update the state of several components, it’s better to do it during a single event.</p></li>
-<li><p>Whenever you try to synchronize state variables in different components, consider lifting state up.</p></li>
-<li><p>You can fetch data with Effects, but you need to implement cleanup to avoid race conditions.</p></li>
-<li><p>When you give each component a different key, React knows they are not the same and keeps their data separate.</p></li>
-<li><p>Assigning a unique key to a component instance tells React to fully unmount and remount it when the key changes, preventing shared state and ensuring a fresh internal lifecycle for each instance.</p></li>
-<li><p>When you’re not sure whether some code should be in an Effect or in an event handler, ask yourself why this code needs to run. Use Effects only for code that should run because the component was displayed to the user</p></li>
+<li>useEffect is intended for synchronizing your component with external systems (like browser APIs, network requests, or third-party libraries). If you’re not interacting with such systems, you likely don’t need useEffect.</li>
+<li>If you can calculate something during render, you don’t need an Effect.</li>
+<li>To cache expensive calculations, add useMemo instead of useEffect.</li>
+<li>To reset the state of an entire component tree, pass a different key to it.</li>
+<li>To reset a particular bit of state in response to a prop change, set it during rendering.</li>
+<li>Code that runs because a component was displayed should be in Effects, the rest should be in events.</li>
+<li>If you need to update the state of several components, it’s better to do it during a single event.</li>
+<li>Whenever you try to synchronize state variables in different components, consider lifting state up.</li>
+<li>You can fetch data with Effects, but you need to implement cleanup to avoid race conditions.</li>
+<li>When you give each component a different key, React knows they are not the same and keeps their data separate.</li>
+<li>Assigning a unique key to a component instance tells React to fully unmount and remount it when the key changes, preventing shared state and ensuring a fresh internal lifecycle for each instance.</li>
+<li>When you’re not sure whether some code should be in an Effect or in an event handler, ask yourself why this code needs to run. Use Effects only for code that should run because the component was displayed to the user</li>
 </ul>
 <section id="usememo" class="level3">
 <h3>useMemo</h3>
@@ -1005,32 +1006,116 @@ Use refs when your component needs to interact with external APIs (like browser 
 </section>
 <section id="removing-effect-dependencies" class="level2">
 <h2>Removing Effect Dependencies</h2>
+<section id="core-principle" class="level3">
+<h3>Core Principle</h3>
+<p><strong>Dependencies should always match the code</strong></p>
 <ul>
-<li>Every time you adjust the Effect’s dependencies to reflect the code, look at the dependency list. Does it make sense for the Effect to re-run when any of these dependencies change? Sometimes, the answer is “no”:</li>
-<li>You might want to re-execute different parts of your Effect under different conditions.</li>
-<li>You might want to only read the latest value of some dependency instead of “reacting” to its changes.</li>
-<li>A dependency may change too often unintentionally because it’s an object or a function.</li>
-<li>To find the right solution, you’ll need to answer a few questions about your Effect. Let’s walk through them.</li>
-<li>Should this code move to an event handler?</li>
-<li>Is your Effect doing several unrelated things? (Each Effect should represent an independent synchronization process.)</li>
-<li>Are you reading some state to calculate the next state?</li>
-<li>Do you want to read a value without “reacting” to its changes?</li>
-<li>Does some reactive value change unintentionally?</li>
-<li><strong>NOTE:</strong> This problem only affects objects and functions. In JavaScript, each newly created object and function is considered distinct from all the others. It doesn’t matter that the contents inside of them may be the same!</li>
-<li>Object and function dependencies can make your Effect re-synchronize more often than you need.</li>
-<li>This is why, whenever possible, you should try to avoid objects and functions as your Effect’s dependencies. Instead, try moving them outside the component, inside the Effect, or extracting primitive values out of them.</li>
-<li>Dependencies should always match the code.</li>
-<li>When you’re not happy with your dependencies, what you need to edit is the code.</li>
-<li>Suppressing the linter leads to very confusing bugs, and you should always avoid it.</li>
-<li>To remove a dependency, you need to “prove” to the linter that it’s not necessary.</li>
-<li>If some code should run in response to a specific interaction, move that code to an event handler.</li>
-<li>If different parts of your Effect should re-run for different reasons, split it into several Effects.</li>
-<li>If you want to update some state based on the previous state, pass an updater function.</li>
-<li>If you want to read the latest value without “reacting” it, extract an Effect Event from your Effect.</li>
-<li>In JavaScript, objects and functions are considered different if they were created at different times.</li>
-<li>Try to avoid object and function dependencies. Move them outside the component or inside the Effect.</li>
-<li>Sticking to primitive props where possible makes it easier to optimize your components later.</li>
+<li>when you’re not happy with your dependencies, edit the code, not the dependency array.</li>
 </ul>
+</section>
+<section id="key-questions-to-ask-before-fixing-dependencies" class="level3">
+<h3>Key Questions to Ask Before Fixing Dependencies</h3>
+<p>Before adjusting dependencies, evaluate your Effect by asking these critical questions:</p>
+<p><strong>Should this code move to an event handler?</strong></p>
+<ul>
+<li>If code should run in response to specific user interactions, move it to an event handler instead of an Effect</li>
+</ul>
+<p><strong>Is your Effect doing several unrelated things?</strong></p>
+<ul>
+<li>Each Effect should represent one independent synchronization process</li>
+<li>Split complex Effects into multiple focused Effects if they handle different concerns</li>
+</ul>
+<p><strong>Are you reading state to calculate the next state?</strong></p>
+<ul>
+<li>Use updater functions instead of reading current state as a dependency</li>
+<li>Pass <code>setState(prev =&gt; prev + 1)</code> rather than <code>setState(count + 1)</code></li>
+</ul>
+<p><strong>Do you want to read a value without “reacting” to its changes?</strong></p>
+<ul>
+<li>Extract an Effect Event when you need to access current values without triggering re-runs</li>
+<li>Use Effect Events for reading latest values without making them dependencies</li>
+</ul>
+<p><strong>Does some reactive value change unintentionally?</strong></p>
+<ul>
+<li>Objects and functions recreated on every render cause unnecessary re-synchronizations</li>
+<li>This is the most common cause of excessive Effect re-runs</li>
+</ul>
+</section>
+<section id="the-object-and-function-problem" class="level3">
+<h3>The Object and Function Problem</h3>
+<p><strong>Why Objects and Functions Cause Issues:</strong></p>
+<ul>
+<li>In JavaScript, each newly created object/function is considered distinct from all others</li>
+<li>Content doesn’t matter - <code>{}</code> !== <code>{}</code> and <code>() =&gt; {}</code> !== <code>() =&gt; {}</code></li>
+<li>Components recreate objects/functions on every render, triggering Effects unnecessarily</li>
+</ul>
+<p><strong>Impact on Performance:</strong></p>
+<ul>
+<li>Effect re-synchronizes more often than needed</li>
+<li>Can cause performance issues and infinite loops</li>
+<li>Makes debugging more difficult</li>
+</ul>
+</section>
+<section id="solutions-for-different-scenarios" class="level3">
+<h3>Solutions for Different Scenarios</h3>
+<p><strong>Move Code to Event Handlers:</strong></p>
+<ul>
+<li>Use when code should respond to specific interactions</li>
+<li>Event handlers don’t need dependency arrays</li>
+<li>Better separation of concerns</li>
+</ul>
+<p><strong>Split Effects:</strong></p>
+<ul>
+<li>Separate unrelated synchronization logic</li>
+<li>Each Effect handles one specific concern</li>
+<li>Easier to debug and maintain</li>
+</ul>
+<p><strong>Use Updater Functions:</strong></p>
+<ul>
+<li>Replace <code>setState(count + 1)</code> with <code>setState(prev =&gt; prev + 1)</code></li>
+<li>Removes state variables from dependencies</li>
+<li>Prevents stale closure issues</li>
+</ul>
+<p><strong>Extract Effect Events:</strong></p>
+<ul>
+<li>Access latest values without making them dependencies</li>
+<li>Useful for reading props/state without triggering re-runs</li>
+<li>Maintains access to current values while avoiding re-synchronization</li>
+</ul>
+<p><strong>Restructure Object/Function Dependencies:</strong></p>
+<ul>
+<li><strong>Move outside component:</strong> Define constants outside component scope</li>
+<li><strong>Move inside Effect:</strong> Create objects/functions within the Effect body</li>
+<li><strong>Extract primitive values:</strong> Use only the specific primitive values you need</li>
+<li><strong>Use primitive props:</strong> Structure component APIs around primitives when possible</li>
+</ul>
+</section>
+<section id="best-practices" class="level3">
+<h3>Best Practices</h3>
+<p><strong>Avoid Suppressing the Linter:</strong></p>
+<ul>
+<li>Never ignore dependency warnings without proper justification</li>
+<li>Suppressing leads to confusing bugs and stale closures</li>
+<li>Always “prove” to the linter that a dependency isn’t necessary</li>
+</ul>
+<p><strong>Prefer Primitive Dependencies:</strong></p>
+<ul>
+<li>Use strings, numbers, booleans instead of objects when possible</li>
+<li>Primitive values are compared by value, not reference</li>
+<li>Makes components easier to optimize later</li>
+</ul>
+<p><strong>Structure for Success:</strong></p>
+<ul>
+<li>Design component APIs around primitive props</li>
+<li>Keep object creation outside render cycles when possible</li>
+<li>Consider memoization for complex objects that must be dependencies</li>
+</ul>
+</section>
+<section id="debugging-strategy" class="level3">
+<h3>Debugging Strategy</h3>
+<p>When an Effect runs too often: 1. Check if objects/functions are being recreated unnecessarily 2. Verify each dependency is actually needed for the Effect’s logic 3. Consider if the Effect is doing too many unrelated things 4. Evaluate whether some code belongs in event handlers instead 5. Look for opportunities to extract primitive values from complex dependencies</p>
+<p>This systematic approach ensures Effects run only when necessary while maintaining code clarity and performance.</p>
+</section>
 </section>
 <section id="reusing-logic-with-custom-hooks" class="level2">
 <h2>Reusing Logic with Custom Hooks</h2>
