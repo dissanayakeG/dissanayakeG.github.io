@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+		<script>
+			let links = [];
+			document.addEventListener("DOMContentLoaded", getAllH1Tags);
+			function getAllH1Tags() {
+				const h1Elements = document.querySelectorAll("h1");
+				const h2Elements = document.querySelectorAll("h2");
+				const h1Array = Array.from(h1Elements);
+				const h2Array = Array.from(h2Elements);
+				let headings = [];
+				headings.push(h1Array);
+				headings.push(h2Array);
+				h2Array.forEach((h1, index) => {
+					links.push({ id: "#" + h1.id, innerText: h1.innerText });
+				});
+				let wrapperDiv = createNavLinks(links);
+				let nav = document.getElementById("nav-container");
+				nav.appendChild(wrapperDiv);
+			}
+			function createNavLinks(links) {
+				let navList = document.createElement("div");
+				navList.id = "nav-list";
+				navList.className = "nav-list";
+				links.forEach((h1, index) => {
+					let navItem = document.createElement("a");
+					navItem.href = h1.id;
+					navItem.innerHTML = h1.innerText;
+					navList.appendChild(navItem);
+				});
+				return navList;
+			}
+		</script>
+
+		<style>
+
+			html {
+				color: #1a1a1a;
+				background-color: #fdfdfd;
+			}
+			body {
+				margin: 0 auto;
+				max-width: 36em;
+				padding-left: 50px;
+				padding-right: 50px;
+				padding-top: 50px;
+				padding-bottom: 50px;
+				hyphens: auto;
+				overflow-wrap: break-word;
+				text-rendering: optimizeLegibility;
+				font-kerning: normal;
+			}
+			@media (max-width: 600px) {
+				body {
+					font-size: 0.9em;
+					padding: 12px;
+				}
+				h1 {
+					font-size: 1.8em;
+				}
+			}
+			.nav-list {
+				position: fixed;
+				top: 50px;
+				left: 10px;
+				background-color: rgb(255, 255, 255);
+				border: 0.5px solid gray;
+				border-radius: 5px;
+				display: none;
+				flex-direction: column;
+				width: 200px;
+				z-index: 1000; /* ensures it's above everything */
+			}
+			.show-nav {
+				display: flex !important;
+			}
+			.nav-list > a {
+				display: flex;
+				justify-items: center;
+				/* justify-content: center; */
+				background-color: rgb(255, 255, 255);
+				border: 0.5px solid gray;
+				border-radius: 5px;
+				padding: 5px;
+				margin: 5px;
+				cursor: pointer;
+				text-decoration: none;
+				color: rgb(0, 0, 0);
+			}
+			.nav-icon {
+				position: fixed;
+				top: 5px;
+				left: 10px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				width: 40px;
+				height: 30px;
+				margin: 5px;
+			}
+			.nav-icon > .nav-icon-row {
+				width: 30px;
+				height: 3px;
+				margin-bottom: 2px;
+				background-color: rgb(0, 0, 0) !important;
+			}
+
+			.content {
+				margin-top: 50px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="nav-container" class="nav-container"></div>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+		<section class="content">
+			<h2>Setup xdebug in ubuntu with VS-Code</h2>
+
+<h2 id="php-version-check">Identify Your PHP Versions</h2>
+
+<pre><code class="language-bash">
+ls /etc/php/
+
+# Check version
+php -v
+which php
+</code></pre>
+
+If you need to switch between PHP versions,
+Make sure to install and configure Xdebug for each version you plan to use.
+
+<h2 id="install-xdebug">Install Xdebug for Your PHP Version</h2>
+
+<pre><code class="language-bash">
+sudo apt update
+sudo apt install php8.2-xdebug
+</code></pre>
+
+<h2 id="configure-xdebug">Configure Xdebug</h2>
+
+<pre><code class="language-bash">
+sudo nano /etc/php/8.2/mods-available/xdebug.ini
+</code></pre>
+
+add these lines
+
+<pre><code class="language-bash">
+zend_extension=xdebug.so
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.idekey=VSCODE
+</code></pre>
+
+<h2 id="verify-xdebug-installation">Verify Xdebug Installation</h2>
+
+<pre><code class="language-bash">
+php -m | grep xdebug
+
+php -r "phpinfo();" | grep xdebug
+</code></pre>
+
+<h2 id="test-xdebug">Test Xdebug</h2>
+
+<pre><code class="language-bash"> 
+php -m | grep -i xdebug
+</code></pre>
+
+<h2 id="test-xdebug-functionality">Test Xdebug Functionality</h2>
+
+<pre><code class="language-bash">
+echo '<?php var_dump(extension_loaded("xdebug")); xdebug_info(); ?>' > test_xdebug.php
+php test_xdebug.php
+</code></pre>
+
+- You should see bool(true) and Xdebug configuration information without any "already loaded" warnings.
+
+ ![xdebugInEnabled.png](./xdebugInEnabled.png)
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<pre><code class="language-bash">
+tail -f /tmp/xdebug.log
+</code></pre>
+
+<h2 id="check-conflicts">Check if there are conflicting xdebug entries</h2>
+
+<pre><code class="language-bash">
+grep -r "xdebug" /etc/php/
+</code></pre>
+
+<h2 id="restart-service">Restart server</h2>
+
+<pre><code class="language-bash">
+# for apache2
+sudo systemctl restart apache2
+
+# for Nginx
+sudo systemctl restart nginx
+</code></pre>
+
+- If everything is set up correctly, Xdebug should be working by now.
+
+<h2 id="xdebug-for-laravel">Laravel-Specific Xdebug Configuration</h2>
+
+<h2>Update Xdebug Configuration for Web Debugging</h2>
+
+<pre><code class="language-bash">
+sudo nano /etc/php/8.2/mods-available/xdebug.ini
+
+#add these lines
+zend_extension=xdebug
+xdebug.mode=debug,develop
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.idekey=VSCODE
+xdebug.max_nesting_level=512
+xdebug.var_display_max_depth=10
+xdebug.var_display_max_children=256
+xdebug.var_display_max_data=1024
+
+#restart apache server
+sudo systemctl restart apache2
+</code></pre>
+
+<h2 id="setup-vscode">VS Code Configuration for Laravel</h2>
+
+- install xdebug vs-code extension/s 
+- Create `.vscode/launch.json` in your Laravel root directory,
+- **NOTE:** pathMappings in `.vscode/launch.json`
+- After setting up just click (FN+F5)
+
+<h2 id="setup-for-artisan">for PHP artisan serve</h2>
+
+<pre><code class="language-json">
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug (Laravel Serve)",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/path/to/application": "${workspaceFolder}"
+            },
+            "ignore": [
+                "**/vendor/**/*.php"
+            ]
+        },
+        {
+            "name": "Debug Laravel Serve with Xdebug",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceFolder}/artisan",
+            "args": ["serve", "--host=127.0.0.1", "--port=8000"],
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": [
+                "-dxdebug.mode=debug",
+                "-dxdebug.client_host=127.0.0.1",
+                "-dxdebug.client_port=9003",
+                "-dxdebug.start_with_request=yes"
+            ],
+            "env": {
+                "XDEBUG_CONFIG": "idekey=VSCODE"
+            },
+            "ignore": [
+                "**/vendor/**/*.php"
+            ]
+        }
+    ]
+}
+</code></pre>
+
+<h2 id="enable-for-cli-and-web">Enable Xdebug for CLI and Web</h2>
+
+<pre><code class="language-bash">
+#Enable for CLI (for artisan commands):
+sudo phpenmod -s cli xdebug
+
+#Enable for Apache/Nginx:
+sudo phpenmod -s apache2 xdebug
+
+# or for nginx with php-fpm
+sudo phpenmod -s fpm xdebug
+
+</code></pre>
+
+<h2>Restart Services</h2>
+
+<pre><code class="language-bash">
+# For Apache:
+sudo systemctl restart apache2
+
+# For Nginx with PHP-FPM:
+sudo systemctl restart php8.1-fpm 
+sudo systemctl restart nginx
+
+</code></pre>
+		</section>
+		<script>
+			document
+				.getElementById("nav-icon")
+				.addEventListener("click", displayNav);
+			function displayNav(event) {
+				event.stopPropagation();
+				const navList = document.getElementById("nav-list");
+				navList.classList.toggle("show-nav");
+			}
+
+			// Hide nav if click is outside
+			document.addEventListener("click", function (event) {
+				const navList = document.getElementById("nav-list");
+				const menuIcon = document.getElementById("nav-icon");
+
+				if (
+					!navList.contains(event.target) &&
+					!menuIcon.contains(event.target)
+				) {
+					navList.classList.remove("show-nav");
+				}
+			});
+		</script>
+	</body>
+</html>
