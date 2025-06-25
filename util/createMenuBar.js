@@ -21,7 +21,7 @@ function createNavLinks(links) {
 
     //create a link for home
     const homeLink = document.createElement("a");
-    const homeUrl = window.location.protocol+"//"+window.location.host
+    const homeUrl = window.location.protocol + "//" + window.location.host
     homeLink.href = homeUrl;
     homeLink.textContent = "Home";
     navList.appendChild(homeLink);
@@ -40,6 +40,7 @@ function createNavLinks(links) {
 document
     .getElementById("nav-icon")
     .addEventListener("click", displayNav);
+
 function displayNav(event) {
     event.stopPropagation();
     const navList = document.getElementById("nav-list");
