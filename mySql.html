@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br />
+			<h1 id="querying-data">Querying data</h1>
+			<br />
+			<ul>
+				<li>
+					MySQL <strong>SELECT</strong> statement doesn’t require
+					the <strong>FROM</strong> clause.
+				</li>
+				<li>
+					When executing the SELECT statement, MySQL evaluates the
+					FROM clause before the SELECT clause (if has)
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT CONCAT(“HI&quot;,”MySql&quot;) 
+</code></pre>
+			<ul>
+				<li>
+					Assign an alias to a column to make it more readable. (here,
+					<strong>as</strong> is optional)
+				</li>
+			</ul>
+			<br />
+			<h2 id="evaluation-order">Evaluation Order</h2>
+			<br />
+			<ul>
+				<li>
+					The evaluation order is so important because when we use
+					aliases, sometimes it may not work if the relevant CLAUSE
+					executes before the SELECT statement.
+				</li>
+			</ul>
+			<br />
+			<h1 id="sorting-data">Sorting data</h1>
+			<br />
+			<ul>
+				<li>
+					By default, the ORDER BY clause uses ASC if you don’t
+					explicitly specify any option
+				</li>
+				<li>
+					The evaluation order <strong
+						>FROM-&gt;SELECT-&gt;ORDER BY</strong
+					>
+				</li>
+				<li>In MySQL, NULL is lower than non-NULL values</li>
+			</ul>
+			<pre><code class="language-sql">SELECT contactLastname, contactFirstname
+FROM customers
+ORDER BY contactLastname DESC , contactFirstname ASC;
+</code></pre>
+			<ul>
+				<li>
+					The ORDER BY clause sorts the result set by the last name in
+					descending order first and then sorts the sorted result set
+					by the first name in ascending order to make the final
+					result set. (Guess here are multiple records with same
+					lastName but with different firstName)
+				</li>
+			</ul>
+			<pre><code class="language-sql">#The FIELD() function returns the position of the value in the list of values value1, value2, and so on
+#FIELD(value, value1, value2, ...)
+
+SELECT orderNumber,status FROM orders 
+ORDER BY  FIELD(status, &#39;In Process&#39;, &#39;On Hold&#39;, &#39;Cancelled&#39;, &#39;Resolved&#39;, &#39;Disputed&#39;, &#39;Shipped&#39;);
+</code></pre>
+			<br />
+			<h1 id="filtering-data">Filtering data</h1>
+			<br />
+			<ul>
+				<li>Note that MySQL treats 1 as true and 0 as false.</li>
+				<li>
+					MySQL evaluates the WHERE clause after the FROM clause and
+					before the SELECT and ORDER BY clauses.
+					<strong>FROM-&gt;WHERE-&gt;SELECT-&gt;ORDER_BY</strong>
+				</li>
+				<li>
+					In the database world, NULL is a marker that indicates that
+					a value is missing or unknown. NULL is not equivalent to the
+					number 0 or an empty string. SO use
+					<strong>IS NULL</strong> in where clauses instead of (=)
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT firstName, lastName FROM employees WHERE lastName LIKE &#39;%son&#39; ORDER BY firstName;
+</code></pre>
+			<ul>
+				<li>
+					Use the MySQL DISTINCT clause to remove duplicate rows from
+					the result set returned by the SELECT clause.
+				</li>
+				<li>
+					MySQL doesn’t have a built-in Boolean type. Instead, it uses
+					the number zero as FALSE and non-zero values as TRUE.
+				</li>
+				<li>
+					So,logical AND operator returns 1 or 0, and returns NULL if
+					either operand is non-zero or both operands are NULL.
+				</li>
+				<li>
+					MySQL evaluates the OR operator after the AND operator if an
+					expression contains both AND and OR operators.
+					<ul>
+						<li>
+							Use parentheses to change the order of evaluation.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT 1 OR 0 AND 0;
+SELECT (1 OR 0) AND 0;
+</code></pre>
+			<ul>
+				<li>
+					Use the IN operator to check if a value is in a set of
+					values.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#The value can be a column or an expression.
+...value IN (value1, value2, value3,...)
+
+SELECT 1 IN (1,2,3); #returns 1 because 1 is in the list
+</code></pre>
+			<ul>
+				<li>
+					Use the MySQL NOT IN to check if a value doesn’t match any
+					value in a list.
+				</li>
+			</ul>
+			<br />
+			<h2 id="wildcard-characters-_">wildcard characters (%, _)</h2>
+			<br />
+			<ul>
+				<li>
+					The percentage ( % ) wildcard matches any string of zero or
+					more characters
+					<strong
+						>s% =&gt; sun, six | %on =&gt; Patterson,Thompson | %on%
+						=&gt; Bondur,Bondur</strong
+					>
+				</li>
+				<li>
+					The underscore ( _ ) wildcard matches any single character.
+					<strong>se_ =&gt; see, sea | T_m =&gt; tom, tim</strong>
+				</li>
+				<li>
+					When the pattern contains the wildcard character and you
+					want to treat it as a regular character, you can use the
+					ESCAPE clause.
+				</li>
+				<li>
+					To ensure the LIMIT clause returns an expected output, you
+					should always use it with an ORDER BY clause
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT select_list
+FROM table_name
+ORDER BY  sort_expression LIMIT offset, row_count;
+#from row *offset *row_count num of rows will be returned, 1st row is 0
+#alternative way -&gt; LIMIT row_count OFFSET offset
+</code></pre>
+			<ul>
+				<li>
+					When you use the LIMIT clause with one argument, mysql use
+					this to determine the maximum number of rows to return from
+					the first row of the result set
+				</li>
+			</ul>
+			<pre><code class="language-sql">...LIMIT row_count; === LIMIT 0 , row_count;
+</code></pre>
+			<ul>
+				<li>
+					The following finds the customer who has the second-highest
+					credit (Note that this technique works when there are no two
+					customers who have the same credit limits. To get a more
+					accurate result, you should use the DENSE_RANK() window
+					function.)
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT customerName, creditLimit FROM customers ORDER BY creditLimit DESC LIMIT 1,1;
+</code></pre>
+			<br />
+			<h1 id="joining-tables">Joining tables</h1>
+			<br />
+			<ul>
+				<li>
+					You cannot use a column alias in the WHERE clause. The
+					reason is that when MySQL evaluates the WHERE clause, the
+					values of columns specified in the SELECT clause have not
+					been evaluated yet
+				</li>
+				<li>MySQL hasn’t supported the FULL OUTER JOIN yet.</li>
+				<li>
+					The left table is the table mentioned before the LEFT/RIGHT
+					JOIN clause.The right table is the table mentioned after the
+					LEFT/RIGHT JOIN clause.
+				</li>
+				<li>
+					To find the committee members who are not in the members
+					table, you use this query
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT m.member_id,m.name AS member,c.committee_id, c.name AS committee
+FROM members m
+RIGHT JOIN committees c USING(name)
+WHERE m.member_id IS NULL;
+</code></pre>
+			<ul>
+				<li>
+					These two are different, 2nd one returns all orders;
+					However, only the order <code>10123</code> will have
+					associated line items as shown in the query result
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT o.orderNumber, customerNumber, productCode FROM orders o LEFT JOIN orderDetails USING(orderNumber) WHERE orderNumber = 10123;
+
+SELECT o.orderNumber, customerNumber, productCode FROM orders o LEFT JOIN orderDetails d ON o.orderNumber = d.orderNumber AND o.orderNumber = 10123;
+</code></pre>
+			<ul>
+				<li>
+					Notice that for INNER JOIN clause, the condition in the ON
+					clause is equivalent to the condition in the WHERE clause.
+				</li>
+				<li>The RIGHT OUTER JOIN is the synonym of the RIGHT JOIN</li>
+				<li>
+					Use table aliases and inner join or left join to perform a
+					self join in MySQL. //REFER MORE
+				</li>
+			</ul>
+			<br />
+			<h1 id="grouping-data">Grouping data</h1>
+			<br />
+			<br />
+			<h2 id="group-by">Group By</h2>
+			<br />
+			<ul>
+				<li>
+					The GROUP BY clause groups rows into summary rows based on
+					column values or expressions. It returns one row for each
+					group and reduces the number of rows in the result set.
+				</li>
+				<li>
+					Place the GROUP BY clause after the FROM and WHERE clauses
+				</li>
+			</ul>
+			<p>
+				<strong
+					>FROM-&gt;WHERE-&gt;GROUP_BY-&gt;HAVING-&gt;SELECT-&gt;DISTINCT-&gt;ORDER_BY-&gt;LIMIT</strong
+				>
+			</p>
+			<pre><code class="language-sql">#To obtain the number of orders in each status
+SELECT status, COUNT(*) FROM orders GROUP BY status;
+</code></pre>
+			<ul>
+				<li>
+					If you use the GROUP BY clause in the SELECT statement
+					without using aggregate functions, the GROUP BY clause
+					behaves like the DISTINCT clause.
+				</li>
+			</ul>
+			<br />
+			<h2 id="having">Having</h2>
+			<br />
+			<ul>
+				<li>
+					The HAVING clause applies the condition to groups of rows,
+					while the WHERE clause applies the condition to individual
+					rows.
+				</li>
+				<li>
+					If you omit the GROUP BY clause, the HAVING clause behaves
+					like the WHERE clause
+					<strong
+						>FROM-&gt;WHERE-&gt;GROUP_BY-&gt;HAVING-&gt;SELECT-&gt;DISTINCT-&gt;ORDER_BY-&gt;LIMIT</strong
+					>
+				</li>
+				<li>
+					To filter the groups returned by GROUP BY clause, you use a
+					HAVING clause.
+				</li>
+			</ul>
+			<pre><code class="language-sql">...GROUP BY year HAVING year &gt; 2003;
+
+SELECT ordernumber, SUM(quantityOrdered) AS itemsCount, SUM(quantityOrdered*priceeach) AS total 
+FROM orderdetails 
+GROUP BY ordernumber HAVING total &gt; 1000;
+</code></pre>
+			<ul>
+				<li>
+					Use the HAVING COUNT clause to filter groups by the number
+					of items in each group.
+				</li>
+			</ul>
+			<br />
+			<h1 id="subqueries">Subqueries</h1>
+			<br />
+			<ul>
+				<li>
+					A query contain within another query like SELECT, INSERT,
+					UPDATE, DELETE
+				</li>
+				<li>SubQuery evaluates first</li>
+			</ul>
+			<pre><code class="language-sql">SELECT lastName,
+         officeCode
+FROM employees
+WHERE officeCode IN 
+    (SELECT officeCode
+    FROM offices
+    WHERE country = &#39;USA&#39;);
+
+#this is similar to WHERE officeCode IN (1,2,3)
+#Operand should contain 1 column(s)
+#IN,NOT IN, comparison OPERATORS,EXISTS and NOT EXISTS
+</code></pre>
+			<ul>
+				<li>
+					When a subquery is used with the EXISTS or NOT EXISTS
+					operator, a subquery returns a Boolean value of TRUE or
+					FALSE.
+				</li>
+				<li>
+					When you use a subquery in the FROM clause, the result set
+					returned from a subquery is used as a temporary table. This
+					table is referred to as a derived table or materialized
+					subquery.
+				</li>
+			</ul>
+			<br />
+			<h2 id="correlated-subquery">correlated subquery</h2>
+			<br />
+			<ul>
+				<li>Subqueries are independent as they are standalone.</li>
+				<li>
+					A correlated subquery is a subquery that uses the data from
+					the outer query. In other words, a correlated subquery
+					depends on the outer query. A correlated subquery is
+					evaluated once for each row in the outer query.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#1
+SELECT productname,
+         buyprice
+FROM products AS p1
+WHERE buyprice &gt; 
+    (SELECT AVG(buyprice)
+    FROM products
+    WHERE productline = p1.productline)
+#2
+SELECT customerNumber,
+         customerName
+FROM customers
+WHERE EXISTS
+    (SELECT orderNumber,
+         SUM(priceEach * quantityOrdered)
+    FROM orderdetails
+    INNER JOIN orders
+    USING (orderNumber)
+    WHERE customerNumber = customers.customerNumber
+    GROUP BY  orderNumber
+    HAVING SUM(priceEach * quantityOrdered) &gt; 60000);
+</code></pre>
+			<br />
+			<h2 id="derived-tables">derived tables</h2>
+			<br />
+			<p><img src="./assets/DerivedTables.png" alt="DerivedTables.png" /></p>
+			<pre><code class="language-sql">SELECT 
+    customerGroup, 
+    COUNT(cg.customerGroup) AS groupCount
+FROM
+    (SELECT 
+        customerNumber,
+            ROUND(SUM(quantityOrdered * priceEach)) sales,
+            (CASE
+                WHEN SUM(quantityOrdered * priceEach) &lt; 10000 THEN &#39;Silver&#39;
+                WHEN SUM(quantityOrdered * priceEach) BETWEEN 10000 AND 100000 THEN &#39;Gold&#39;
+                WHEN SUM(quantityOrdered * priceEach) &gt; 100000 THEN &#39;Platinum&#39;
+            END) customerGroup
+    FROM
+        orderdetails
+    INNER JOIN orders USING (orderNumber)
+    WHERE
+        YEAR(shippedDate) = 2003
+    GROUP BY customerNumber) cg
+GROUP BY cg.customerGroup;    
+</code></pre>
+			<ul>
+				<li>
+					For some scenarios, both the <strong>IN</strong> and
+					<strong>EXISTS</strong> clauses can be used, but since the
+					<strong>EXISTS</strong> operator works based on the
+					<strong>at least found</strong> principle, it is much
+					faster.
+				</li>
+				<li>
+					However, the query that uses the IN operator will perform
+					faster if the result set returned from the subquery is very
+					small.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#1
+SELECT * FROM customers c1
+WHERE customerNumber IN 
+    (SELECT customerNumber FROM orders );
+#2    
+SELECT * FROM customers c1
+WHERE EXISTS 
+    (SELECT *  FROM orders o  WHERE c1.customerNumber = o.customerNumber );
+</code></pre>
+			<br />
+			<h1 id="set-operators">Set operators</h1>
+			<br />
+			<ul>
+				<li>
+					To combine result set of two or more queries using the UNION
+					operator.
+				</li>
+				<li>
+					First, the number and the orders of columns that appear in
+					all SELECT statements must be the same.
+				</li>
+				<li>
+					Second, the data types of columns must be the same or
+					compatible.
+				</li>
+				<li>
+					By default, the UNION operator removes duplicate rows even
+					if you don’t specify the DISTINCT operator explicitly.
+					<strong>SELECT column_list UNION [DISTINCT | ALL]</strong>
+				</li>
+				<li>
+					A JOIN combines result sets horizontally, a UNION appends
+					result set vertically.
+				</li>
+				<li>
+					Use the MySQL <strong>EXCEPT</strong> operator to retrieve
+					rows from one result set that do not appear in another
+					result set. And it follows the same rules like in UNION
+					operator.
+				</li>
+				<li>
+					Use the MySQL <strong>INTERSECT</strong> operator to find
+					the rows that are common to multiple query results. And it
+					follows the same rules like in UNION operator.
+				</li>
+			</ul>
+			<br />
+			<h1 id="managing-databases">Managing databases</h1>
+			<br />
+			<ul>
+				<li>
+					Directly login MYSQL with a database name
+					<strong>mysql -u root -D classicmodels -p</strong>
+				</li>
+				<li>
+					Review the created database
+					<strong>SHOW CREATE DATABASE testdb;</strong>
+				</li>
+				<li>
+					Unlike MySQL, where schema and database are interchangeable,
+					in standard SQL (and many RDBMS like PostgreSQL, SQL Server,
+					or Oracle), they are distinct concepts.
+				</li>
+				<li>
+					In standard SQL, CREATE DATABASE creates a new database,
+					while CREATE SCHEMA organizes objects within an existing
+					database.
+				</li>
+			</ul>
+			<br />
+			<h1 id="working-with-tables">Working with tables</h1>
+			<br />
+			<ul>
+				<li>
+					<strong
+						>CREATE TABLE [IF NOT EXISTS] table_name(column1
+						datatype constraints,...) ENGINE=storage_engine;</strong
+					>
+				</li>
+				<li>
+					The <strong>SELECT LAST_INSERT_ID();</strong> query returns
+					the last auto-increment value generated for the ID column.
+				</li>
+				<li>
+					MySQL does not have the built-in BOOLEAN or BOOL data type.
+					To represent boolean values, MySQL uses the smallest integer
+					type which is TINYINT(1).
+				</li>
+				<li>
+					CHAR and BINARY are fixed length while VARCHAR and VARBINARY
+					are variable length string data types.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#Insert data into a tbale from other tables
+INSERT INTO credits(customerNumber, creditLimit)
+SELECT customerNumber, creditLimit FROM customers WHERE creditLimit &gt; 0;
+</code></pre>
+			<br />
+			<h2 id="alter-tables">ALTER Table/s</h2>
+			<br />
+			<pre><code class="language-sql">ALTER TABLE tbl ADD col1 column_definition  [FIRST | AFTER column_name], col2 column_definition  [FIRST | AFTER column_name]...
+#Adding a new NOT NULL columns to an existing table will populated with default values
+
+ALTER TABLE tbl MODIFY col1 column_definition [ FIRST | AFTER column_name], col1 column_definition [ FIRST | AFTER column_name]...;
+
+ALTER TABLE tbl CHANGE COLUMN original_name new_name column_definition [FIRST | AFTER column_name];
+
+ALTER TABLE table_name DROP COLUMN column_name;
+#The COLUMN keyword in the DROP COLUMN clause is optional
+#Before droping, need to check use cases of the column like FKs,SPs,Views,Triggers...
+
+ALTER TABLE table_name RENAME TO new_table_name;
+
+#Note:
+RENAME TABLE table_name TO new_table_name;
+
+DROP [TEMPORARY] TABLE [IF EXISTS] tbl1,tbl2...;
+</code></pre>
+			<ul>
+				<li>
+					<p>
+						Note that you cannot use the RENAME TABLE statement to
+						rename a temporary table, but you can use the ALTER
+						TABLE statement to rename a temporary table.
+					</p>
+				</li>
+				<li>
+					<p>
+						Use
+						<strong>DESCRIBE tabel_name; / DESC tabel_name;</strong>
+						to get the list of columns in a table with their
+						definitions.
+					</p>
+				</li>
+				<li>
+					<p>
+						Use <strong>CHECK TABLE tbl_name;</strong> to check the
+						status of the table/view.
+					</p>
+				</li>
+				<li>
+					<p>
+						Use <strong>SHOW WARNINGS;</strong> to show the warning
+					</p>
+				</li>
+				<li>
+					<p>
+						Use <strong>SHOW CREATE TABLE tabel_name;</strong> to
+						shows the definition of the table.
+					</p>
+				</li>
+				<li>
+					<p>
+						Use <strong>SHOW INDEX FROM tabel_name;</strong> to
+						displays all indexes associated with the table.
+					</p>
+				</li>
+				<li>
+					<p>
+						In terms of security, any existing privileges that you
+						granted to the old table must be manually migrated to
+						the new table when using RENAME TABLE.
+					</p>
+				</li>
+				<li>
+					<p>
+						And you’ll need to manually adjust other database
+						objects, including views, stored procedures, triggers,
+						and foreign key constraints that reference the table.
+					</p>
+				</li>
+				<li><p>Check is a column exist in a table</p></li>
+			</ul>
+			<pre><code class="language-sql">SELECT IF(count(*) = 1, &#39;Exist&#39;,&#39;Not Exist&#39;) AS result
+FROM information_schema.columns
+WHERE table_schema = &#39;classicmodels&#39; AND table_name = &#39;vendors&#39; AND column_name = &#39;phone&#39;;
+</code></pre>
+			<ul>
+				<li>
+					MySQL allows a table to have up to one auto-increment column
+					and that column must be defined as a key.
+				</li>
+				<li>
+					If we add new auto-increment id column to an existing table,
+					it will add ids for existing rows as well.
+				</li>
+				<li>
+					Note that the DROP TABLE statement only drops tables. It
+					doesn’t remove specific user privileges associated with the
+					tables. Therefore, if you create a table with the same name
+					as the dropped one, MySQL will apply the existing privileges
+					to the new table, which may pose a security risk.
+				</li>
+				<li>
+					To execute the DROP TABLE statement, you must have DROP
+					privileges for the table that you want to remove.
+				</li>
+				<li>
+					If you want to drop multiple tables that have a specific
+					pattern in a database, you can&#39;t use the LIKE operator;
+					instead, you have to write a separate mechanism or use SPs.
+				</li>
+			</ul>
+			<br />
+			<h2 id="temporary-tables">Temporary tables</h2>
+			<br />
+			<ul>
+				<li>
+					MySQL removes the temporary table automatically when the
+					session ends or the connection is terminated.
+				</li>
+				<li>
+					A temporary table is only available and accessible to the
+					client that creates it.
+				</li>
+				<li>
+					In the same session, two temporary tables cannot share the
+					same name.
+				</li>
+				<li>
+					If you create a temporary table named
+					<strong>employees</strong> in the sample database, the
+					existing <strong>employees</strong> table becomes
+					<strong>inaccessible</strong>.
+				</li>
+				<li>
+					To create a temporary table whose structure is based on an
+					existing table, you cannot use the CREATE TEMPORARY TABLE
+					... LIKE statement.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE TEMPORARY TABLE temp_table_name
+SELECT * FROM original_table LIMIT 0;
+</code></pre>
+			<br />
+			<h2 id="truncateing-a-table">Truncateing a Table</h2>
+			<br />
+			<pre><code class="language-sql">TRUNCATE [TABLE] table_name; #The TABLE keyword is optional, but to distinguish TRUNCATE TABLE and TRUNCATE() use it.
+</code></pre>
+			<ul>
+				<li>
+					Truncating a table resets AUTO_INCREMENT values to zero.
+				</li>
+				<li>
+					If there is any FOREIGN KEY constraints from other tables
+					that reference the table that you truncate, the TRUNCATE
+					TABLE statement will fail.
+				</li>
+				<li>It cannot be rolled back.</li>
+				<li>
+					TRUNCATE TABLE statement is more efficient than the DELETE
+					statement because it drops and recreates the table instead
+					of deleting rows one by one.
+				</li>
+			</ul>
+			<br />
+			<h2 id="generated-column">Generated Column</h2>
+			<br />
+			<ul>
+				<li>
+					Use a MySQL Generated column to store data computed from an
+					expression or other columns.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE TABLE contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    fullname varchar(101) GENERATED ALWAYS AS (CONCAT(first_name,&#39; &#39;,last_name))
+);
+
+column_name data_type [GENERATED ALWAYS] AS (expression) [VIRTUAL | STORED] [UNIQUE [KEY]]
+</code></pre>
+			<ul>
+				<li>
+					MySQL provides two types of generated columns: stored and
+					virtual. The virtual columns are calculated on the fly each
+					time data is read whereas the stored columns are calculated
+					and stored physically when the data is updated. default is
+					VIRTUAL.
+				</li>
+				<li>
+					The <strong>expression</strong> can contain literals, and
+					built-in functions with no parameters, operators, or
+					references to any column within the same table. If you use a
+					function, it must be scalar and deterministic.
+				</li>
+				<li>
+					If the generated column is <strong>stored</strong>, you can
+					define a <strong>unique constraint</strong> for it.
+				</li>
+			</ul>
+			<br />
+			<h1 id="mysql-constraints">MySQL constraints</h1>
+			<br />
+			<br />
+			<h2 id="primary-key">Primary Key</h2>
+			<br />
+			<ul>
+				<li>
+					Primary Key can be defined as a column constraint or a table
+					constraint. If the PK consist with multiple column it should
+					be defined as a table constraint
+				</li>
+				<li>
+					<strong
+						>column1 datatype PRIMARY KEY, | column1
+						datatype,column2 datatype ..., PRIMARY KEY(column1,
+						column2)</strong
+					>
+				</li>
+			</ul>
+			<br />
+			<h2 id="foreign-key">Foreign Key</h2>
+			<br />
+			<pre><code class="language-sql">[CONSTRAINT constraint_name] #constraint_name is optional
+FOREIGN KEY [foreign_key_name] (column_name, ...) # foreign_key_name is optional
+REFERENCES parent_table(colunm_name,...)
+[ON DELETE reference_option]
+[ON UPDATE reference_option]
+</code></pre>
+			<ul>
+				<li>
+					MySQL has five reference options: CASCADE, SET NULL, NO
+					ACTION, RESTRICT, and SET DEFAULT.
+				</li>
+			</ul>
+			<p>
+				<strong>CASCADE</strong>: if a row from the parent table is
+				deleted or updated, the values of the matching rows in the child
+				table are automatically deleted or updated.
+				<strong>SET NULL</strong>: if a row from the parent table is
+				deleted or updated, the values of the foreign key column (or
+				columns) in the child table are set to NULL.
+				<strong>RESTRICT</strong>: if a row from the parent table has a
+				matching row in the child table, MySQL rejects deleting or
+				updating rows in the parent table. <strong>NO ACTION</strong>:
+				is the same as RESTRICT. <strong>SET DEFAULT</strong>: is
+				recognized by the MySQL parser. However, this action is rejected
+				by both InnoDB and NDB tables.
+			</p>
+			<ul>
+				<li>
+					MySQL fully supports three actions: RESTRICT, CASCADE and
+					SET NULL. and If you don’t specify the ON DELETE and ON
+					UPDATE clause, the default action is RESTRICT.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#Drop FK
+ALTER TABLE table_name DROP FOREIGN KEY constraint_name;
+
+#Disabling and Enabling FK. Important for csv imports kind of things and droping tables
+#Or else you wll have to import parent table data first and then import child table data, this check each row in parent table and time consuming
+SET foreign_key_checks = 0;
+SET foreign_key_checks = 1;
+</code></pre>
+			<br />
+			<h2 id="unique-key">UNIQUE Key</h2>
+			<br />
+			<ul>
+				<li>
+					In MySQL, NULL values are treated as distinct when it comes
+					to unique constraints.
+				</li>
+				<li>
+					When you define a unique constraint for a column or a group
+					of columns, MySQL creates a corresponding UNIQUE index and
+					uses this index to enforce the rule.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE TABLE suppliers (
+    supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(15) NOT NULL UNIQUE, #column constraint
+    address VARCHAR(255) NOT NULL,
+    CONSTRAINT uc_name_address UNIQUE (name,address) #table constraint, Here name is optional
+);
+
+#Drop UK
+DROP INDEX index_name ON table_name;
+ALTER TABLE table_name DROP INDEX index_name;
+
+#Add UK
+ALTER TABLE table_name ADD CONSTRAINT constraint_name UNIQUE (column_list);
+</code></pre>
+			<br />
+			<h2 id="not-null">NOT NULL</h2>
+			<br />
+			<pre><code class="language-sql">#Add not null
+ALTER TABLE tasks 
+CHANGE end_date end_date DATE NOT NULL;
+
+#Drop not null
+ALTER TABLE tasks 
+MODIFY end_date DATE;
+</code></pre>
+			<br />
+			<h2 id="default">DEFAULT</h2>
+			<br />
+			<pre><code class="language-sql">#Adddefault
+ALTER TABLE table_name
+ALTER COLUMN column_name SET DEFAULT default_value;
+
+#When inserting, you can pass DEFAULT or ignore passing value
+INSERT INTO cart_items(name, quantity, price, sales_tax)
+VALUES(&#39;Battery&#39;,4, 0.25 , DEFAULT);
+
+#Drop default
+ALTER TABLE table_name
+ALTER column_name DROP DEFAULT;
+</code></pre>
+			<br />
+			<h2 id="check">CHECK</h2>
+			<br />
+			<ul>
+				<li>
+					Use CHECK constraints to ensure values stored in a column
+					satisfy a Boolean condition.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE TABLE parts (
+    part_no VARCHAR(18) PRIMARY KEY,
+    description VARCHAR(40),
+    cost DECIMAL(10,2 ) NOT NULL CONSTRAINT constraint_name CHECK (cost &gt;= 0), #name is optional,this is a column constraint
+    price DECIMAL(10,2) NOT NULL CHECK (price &gt;= 0), #column constraint
+    CONSTRAINT parts_chk_price_gt_cost  CHECK(price &gt;= cost) #table constraint
+);
+
+INSERT INTO parts(part_no, description,cost,price) 
+VALUES(&#39;A-001&#39;,&#39;Cooler&#39;,0,-100); //Fail
+
+INSERT INTO parts(part_no, description,cost,price) 
+VALUES(&#39;A-001&#39;,&#39;Cooler&#39;,200,100); //Fail
+
+#Add CHECK
+ALTER TABLE table_name ADD CHECK (expression);
+ALTER TABLE table_name ADD CONSTRAINT contraint_name CHECK (expression);
+
+#Drop Check
+ALTER TABLE table_name DROP CHECK constraint_name;
+</code></pre>
+			<br />
+			<h1 id="mysql-data-types">MySQL data types</h1>
+			<br />
+			<ul>
+				<li>
+					BIT, INT, BOOLEAN, DECIMAL, CHAR, VARCHAR, TEXT, DATETIME,
+					TIMESTAMP, DATE, TIME, BINARY, VARBINARY, BLOB, ENUM, JSON,
+					UUID?
+				</li>
+			</ul>
+			<br />
+			<h1 id="modifying-data-in-mysql">Modifying data in MySQL</h1>
+			<br />
+			<ul>
+				<li>
+					When you insert multiple rows by a single statement and use
+					the <strong>LAST_INSERT_ID()</strong> function to get the
+					last inserted id of an
+					<strong>AUTO_INCREMENT</strong> column, you will get the id
+					of the first inserted row, not the id of the last inserted
+					row. <strong>SELECT LAST_INSERT_ID();</strong>
+				</li>
+			</ul>
+			<pre><code class="language-sql">INSERT INTO table_name(c1,c2,...)
+VALUES(v1,v2,..),(v1,v2,..)...;
+
+#Insert using a result of a query
+INSERT INTO table_name(column_list)
+SELECT select_list FROM another_table WHERE condition;
+
+#This is also possible
+INSERT INTO stats(totalProduct, totalCustomer, totalOrder)
+VALUES(
+	(SELECT COUNT(*) FROM products),
+	(SELECT COUNT(*) FROM customers),
+	(SELECT COUNT(*) FROM orders)
+);
+</code></pre>
+			<ul>
+				<li>
+					<p>
+						Use the <strong>ON DUPLICATE KEY UPDATE</strong> option
+						of the INSERT statement to insert data into a table and
+						update existing data if a duplicate error occurs.
+					</p>
+				</li>
+				<li>
+					<p>
+						When you use the INSERT statement to add multiple rows
+						to a table and if an error occurs during the processing,
+						MySQL terminates the statement and returns an error.
+						Consequently, the table remains unchanged with no
+						inserted rows.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>INSERT IGNORE INTO</strong> allows you to enter
+						only valid rows and issue a WARNING instead of an ERROR
+						for invalid rows.
+					</p>
+				</li>
+			</ul>
+			<pre><code class="language-sql">INSERT IGNORE INTO subscribers(email)
+VALUES(&#39;john.doe@gmail.com&#39;), 
+      (&#39;jane.smith@ibm.com&#39;);
+</code></pre>
+			<ul>
+				<li>
+					If you use this under STRICT MODE, MySQL will try to adjust
+					them before ignoring... e.g., inserting a 7-digit value into
+					a varchar(6) column will ignore the last digit and insert
+					the first 6.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#Converting a datetime string into a DATETIME (YYYY-MM-DD HH:MM:SS) using STR_TO_DATE()
+INSERT INTO events (event_name, event_time) VALUES (&#39;MySQL Party&#39;, STR_TO_DATE(&#39;10/28/2023 20:00:00&#39;, &#39;%m/%d/%Y %H:%i:%s&#39;));
+
+#Converting a date string into the DATE type (YYYY-MM-DD) format using STR_TO_DATE()
+INSERT INTO events (event_name, event_date) VALUES (&#39;MySQL Innovate&#39;, STR_TO_DATE(&#39;10/29/2023&#39;, &#39;%m/%d/%Y&#39;));
+</code></pre>
+			<ul>
+				<li>
+					<p>
+						<strong>CURRENT_DATE</strong> gives the current date of
+						the database server in &#39;YYYY-MM-DD&#39; format.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>UTC_DATE()</strong> gives the current date in
+						UTC in &#39;YYYY-MM-DD&#39; format.
+					</p>
+				</li>
+				<li>
+					<p>
+						In UPDATE statement WHERE clause is so important, it is
+						optional, But if we foget it, mysql update all the rows.
+					</p>
+				</li>
+				<li>
+					<p>
+						LOW_PRIORITY and IGNORE statements are optional. IGNORE
+						perform same as in INSERT statement.
+					</p>
+				</li>
+				<li>
+					<p>
+						Can be updated from rows returned by a SELECT statement.
+					</p>
+				</li>
+			</ul>
+			<pre><code class="language-sql">#UPDATE to replace string 
+UPDATE employees
+SET email = REPLACE(email,&#39;@classicmodelcars.com&#39;,&#39;@mysqltutorial.org&#39;)
+WHERE
+   jobTitle = &#39;Sales Rep&#39; AND
+   officeCode = 6;
+
+#Update by a result of a select
+UPDATE customers 
+SET  salesRepEmployeeNumber = (SELECT...FROM...WHERE...ORDER BY...LIMIT 1)
+WHERE salesRepEmployeeNumber IS NULL;
+</code></pre>
+			<ul>
+				<li>
+					Use the MySQL UPDATE JOIN with the INNER JOIN or LEFT JOIN
+					clauses to perform cross-table updates.
+				</li>
+			</ul>
+			<pre><code class="language-sql">UPDATE T1
+[INNER JOIN | LEFT JOIN] T2 ON T1.C1 = T2.C1
+SET T1.C2 = T2.C2, 	T2.C3 = expr
+WHERE condition;
+
+#This
+UPDATE T1
+SET T1.c2 = T2.c2,T2.c3 = expr
+WHERE T1.c1 = T2.c1 AND condition;
+
+#Is equel to
+UPDATE T1
+INNER JOIN T2 ON T1.C1 = T2.C1
+SET T1.C2 = T2.C2, T2.C3 = expr
+WHERE condition;
+
+UPDATE employees 
+  INNER JOIN merits ON employees.performance = merits.performance 
+SET salary = salary + salary * percentage;
+
+UPDATE employees 
+  LEFT JOIN merits ON employees.performance = merits.performance 
+SET salary = salary + salary * COALESCE(percentage, 0.015);
+</code></pre>
+			<ul>
+				<li>
+					In DELETE statement, If you omit the WHERE clause, the
+					DELETE statement will delete all rows in the table.
+				</li>
+				<li>
+					To delete rows from both T1 and T2 tables that meet a
+					specified condition, you use the following statement:
+				</li>
+			</ul>
+			<pre><code class="language-sql">#if T! or T@ omit, this query delete records only in other table
+DELETE T1, T2 FROM T1
+INNER JOIN T2 ON T1.key = T2.key
+WHERE condition;
+
+#This clause delete rows from T1 table that does not have corresponding rows in the T2 table:
+DELETE T1 FROM T1 
+LEFT JOIN T2 ON T1.key = T2.key 
+WHERE T2.key IS NULL;
+</code></pre>
+			<br />
+			<h2 id="replace">Replace</h2>
+			<br />
+			<ul>
+				<li>
+					The MySQL REPLACE statement is an extension to the SQL
+					Standard. The MySQL REPLACE statement works as follows:
+					<strong>Step 1</strong>. Insert a new row into the table, if
+					a duplicate key error occurs. <strong>Step 2</strong>. If
+					the insertion fails due to a duplicate-key error occurs:
+					Delete the conflicting row that causes the duplicate key
+					error from the table. Insert the new row into the table
+					again.
+				</li>
+				<li>
+					To use the REPLACE statement, you need to have at least both
+					INSERT and DELETE privileges for the table.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#Insert
+REPLACE INTO cities(id,population) VALUES(2,3696820);
+
+#Update
+REPLACE INTO cities SET id = 4,name = &#39;Phoenix&#39;,population = 1768980;
+
+#Select and update
+REPLACE INTO cities(name,population)
+SELECT name,population FROM cities WHERE id = 1;
+</code></pre>
+			<ul>
+				<li>In INSERT, if no value spefified, it sets to NULL.</li>
+				<li>
+					Unlike the UPDATE statement, if column value not specified
+					in the SET clause, the REPLACE statement will use the
+					default value of that column.
+				</li>
+			</ul>
+			<br />
+			<h1 id="common-table-expressions">Common Table Expressions</h1>
+			<br />
+			<ul>
+				<li>
+					Use MySQL CTEs to break down complex queries into simpler,
+					more manageable queries. Each CTE represents a temporary
+					result set that can be referenced within the main query.
+				</li>
+			</ul>
+			<pre><code class="language-sql">#syntax
+WITH cte_name (column_list) AS ( query ) 
+SELECT * FROM cte_name;
+
+#1
+WITH customers_in_usa AS (
+    SELECT customerName, state FROM customers WHERE  country = &#39;USA&#39;
+) 
+SELECT 
+	customerName
+FROM customers_in_usa WHERE  state = &#39;CA&#39; ORDER BY customerName;
+
+#2
+WITH topsales2003 AS (...query with complex joins)
+SELECT column_list
+FROM another_table JOIN topsales2003
+
+#3 Using multiple CTEs
+WITH salesrep AS (...query),
+customer_salesrep AS (...query)
+SELECT * FROM customer_salesrep ORDER BY customerName;
+
+#4 Joining two CTEs example
+WITH e AS (...query),
+o AS (...query)
+SELECT * FROM e INNER JOIN o USING (colum)
+</code></pre>
+			<ul>
+				<li>Use MySQL recursive CTE to traverse hierarchical data.</li>
+			</ul>
+			<br />
+			<h1 id="table-locking">Table Locking</h1>
+			<br />
+			<pre><code class="language-sql">LOCK TABLES table_name1 [READ | WRITE], 
+            table_name2 [READ | WRITE],
+             ... ;
+#Unlock
+UNLOCK TABLES;
+#If the session is terminated, MySQL will release all the locks implicitly.
+
+#Get connection ID of the current session
+SELECT CONNECTION_ID();
+
+#Show the processlist that are waiting for execute once a particular lock is released
+SHOW PROCESSLIST;
+</code></pre>
+			<ul>
+				<li>
+					If a session locks a table as READ, the table can be read or
+					data stored within that session. Other sessions can only
+					read the table but will be in a waiting state for insert
+					operations until the table is unlocked.
+				</li>
+				<li>
+					If a session locks a table as WRITE, the table can be read
+					or data stored within that session. Other sessions cannot
+					read or write to the table and are placed in a waiting state
+					until the table is unlocked.
+				</li>
+			</ul>
+			<br />
+			<h1 id="mysql-globalization">MySQL globalization</h1>
+			<br />
+			<ul>
+				<li>
+					A character set is a collection of characters with a unique
+					encoding. It defines the set of characters that can be used
+					in a text column, such as letters, numbers, symbols, and
+					special characters.
+				</li>
+				<li>
+					Use the CONVERT() or CAST() function to convert between
+					character sets.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW CHARACTER SET; #To list all character sets in the current MySQL server
+#Ex: utf8, utf8mb4, latin1, utf16
+
+#Setting character sets for client connections
+#1
+SET NAMES &#39;utf8mb4&#39;;
+
+#2 in configuration file (If the application supports the --default-character-set  option)
+[mysql]
+default-character-set=utf8mb4
+
+#3 Using the charset in connection strings ( connectors allow you to specify )
+$dsn =&quot;mysql:host=$host;dbname=$db;charset=utf8mb4&quot;;
+</code></pre>
+			<ul>
+				<li>
+					A MySQL collation is a set of rules used to compare
+					characters in a particular character set.
+				</li>
+				<li>
+					Each character set has a default collation. It can have more
+					than one collation. However, two character sets cannot have
+					the same collation.
+				</li>
+				<li>
+					MySQL allows you to specify character sets and collations at
+					four levels:
+				</li>
+			</ul>
+			<blockquote>
+				<p>Server | Database | Table | Column</p>
+			</blockquote>
+			<br />
+			<h1 id="user-defined-variables">User-defined variables</h1>
+			<br />
+			<ul>
+				<li>
+					Use the MySQL user-defined variables in the SQL statements
+					to pass data between statements within a session.
+				</li>
+				<li>
+					@variable_name, case-insensitive and MySQL-specific
+					extension to SQL standard
+				</li>
+			</ul>
+			<pre><code class="language-sql">#variable assignment
+SET @variable_name = value; OR
+SET @variable_name := value; OR
+SELECT value INTO @variable_name;
+
+SELECT c1, c2, c3, ...
+INTO @v1, @v2, @v3,...
+FROM table_name WHERE condition;
+</code></pre>
+			<ul>
+				<li>
+					A user-defined variable can hold a single value. If the
+					SELECT statement returns multiple values, MySQL will issue
+					an error and the variable will take the value of the first
+					row in the result set: (LIMIT 1; -- ensure maximum one row
+					returned)
+				</li>
+			</ul>
+			<br />
+			<h1 id="mysql-import-amp-export-csv">
+				MySQL import &amp; export CSV
+			</h1>
+			<br />
+			<ul>
+				<li>
+					Use the LOAD DATA INFILE statement to import a CSV file into
+					a table.
+				</li>
+				<li>
+					Use the SELECT ... INTO OUTFILE statement to export a table
+					to a CSV file on the MySQL Server.
+				</li>
+			</ul>
+			<br />
+			<h1 id="advanced-techniques">Advanced techniques</h1>
+			<br />
+			<br />
+			<h2 id="natural-sorting">Natural Sorting</h2>
+			<br />
+			<ul>
+				<li>
+					MySQL does not provide any built-in natural sorting syntax
+					or function.
+				</li>
+				<li>
+					So, 1,10Z,1C,2,20D,2A,3C like results will be returned from
+					the MySQL order by statement even if we expect a result like
+					1,1C,2,2A,3C,10Z,20D
+				</li>
+				<li>
+					natural sorting follows these principles:
+					<ol>
+						<li>Sort Numerical Values First.</li>
+						<li>Then sort Text Values Second.</li>
+						<li>Ignore letter cases and leading zeros.</li>
+						<li>
+							Finally, sort symbols and special Characters using
+							their ASCII or Unicode values.
+						</li>
+					</ol>
+				</li>
+				<li>
+					Split data into parts and sort the parts to achieve natural
+					sorting in MySQL. //<strong
+						>REGEXP_SUBSTR(name, &#39;^\d+&#39;) AS SIGNED</strong
+					>
+				</li>
+			</ul>
+			<br />
+			<h2 id="comparing-two-tables">Comparing two tables</h2>
+			<br />
+			<ul>
+				<li>
+					Thus query returns no row if there are no unmatched records.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT pk, c1
+FROM
+ (
+   SELECT t1.pk, t1.c1
+   FROM t1
+   UNION ALL
+   SELECT t2.pk, t2.c1
+   FROM t2
+)  t
+GROUP BY pk, c1
+HAVING COUNT(*) = 1
+ORDER BY pk
+</code></pre>
+			<br />
+			<h2 id="find-duplicate-rowsvalues">Find Duplicate Rows/Values</h2>
+			<br />
+			<pre><code class="language-sql">SELECT 
+    first_name, COUNT(first_name),last_name,  COUNT(last_name),email,COUNT(email)
+FROM contacts
+GROUP BY first_name , last_name , email
+HAVING  COUNT(first_name) &gt; 1 AND COUNT(last_name) &gt; 1 AND COUNT(email) &gt; 1;
+</code></pre>
+			<br />
+			<h2 id="delete-duplicate-rows">Delete Duplicate Rows</h2>
+			<br />
+			<ol>
+				<li>using the DELETE JOIN statement - refer above</li>
+				<li>
+					using an intermediate table (create an intermediate table
+					with same structure-&gt;insert distinct records-&gt;delete
+					original table-&gt;rename intermediate table to the origianl
+					tabel )
+				</li>
+				<li>using the ROW_NUMBER() function (from version 8.02)</li>
+			</ol>
+			<br />
+			<h2 id="copy-table">Copy Table</h2>
+			<br />
+			<pre><code class="language-sql">#Copy only data
+CREATE TABLE IF NOT EXISTS offices_bk 
+SELECT * FROM offices;
+
+SELECT * FROM offices_bk;
+
+#copy data and all database objects associated with the offices table
+# indexes, primary key constraints, foreign key constraints, triggers, and so on
+CREATE TABLE offices2 LIKE offices;
+
+INSERT offices2
+SELECT * FROM offices;
+
+#Copying tables across databases
+CREATE TABLE destination_db.new_table 
+LIKE source_db.existing_table;
+
+INSERT destination_db.new_table 
+SELECT * FROM source_db.existing_table;
+</code></pre>
+			<br />
+			<h2 id="interval">Interval</h2>
+			<br />
+			<ul>
+				<li><strong>INTERVAL expr unit</strong></li>
+			</ul>
+			<pre><code class="language-sql">SELECT &#39;2020-01-01&#39; + INTERVAL -1 DAY; # 2019-12-31
+
+SELECT DATE_ADD(&#39;2020-01-01&#39;, INTERVAL 1 MONTH) 1_MONTH_LATER, 
+       DATE_SUB(&#39;2020-01-01&#39;,INTERVAL 1 MONTH) 1_MONTH_BEFORE; # 2020-02-01 | 2019-12-01
+
+SELECT TIMESTAMPADD(MINUTE,30,&#39;2020-01-01&#39;) 30_MINUTES_LATER; # | 2020-01-01 00:30:00
+</code></pre>
+			<br />
+			<h2 id="commands">Commands</h2>
+			<br />
+			<pre><code class="language-sql">#Connect
+mysql -u username -p # Connect to a Local MySQL server
+mysql -u username -p db_name # Connect to Local MySQL server with database
+mysql -h remote_host -u username -p # Connect to Remote MySQL Server
+mysql -h remote_host -u username -p db_name # Connect to Remote MySQL Server with Database
+mysql -h remote_host -P port -u username -p # Specify MySQL server port
+mysql --login-path=mypath # Connect to a MySQL server using a login path
+mysql -h remote_host -u username -p --ssl-ca=ca.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem # Connect to MySQL Server with SSL
+
+#Exit
+\q OR quit OR exit Alternatively Ctrl+D in Unix and Ctrl+Z in windows  #Exit MySQL client
+
+#Read
+#If the number of columns is high, the output will not be readable. To fix it, you can 
+#display the query results in a vertical format using the \G instead of the semicolon (;):
+SELECT firstName, lastName FROM employees ORDER BY firstName LIMIT 2\G
+
+#Execute
+mysql -u username -p -e &quot;SELECT * FROM table_name;&quot; db_name # Execute a command and exit
+
+mysql -u username -p db_name &lt; script.sql # Execute queries from a file, This can be used to import a dump db as well
+
+#use the result of another command as an input for mysql using the | operator:
+#works on Unix-like systems such as macOS and Ubuntu
+cat query.sql | mysql -u root -p classicmodels
+
+mysql -u username -p db_name -e &quot;select * from tblName&quot; &gt; path/to/file # Write a query result to a file,
+# This can be used for export a db as a dump file as well if the file is .sql
+
+Ex) writes the data to the employee.txt file
+mysql -u root -p classicmodels -e &quot;select * from employees&quot; &gt; employees.txt
+</code></pre>
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>

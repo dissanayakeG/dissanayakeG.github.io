@@ -2,7 +2,7 @@ const fs = require("fs");
 const { marked } = require("marked");
 
 // Read markdown file
-const content = fs.readFileSync("ReachInNutShell.md", "utf8");
+const content = fs.readFileSync("input.md", "utf8");
 
 // Convert to HTML
 const converted = marked(content);

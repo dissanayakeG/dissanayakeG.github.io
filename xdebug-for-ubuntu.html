@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br />
+			<h1 id="setup-xdebug-in-ubuntu-with-vs-code">
+				Setup xdebug in ubuntu with VS-Code
+			</h1>
+			<br />
+			<br />
+			<h2 id="identify-your-php-versions">Identify Your PHP Versions</h2>
+			<br />
+			<pre><code class="language-bash">ls /etc/php/
+
+# Check version
+php -v
+which php
+</code></pre>
+			<p>
+				If you need to switch between PHP versions, Make sure to install
+				and configure Xdebug for each version you plan to use.
+			</p>
+			<br />
+			<h2 id="install-xdebug-for-your-php-version">
+				Install Xdebug for Your PHP Version
+			</h2>
+			<br />
+			<pre><code class="language-bash">sudo apt update
+sudo apt install php8.2-xdebug
+</code></pre>
+			<br />
+			<h2 id="configure-xdebug">Configure Xdebug</h2>
+			<br />
+			<pre><code class="language-bash">sudo nano /etc/php/8.2/mods-available/xdebug.ini
+</code></pre>
+			<p>add these lines</p>
+			<pre><code class="language-bash">zend_extension=xdebug.so
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.idekey=VSCODE
+</code></pre>
+			<br />
+			<h2 id="verify-xdebug-installation">Verify Xdebug Installation</h2>
+			<br />
+			<pre><code class="language-bash">php -m | grep xdebug
+
+php -r &quot;phpinfo();&quot; | grep xdebug
+</code></pre>
+			<br />
+			<h2 id="test-xdebug">Test Xdebug</h2>
+			<br />
+			<pre><code class="language-bash">php -m | grep -i xdebug
+</code></pre>
+			<br />
+			<h2 id="test-xdebug-functionality">Test Xdebug Functionality</h2>
+			<br />
+			<pre><code class="language-bash">echo &#39;&lt;?php var_dump(extension_loaded(&quot;xdebug&quot;)); xdebug_info(); ?&gt;&#39; &gt; test_xdebug.php
+php test_xdebug.php
+</code></pre>
+			<ul>
+				<li>
+					You should see bool(true) and Xdebug configuration
+					information without any &quot;already loaded&quot; warnings.
+				</li>
+			</ul>
+			<p><img src="./assets/xdebugInEnabled.png" alt="xdebugInEnabled.png" /></p>
+			<br />
+			<h2 id="troubleshooting">Troubleshooting</h2>
+			<br />
+			<pre><code class="language-bash">tail -f /tmp/xdebug.log
+</code></pre>
+			<br />
+			<h2 id="check-if-there-are-conflicting-xdebug-entries">
+				Check if there are conflicting xdebug entries
+			</h2>
+			<br />
+			<pre><code class="language-bash">grep -r &quot;xdebug&quot; /etc/php/
+</code></pre>
+			<br />
+			<h2 id="restart-server">Restart server</h2>
+			<br />
+			<pre><code class="language-bash"># for apache2
+sudo systemctl restart apache2
+
+# for Nginx
+sudo systemctl restart nginx
+</code></pre>
+			<ul>
+				<li>
+					If everything is set up correctly, Xdebug should be working
+					by now.
+				</li>
+			</ul>
+			<br />
+			<h2 id="laravel-specific-xdebug-configuration">
+				Laravel-Specific Xdebug Configuration
+			</h2>
+			<br />
+			<br />
+			<h3 id="update-xdebug-configuration-for-web-debugging">
+				Update Xdebug Configuration for Web Debugging
+			</h3>
+			<br />
+			<pre><code class="language-bash">sudo nano /etc/php/8.2/mods-available/xdebug.ini
+
+#add these lines
+zend_extension=xdebug
+xdebug.mode=debug,develop
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.idekey=VSCODE
+xdebug.max_nesting_level=512
+xdebug.var_display_max_depth=10
+xdebug.var_display_max_children=256
+xdebug.var_display_max_data=1024
+
+#restart apache server
+sudo systemctl restart apache2
+</code></pre>
+			<br />
+			<h2 id="vs-code-configuration-for-laravel">
+				VS Code Configuration for Laravel
+			</h2>
+			<br />
+			<ul>
+				<li>install xdebug vs-code extension/s</li>
+				<li>
+					Create <code>.vscode/launch.json</code> in your Laravel root
+					directory,
+				</li>
+				<li>
+					<strong>NOTE:</strong> pathMappings in
+					<code>.vscode/launch.json</code>
+				</li>
+				<li>After setting up just click (FN+F5)</li>
+			</ul>
+			<br />
+			<h2 id="for-php-artisan-serve">for PHP artisan serve</h2>
+			<br />
+			<pre><code class="language-json">{
+    &quot;version&quot;: &quot;0.2.0&quot;,
+    &quot;configurations&quot;: [
+        {
+            &quot;name&quot;: &quot;Listen for Xdebug (Laravel Serve)&quot;,
+            &quot;type&quot;: &quot;php&quot;,
+            &quot;request&quot;: &quot;launch&quot;,
+            &quot;port&quot;: 9003,
+            &quot;pathMappings&quot;: {
+                &quot;/path/to/application&quot;: &quot;${workspaceFolder}&quot;
+            },
+            &quot;ignore&quot;: [
+                &quot;**/vendor/**/*.php&quot;
+            ]
+        },
+        {
+            &quot;name&quot;: &quot;Debug Laravel Serve with Xdebug&quot;,
+            &quot;type&quot;: &quot;php&quot;,
+            &quot;request&quot;: &quot;launch&quot;,
+            &quot;program&quot;: &quot;${workspaceFolder}/artisan&quot;,
+            &quot;args&quot;: [&quot;serve&quot;, &quot;--host=127.0.0.1&quot;, &quot;--port=8000&quot;],
+            &quot;cwd&quot;: &quot;${workspaceFolder}&quot;,
+            &quot;runtimeArgs&quot;: [
+                &quot;-dxdebug.mode=debug&quot;,
+                &quot;-dxdebug.client_host=127.0.0.1&quot;,
+                &quot;-dxdebug.client_port=9003&quot;,
+                &quot;-dxdebug.start_with_request=yes&quot;
+            ],
+            &quot;env&quot;: {
+                &quot;XDEBUG_CONFIG&quot;: &quot;idekey=VSCODE&quot;
+            },
+            &quot;ignore&quot;: [
+                &quot;**/vendor/**/*.php&quot;
+            ]
+        }
+    ]
+}
+</code></pre>
+			<br />
+			<h2 id="enable-xdebug-for-cli-and-web">
+				Enable Xdebug for CLI and Web
+			</h2>
+			<br />
+			<pre><code class="language-bash">#Enable for CLI (for artisan commands):
+sudo phpenmod -s cli xdebug
+
+#Enable for Apache/Nginx:
+sudo phpenmod -s apache2 xdebug
+
+# or for nginx with php-fpm
+sudo phpenmod -s fpm xdebug
+</code></pre>
+			<br />
+			<h2 id="restart-services">Restart Services</h2>
+			<br />
+			<pre><code class="language-bash"># For Apache:
+sudo systemctl restart apache2
+
+# For Nginx with PHP-FPM:
+sudo systemctl restart php8.1-fpm 
+sudo systemctl restart nginx
+</code></pre>
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>

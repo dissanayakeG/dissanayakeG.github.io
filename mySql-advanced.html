@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br />
+			<h1 id="stored-procedures">Stored procedures</h1>
+			<br />
+			<br />
+			<h2 id="basic-mysql-stored-procedures">
+				Basic MySQL Stored procedures
+			</h2>
+			<br />
+			<ul>
+				<li>
+					A stored procedure is a wrapper of a set of SQL statements
+					stored in the MySQL database server.
+				</li>
+				<li>
+					If you invoke the same stored procedure again within the
+					same session, MySQL will execute it from the cache without
+					the need for recompilation.
+				</li>
+				<li>
+					The advantages of stored procedures include reduced network
+					traffic, enhanced code reusability, improved security
+					through controlled access, streamlined implementation of
+					business logic, and the ability to grant specific privileges
+					to applications without exposing underlying database
+					structures.
+				</li>
+				<li>
+					The disadvantages of stored procedures include increased
+					memory usage for each connection, challenges in debugging
+					due to a lack of dedicated tools, and the necessity for a
+					specialized skill set, which not all application developers
+					may possess, leading to potential difficulties in both
+					development and maintenance processes.
+				</li>
+				<li>
+					default delimiter (;) uses to separate statements and
+					execute each separately.
+				</li>
+				<li>
+					Since a SP consist of multiple statements, mysql client need
+					a different delimiter in order to treat the entire stored
+					procedure as a single statement.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER //
+
+CREATE PROCEDURE sp_name(parameter_list)
+BEGIN
+   statements;
+END //
+
+DELIMITER ;
+</code></pre>
+			<br />
+			<h3 id="sp-parameter-types">SP Parameter types</h3>
+			<br />
+			<pre><code class="language-sql">[IN | OUT | INOUT] parameter_name datatype[(length)]
+</code></pre>
+			<ol>
+				<li>
+					IN : default | calling program must pass an argument |
+					protected, changing value within SP does not change original
+					value, work with a copy of the value.
+				</li>
+				<li>
+					OUT : can be modified | updated value is then passed back to
+					the calling program | cannot access the initial value of the
+					OUT parameter when they begin.
+				</li>
+				<li>
+					INOUT : calling program may pass the argument | can modify |
+					pass the new value back to the calling program.
+				</li>
+			</ol>
+			<pre><code class="language-sql">#pass a session variable ( @total ) to receive the return value.
+CALL GetOrderCountByStatus(&#39;Shipped&#39;,@total); #1st IN 2nd OUT
+SELECT @total;
+
+#INOUT
+DELIMITER $$
+
+CREATE PROCEDURE SetCounter(
+	INOUT counter INT,
+    IN inc INT
+)
+BEGIN
+	SET counter = counter + inc;
+END$$
+
+DELIMITER ;
+
+SET @counter = 1;
+CALL SetCounter(@counter,1); -- 2
+CALL SetCounter(@counter,1); -- 3
+CALL SetCounter(@counter,5); -- 8
+SELECT @counter; -- 8
+</code></pre>
+			<br />
+			<h3 id="variables">Variables</h3>
+			<br />
+			<pre><code class="language-sql">DECLARE variable_name datatype(size) [DEFAULT default_value];
+DECLARE totalSale DEC(10,2) DEFAULT 0.0;
+
+#Assigning variables
+SET variable_name = value;
+SELECT COUNT(*) INTO productCount FROM products;
+</code></pre>
+			<ul>
+				<li>
+					A variable whose name begins with the @ sign is a session
+					variable, available and accessible until the session ends.
+				</li>
+			</ul>
+			<br />
+			<h3 id="listing-stored-procedures">Listing Stored Procedures</h3>
+			<br />
+			<pre><code class="language-sql">SHOW PROCEDURE STATUS [LIKE &#39;pattern&#39; | WHERE search_condition]
+SHOW PROCEDURE STATUS;
+SHOW PROCEDURE STATUS WHERE db = &#39;classicmodels&#39;;
+SHOW PROCEDURE STATUS LIKE &#39;%Order%&#39;
+</code></pre>
+			<br />
+			<h2 id="conditional-statements">Conditional Statements</h2>
+			<br />
+			<ul>
+				<li>IF statement is different tahat IF() function.</li>
+				<li>
+					IF...THEN | IF...THEN...ELSE | IF...THEN...ELSEIF...ELSE
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER $$
+
+CREATE PROCEDURE GetCustomerLevel(
+    IN  pCustomerNumber INT, 
+    OUT pCustomerLevel  VARCHAR(20))
+BEGIN
+    DECLARE credit DECIMAL(10,2) DEFAULT 0;
+
+    SELECT creditLimit 
+    INTO credit
+    FROM customers
+    WHERE customerNumber = pCustomerNumber;
+
+    IF credit &gt; 50000 THEN
+        SET pCustomerLevel = &#39;PLATINUM&#39;;
+    ELSEIF credit &lt;= 50000 AND credit &gt; 10000 THEN
+        SET pCustomerLevel = &#39;GOLD&#39;;
+    ELSE
+        SET pCustomerLevel = &#39;SILVER&#39;;
+    END IF;
+END$$
+
+DELIMITER ;
+
+CALL GetCustomerLevel(141, @level);
+SELECT @level; #PLATINUM
+</code></pre>
+			<ul>
+				<li>CASE expression if differs from the CASE statement.</li>
+				<li>Simple CASE statement |Searched CASE statement.</li>
+			</ul>
+			<br />
+			<h3 id="simple-case-statement">Simple CASE statement</h3>
+			<br />
+			<ul>
+				<li>
+					To avoid the error when the case_value does not equal any
+					when_value, you can use an empty BEGIN...END block in the
+					ELSE clause.
+				</li>
+				<li>
+					The simple CASE statement tests for equality ( =),
+					therefore, you cannot use it to test equality with NULL
+					because NULL = NULL returns FALSE.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CASE case_value
+    WHEN when_value1 THEN ...
+    WHEN when_value2 THEN ...
+    ELSE 
+        BEGIN
+        END;
+END CASE;
+</code></pre>
+			<br />
+			<h3 id="searched-case-statement">Searched CASE statement</h3>
+			<br />
+			<ul>
+				<li>
+					Use a simple CASE statement to evaluate a specific
+					expression against a series of possible values and execute
+					corresponding actions.
+				</li>
+				<li>
+					Use a searched CASE statement to evaluate various conditions
+					individually, allowing for a more flexible code.
+				</li>
+			</ul>
+			<br />
+			<h2 id="loops">Loops</h2>
+			<br />
+			<pre><code class="language-sql">#LOOP
+
+[label]: LOOP
+    IF condition THEN
+        LEAVE [label]; //The loop exits when the LEAVE statement is reached.
+        #ITERATE [label]; //to skip the current iteration
+    END IF;
+END LOOP;
+
+#WHILE
+
+[begin_label:] WHILE search_condition DO
+    statement_list
+END WHILE [end_label]
+
+# REPEAT
+
+[begin_label:] REPEAT
+    statement;
+UNTIL condition
+END REPEAT [end_label]
+</code></pre>
+			<ul>
+				<li>
+					It’s important to note that the REPEAT checks the condition
+					after the execution of the block, meaning that the block
+					always executes at least once.
+				</li>
+				<li>
+					The LEAVE statement exits the flow control that has a given
+					label.
+				</li>
+				<li>
+					Use the MySQL LEAVE statement to exit a stored procedure or
+					terminate a loop.
+				</li>
+			</ul>
+			<br />
+			<h2 id="error-handling">Error Handling</h2>
+			<br />
+			<br />
+			<h3 id="show-warnings">Show Warnings</h3>
+			<br />
+			<pre><code class="language-sql">SHOW WARNINGS;
+SHOW WARNINGS [LIMIT [offset,] row_count] --&gt; SHOW WARNINGS LIMIT 2;
+SHOW COUNT(*) WARNINGS;
+SELECT @@warning_count; #system variable:
+
+SHOW VARIABLES LIKE &#39;max_error_count&#39;;
+SET max_error_count=2048;
+</code></pre>
+			<ul>
+				<li>
+					MySQL uses the max_error_count system variable to control
+					the maximum number of warnings, errors, and notes that the
+					server can store.
+				</li>
+			</ul>
+			<br />
+			<h3 id="show-errors">Show ERRORS</h3>
+			<br />
+			<ul>
+				<li>
+					The SHOW ERRORS statement is used to display error
+					information about the most recent execution of a statement
+					or a stored procedure.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW ERRORS;
+SHOW ERRORS [LIMIT [offset,] row_count];
+SHOW COUNT(*) ERRORS;
+SELECT @@error_count; # system variable
+</code></pre>
+			<br />
+			<h3 id="declare-handler">DECLARE … HANDLER</h3>
+			<br />
+			<ul>
+				<li>
+					Use MySQL handlers to handle conditions including warnings
+					and errors in stored procedures.
+				</li>
+				<li>
+					Use the DECLARE...HANDLER statement to declare a handler.
+				</li>
+				<li>
+					SQLSTATE is a five-character that provides information about
+					the result of an SQL operation.
+					<ul>
+						<li>An SQLSTATE consists of two parts:</li>
+					</ul>
+					<ol>
+						<li>
+							Class Code (First two characters): Indicates the
+							general category of the error.
+						</li>
+						<li>
+							Subclass Code (Next three characters): Provides more
+							specific information about the error within the
+							general category.
+						</li>
+					</ol>
+				</li>
+				<li>
+					For example, a SQLSTATE code of ’42S02′ indicates a missing
+					table, where ’42’ is the class code for syntax error or
+					access rule violation, and ‘S02’ is the subclass code
+					indicating that the table is not found.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DECLARE { EXIT | CONTINUE } HANDLER
+    FOR condition_value [, condition_value] ...
+    statement
+
+#Example
+DELIMITER //
+
+CREATE PROCEDURE insert_user(
+	IN p_username VARCHAR(50), 
+    IN p_email VARCHAR(50)
+)
+BEGIN
+  -- SQLSTATE for unique constraint violation
+  DECLARE EXIT HANDLER FOR SQLSTATE &#39;23000&#39;
+  BEGIN
+    -- Handler actions when a duplicate username is detected
+    SELECT &#39;Error: Duplicate username. Please choose a different username.&#39; AS Message;
+  END;
+
+  -- Attempt to insert the user into the table
+  INSERT INTO users (username, email) VALUES (p_username, p_email);
+
+  -- If the insertion was successful, display a success message
+  SELECT &#39;User inserted successfully&#39; AS Message;
+
+END //
+
+DELIMITER ;
+
+#call
+CALL insert_user(&#39;jane&#39;,&#39;jane@example.com&#39;);
+</code></pre>
+			<br />
+			<h3 id="declare-condition">DECLARE ... CONDITION</h3>
+			<br />
+			<ul>
+				<li>
+					Use MySQL DECLARE ... CONDITION to associate a name with a
+					condition specified by a MySQL error code or SQLSTATE value
+					to make the stored procedure code more readable and
+					expressive.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DECLARE unknown_table CONDITION FOR 1051;
+DECLARE CONTINUE HANDLER FOR unknown_table 
+  BEGIN
+    -- body of handler
+  END;
+</code></pre>
+			<br />
+			<h3 id="signals">SIGNALs</h3>
+			<br />
+			<ul>
+				<li>
+					The MySQL SIGNAL statement allows you to raise an exception
+					within a stored program, including a stored procedure, a
+					stored function, a trigger, or an event.
+				</li>
+				<li>
+					condition_value can be An SQLSTATE valu or A named condition
+					is defined with DECLARE ... CONDITION statement.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER //
+
+CREATE PROCEDURE update_salary(
+	IN p_employee_id INT,
+    IN p_salary DECIMAL
+)
+BEGIN 
+	DECLARE employee_count INT;
+    
+    -- check if employee exists
+    SELECT COUNT(*) INTO employee_count 
+    FROM employees
+    WHERE id = p_employee_id;
+    
+    IF employee_count = 0 THEN
+		SIGNAL SQLSTATE &#39;45000&#39;
+		SET MESSAGE_TEXT = &#39;Employee not found&#39;;
+    END IF;
+    
+    -- validate salary
+    IF p_salary &lt; 0 THEN
+		SIGNAL SQLSTATE &#39;45000&#39;
+		SET MESSAGE_TEXT = &#39;Salary cannot be negative&#39;;
+    END IF;
+    
+    -- if every is fine, update the salary
+    UPDATE employees
+    SET salary = p_salary
+    WHERE id = p_employee_id;    
+
+END //
+
+DELIMITER ;
+</code></pre>
+			<br />
+			<h3 id="resignal">RESIGNAL</h3>
+			<br />
+			<ul>
+				<li>Use the RESIGNAL statement to re-raise an exception.</li>
+			</ul>
+			<pre><code class="language-sql">#1) Using MySQL RESIGNAL to re-raise the same exception
+DELIMITER //
+
+CREATE PROCEDURE DropTableXYZ()
+BEGIN
+  -- reraise the error
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    RESIGNAL;
+  END;
+  
+  -- drop a table that doesn&#39;t exist
+  DROP TABLE XYZ;
+END//
+
+DELIMITER ;
+
+-- ERROR 1051 (42S02): Unknown table &#39;classicmodels.xyz&#39;
+
+#2) Using RESIGNAL statement with new signal information	
+BEGIN
+  -- reraise the error
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    RESIGNAL SET MYSQL_ERRNO = 5;
+  END;
+  
+  -- drop a table that doesn&#39;t exist
+  DROP TABLE XYZ;
+END//
+
+-- ERROR 5 (42S02): Unknown table &#39;classicmodels.xyz&#39;
+
+#3) Re-rasing exception with new condition value and signal information:
+BEGIN
+  -- reraise the error
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    RESIGNAL SQLSTATE &#39;45000&#39; SET MYSQL_ERRNO = 5;
+  END;
+  
+  -- drop a table that doesn&#39;t exist
+  DROP TABLE XYZ;
+END//
+
+-- ERROR 5 (45000): Unknown table &#39;classicmodels.xyz&#39;
+</code></pre>
+			<br />
+			<h2 id="cursor">Cursor</h2>
+			<br />
+			<ul>
+				<li>
+					Cursors are used in stored procedures to iterate through a
+					result set returned by a SELECT statement.
+				</li>
+				<li>
+					Cursors are used to process a result set row by row
+					individually.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER $$
+
+CREATE PROCEDURE create_email_list (
+	INOUT email_list TEXT
+)
+BEGIN
+	DECLARE done BOOL DEFAULT false;
+	DECLARE email_address VARCHAR(100) DEFAULT &quot;&quot;;
+    
+	-- declare cursor for employee email
+	DECLARE cur CURSOR FOR SELECT email FROM employees;
+
+	-- declare NOT FOUND handler
+	DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET done = true;
+	
+    -- open the cursor
+	OPEN cur;
+	
+    SET email_list = &#39;&#39;;
+	
+    process_email: LOOP
+		
+        FETCH cur INTO email_address;
+        
+		IF done = true THEN 
+			LEAVE process_email;
+		END IF;
+		
+        -- concatenate the email into the emailList
+		SET email_list = CONCAT(email_address,&quot;;&quot;,email_list);
+	END LOOP;
+    
+    -- close the cursor
+	CLOSE cur;
+
+END$$
+
+DELIMITER ;
+</code></pre>
+			<br />
+			<h3 id="prepared-statement">Prepared Statement</h3>
+			<br />
+			<ul>
+				<li>
+					helps you enhance the security and performance of database
+					queries.
+				</li>
+				<li>
+					Prepared statements allow you to write SQL queries with
+					placeholders for parameters, and then bind values to those
+					parameters at runtime. They can help prevent SQL injection
+					attacks and optimize query execution.
+				</li>
+			</ul>
+			<pre><code class="language-sql">PREPARE stmt_name FROM preparable_stmt;
+SET @var_name1 = value1;
+SET @var_name2 = value2;
+EXECUTE stmt_name [USING @var_name [, @var_name] ...];
+{DEALLOCATE | DROP} PREPARE stmt_name;
+</code></pre>
+			<ul>
+				<li>
+					The preparable_stmt is sent to the MySQL server with
+					placeholders (?) for parameters. Upon receiving the
+					statement, the MySQL server parses, optimizes, and
+					precompiles the query, and then creates the prepared
+					statement.
+				</li>
+				<li>
+					Note : Note that you can use only user variables as the
+					values for the parameters.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+PREPARE insert_user FROM &#39;INSERT INTO users (username, email) VALUES (?, ?)&#39;;
+SET @username = &#39;john_doe&#39;;
+SET @email = &#39;jone@example.com&#39;;
+EXECUTE insert_user USING @username, @email;
+
+#reuse, This time, MySQL will use the precompiled statement:
+SET @username = &#39;jane_doe&#39;;
+SET @email = &#39;jane@example.com&#39;;
+EXECUTE insert_user USING @username, @email;
+DEALLOCATE PREPARE insert_user;
+</code></pre>
+			<br />
+			<h2 id="stored-functions">Stored Functions</h2>
+			<br />
+			<ul>
+				<li>
+					A stored function is a specialized type of stored program
+					designed to return a single value. Typically, you use stored
+					functions to encapsulate common formulas or business rules,
+					making them reusable across SQL statements or other stored
+					programs.
+				</li>
+				<li>
+					Unlike a stored procedure, you can use a stored function in
+					SQL statements wherever you use an expression.
+				</li>
+				<li>
+					By default, stored functions consider all parameters as IN
+					parameters. You cannot specify IN , OUT or INOUT modifiers
+					to parameters
+				</li>
+				<li>
+					A deterministic function always returns the same result for
+					the same input parameters, while a non-deterministic
+					function produces different results for the same input
+					parameters.
+				</li>
+				<li>
+					Inside the body section, you need to include at least one
+					RETURN statement. The RETURN statement sends a value to the
+					calling programs.
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER $$
+
+CREATE FUNCTION CustomerLevel(
+	credit DECIMAL(10,2)
+) 
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    DECLARE customerLevel VARCHAR(20);
+
+    IF credit &gt; 50000 THEN
+		SET customerLevel = &#39;PLATINUM&#39;;
+    ELSEIF (credit &gt;= 50000 AND 
+			credit &lt;= 10000) THEN
+        SET customerLevel = &#39;GOLD&#39;;
+    ELSEIF credit &lt; 10000 THEN
+        SET customerLevel = &#39;SILVER&#39;;
+    END IF;
+	-- return the customer level
+	RETURN (customerLevel);
+END$$
+
+DELIMITER ;
+</code></pre>
+			<pre><code class="language-sql">SHOW FUNCTION STATUS WHERE db = &#39;classicmodels&#39;;
+</code></pre>
+			<ul>
+				<li>
+					It’s important to notice that if a stored function contains
+					SQL statements that retrieve data from tables, then you
+					should avoid using it in other SQL statements; otherwise,
+					the stored function may slow down the query speed.
+				</li>
+				<li>
+					stored functions can be called from select statements,
+					stored procedures...ect EX)
+				</li>
+			</ul>
+			<pre><code class="language-sql">SELECT customerName, CustomerLevel(creditLimit)
+FROM customers ORDER BY customerName;
+</code></pre>
+			<br />
+			<h3 id="drop-function">DROP FUNCTION</h3>
+			<br />
+			<pre><code class="language-sql">DROP FUNCTION [IF EXISTS] function_name;
+</code></pre>
+			<br />
+			<h3 id="listing-stored-functions">Listing Stored Functions</h3>
+			<br />
+			<pre><code class="language-sql">SHOW FUNCTION STATUS [LIKE &#39;pattern&#39; | WHERE search_condition];
+SHOW FUNCTION STATUS; # shows all stored functions in the current MySQL server
+SHOW FUNCTION STATUS WHERE db = &#39;classicmodels&#39;;
+SHOW FUNCTION STATUS LIKE &#39;%pattern%&#39;;
+#Note that the SHOW FUNCTION STATUS only shows the function that you have a privilege to access.
+</code></pre>
+			<br />
+			<h2 id="stored-program-security">Stored Program Security</h2>
+			<br />
+			<ul>
+				<li>
+					<p>
+						In MySQL, stored programs including stored procedures
+						stored functions, triggers, and events execute within a
+						security context which determines their privileges.
+					</p>
+				</li>
+				<li>
+					<p>
+						MySQL uses DEFINER and SQL SECURITY characteristics to
+						control these privileges.
+					</p>
+				</li>
+			</ul>
+			<br />
+			<h2 id="transactions">Transactions</h2>
+			<br />
+			<ul>
+				<li>
+					A transaction is a sequence of one or more SQL statements
+					that are executed as a single unit of work.
+				</li>
+				<li>
+					By default, when you execute an SQL statement, MySQL
+					automatically wraps it in a transaction and commits the
+					transaction automatically.
+				</li>
+				<li>
+					To instruct MySQL to not start a transaction implicitly and
+					commit the changes automatically, you set the value of the
+					autocommit variable to 0 or OFF:
+				</li>
+			</ul>
+			<pre><code class="language-sql">SET autocommit = OFF; #or
+SET autocommit = 0;
+</code></pre>
+			<ul>
+				<li>
+					To enable the auto-commit mode, you set the value of the
+					autocommit variable to 1 or ON:
+				</li>
+			</ul>
+			<pre><code class="language-sql">SET autocommit = 1; #or
+SET autocommit = ON;
+</code></pre>
+			<ul>
+				<li>
+					Use the START TRANSACTION statement to start a transaction.
+				</li>
+				<li>
+					Use the COMMIT statement to apply the changes made during
+					the transaction to the database.
+				</li>
+				<li>
+					Use the ROLLBACK statement to roll back the changes made
+					during the transaction and revert the state of the database
+					before the transaction starts.
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE DATABASE banks;
+USE banks;
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255)
+);
+
+START TRANSACTION;
+INSERT INTO users (id, username) 
+VALUES (1, &#39;john&#39;);
+
+
+UPDATE users 
+SET email = &#39;john.doe@example.com&#39; 
+WHERE id = 1;
+
+# SELECT * FROM users; shows the inserted data only for current session since it didn&#39;t commit yet
+COMMIT;
+
+# ROLLBACK; - undoes all the changes made during the transaction, reverting the database to its state before the transaction started
+</code></pre>
+			<ul>
+				<li>
+					transactions can be used in Stored Procedures for more
+					advance transactions (<a
+						href="#https://www.mysqltutorial.org/mysql-stored-procedure/mysql-transactions/"
+						>See</a
+					>)
+				</li>
+			</ul>
+			<br />
+			<h1 id="triggers">Triggers</h1>
+			<br />
+			<ul>
+				<li>
+					A trigger is a stored program invoked automatically in
+					response to an event such as insert, update, or delete that
+					occurs in the associated table
+				</li>
+				<li>
+					The SQL standard defines two types of triggers: row-level
+					triggers and statement-level triggers.
+				</li>
+				<li>MySQL supports only row-level triggers.</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER //
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- Trigger body (SQL statements)
+END;
+//
+
+DELIMITER ;
+</code></pre>
+			<ul>
+				<li>
+					If you have multiple statements in the trigger_body, you
+					have to use the BEGIN END block and change the default
+					delimiter.
+				</li>
+				<li>
+					The trigger body can access the values of the column being
+					affected by the operation.
+				</li>
+				<li>
+					To distinguish between the value of the columns BEFORE and
+					AFTER the event has fired, you use the NEW and OLD
+					modifiers. Ex: OLD.description, NEW.description
+				</li>
+				<li>No OLD BEFORE INSERT and no NEW value AFTER DELETE</li>
+				<li>
+					In an AFTER INSERT trigger, you can access the NEW values
+					but you cannot change them.
+				</li>
+				<li>
+					In a BEFORE UPDATE trigger, you can update the NEW values
+					but cannot update the OLD values.
+				</li>
+				<li>
+					In a AFTER UPDATE trigger, you can access OLD and NEW rows
+					but cannot update them.
+				</li>
+				<li>
+					In a BEFORE DELETE trigger, you can access the OLD row but
+					cannot update it.
+				</li>
+				<li>
+					In an AFTER DELETE trigger, you can access the OLD row but
+					cannot change it.
+				</li>
+				<li>
+					The DROP TRIGGER requires the TRIGGER privilege for the
+					table associated with the trigger.
+				</li>
+				<li>
+					Note that if you drop a table, MySQL will automatically drop
+					all triggers associated with the table.
+				</li>
+			</ul>
+			<pre><code class="language-sql"># to drop a trigger
+DROP TRIGGER [IF EXISTS] [schema_name.]trigger_name;
+
+# to show
+SHOW TRIGGERS
+[{FROM | IN} database_name]
+[LIKE &#39;pattern&#39; | WHERE search_condition];
+
+SHOW TRIGGERS FROM database_name LIKE &#39;pattern&#39;; # similar to SHOW TRIGGERS IN database_name LIKE &#39;pattern&#39;;
+</code></pre>
+			<ul>
+				<li>
+					Notice that to execute the SHOW TRIGGERS statement, you need
+					to have the SUPER privilege.
+				</li>
+				<li>
+					Below is the Syntax for defining a trigger that will
+					activate before or after an existing trigger in response to
+					the same event and action time:
+				</li>
+				<li>Only for MySQL 5.7.2+</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER $$
+
+CREATE TRIGGER trigger_name
+{BEFORE|AFTER}{INSERT|UPDATE|DELETE} 
+ON table_name FOR EACH ROW 
+{FOLLOWS|PRECEDES} existing_trigger_name
+BEGIN
+    -- statements
+END$$
+
+DELIMITER ;
+</code></pre>
+			<br />
+			<h2 id="how-to-call-a-stored-procedure-from-a-trigger">
+				How To Call a Stored Procedure From a Trigger
+			</h2>
+			<br />
+			<ul>
+				<li>
+					The following statement creates a BEFORE UPDATE trigger that
+					calls the stored procedure CheckWithdrawal:
+				</li>
+			</ul>
+			<pre><code class="language-sql">DELIMITER $$
+
+CREATE TRIGGER before_accounts_update
+BEFORE UPDATE
+ON accounts FOR EACH ROW
+BEGIN
+    CALL CheckWithdrawal (
+        OLD.accountId, 
+        OLD.amount - NEW.amount
+    );
+END$$
+
+DELIMITER ;
+</code></pre>
+			<br />
+			<h1 id="events">Events</h1>
+			<br />
+			<ul>
+				<li>
+					MySQL events are similar to cron jobs on Linux or task
+					schedulers on Windows, providing a tool to automate
+					recurring tasks within the MySQL database server.
+				</li>
+			</ul>
+			<br />
+			<h2 id="lifecycle">lifecycle</h2>
+			<br />
+			<ul>
+				<li>
+					Creation -&gt; Activation -&gt; Modification -&gt;
+					Deactivation -&gt; Removal
+				</li>
+				<li>
+					MySQL uses a special thread called an event scheduler thread
+					to execute all scheduled events.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW PROCESSLIST; #view the status of the event scheduler thread
+SET GLOBAL event_scheduler = ON; #to enable and start
+SET GLOBAL event_scheduler = OFF;
+</code></pre>
+			<br />
+			<h2 id="create-an-event">Create an Event</h2>
+			<br />
+			<pre><code class="language-sql">CREATE EVENT [IF NOT EXIST] event_name
+ON SCHEDULE &lt;schedule&gt; #this can be vary based on the schedule
+DO
+event_body
+
+#If the event is a one-time event, you use the syntax:
+AT timestamp [+ INTERVAL]
+
+#If the event is a recurring event, you use the EVERY clause:
+EVERY interval 
+STARTS timestamp [+INTERVAL] 
+ENDS timestamp [+INTERVAL]
+</code></pre>
+			<ul>
+				<li>
+					If you have multiple statements, you can use the BEGIN...END
+					block. Please note that you can call a stored procedure
+					inside the body of an event.
+				</li>
+				<li>Event are automatically dropped when it expires</li>
+				<li>
+					To keep the event after it has expired, you use the ON
+					COMPLETION PRESERVE clause.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW EVENTS FROM mydb; #To show all events in the mydb database
+
+CREATE EVENT one_time_log
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+ON COMPLETION PRESERVE
+DO
+   INSERT INTO messages(message)
+   VALUES(&#39;Preserved One-time event&#39;);
+</code></pre>
+			<br />
+			<h2 id="alter-event">ALTER EVENT</h2>
+			<br />
+			<pre><code class="language-sql">ALTER EVENT [IF EXISTS] event_name
+ON SCHEDULE schedule
+[ON COMPLETION [NOT] PRESERVE]
+[COMMENT &#39;comment&#39;]
+[ENABLE | DISABLE]
+DO event_body
+
+#Changing the schedule
+ALTER EVENT test_event
+ON SCHEDULE EVERY 2 MINUTE;
+
+#Changing the event body
+ALTER EVENT test_event
+DO
+   INSERT INTO messages(message)
+   VALUES(&#39;New message&#39;);
+#Disabling an event
+ALTER EVENT test_event
+DISABLE;
+
+#Enabling an event
+ALTER EVENT test_event
+ENABLE;
+
+#Renaming an event
+ALTER EVENT test_event
+RENAME TO sample_event;
+
+#Moving an event to another database
+ALTER EVENT mydb.sample_event
+RENAME TO newdb.test_event;
+</code></pre>
+			<br />
+			<h2 id="drop-event">DROP EVENT</h2>
+			<br />
+			<pre><code class="language-sql">DROP EVENT [IF EXISTS] event_name [, event_name] ...;
+</code></pre>
+			<ul>
+				<li>
+					<p>
+						Note that you can use the wildcard % in the event name
+						to remove all the events that match a specific pattern.
+					</p>
+				</li>
+				<li>
+					<p>
+						To perform the DROP EVENT statement, you need to have
+						EVENT privilege for the database to which the event
+						belongs.
+					</p>
+				</li>
+			</ul>
+			<br />
+			<h2 id="show-events">SHOW EVENTS</h2>
+			<br />
+			<pre><code class="language-sql">SHOW EVENTS [FROM db_name] 
+[LIKE &#39;pattern&#39; | WHERE expr];
+</code></pre>
+			<br />
+			<h1 id="views">Views</h1>
+			<br />
+			<ul>
+				<li>
+					By definition, a view is a named query stored in the
+					database catalog.
+				</li>
+				<li>
+					Note that a view does not physically store the data. When
+					you issue the SELECT statement against the view, MySQL
+					executes the underlying query specified in the view’s
+					definition and returns the result set. For this reason,
+					sometimes, a view is referred to as a virtual table.
+				</li>
+			</ul>
+			<br />
+			<h2 id="create-view">CREATE VIEW</h2>
+			<br />
+			<pre><code class="language-sql">CREATE [OR REPLACE] VIEW [db_name.]view_name [(column_list)]
+AS
+  select-statement;
+
+SHOW TABLES; #gives all the tables and viwes since both shred same nemespace
+SHOW FULL TABLES; #To know which object is a view or table
+</code></pre>
+			<ul>
+				<li>
+					MySQL allows you to create a view based on another view.
+				</li>
+			</ul>
+			<br />
+			<h2 id="view-processing-algorithms">View Processing Algorithms</h2>
+			<br />
+			<pre><code class="language-sql">#CREATE VIEW
+CREATE [OR REPLACE][ALGORITHM = {MERGE | TEMPTABLE | UNDEFINED}] VIEW 
+   view_name[(column_list)]
+AS 
+   select-statement;
+
+#ALTER VIEW
+CREATE [ALGORITHM = {MERGE | TEMPTABLE | UNDEFINED}] VIEW 
+   view_name[(column_list)] 
+AS 
+   select-statement;
+</code></pre>
+			<br />
+			<h2 id="updatable-views">Updatable views</h2>
+			<br />
+			<ul>
+				<li>
+					In MySQL, views are not only queryable but also updatable.
+					(INSERT | UPDATE | DELETE)
+				</li>
+				<li>
+					These modify rows of the base table through the updatable
+					view.
+				</li>
+				<li>
+					However, to create an updatable view, the SELECT statement
+					defining the view must not contain any of the following
+					elements:
+				</li>
+			</ul>
+			<pre><code>Aggregate functions such as MIN, MAX, SUM, AVG, and COUNT.
+DISTINCT
+GROUP BY clause.
+HAVING clause.
+UNION or UNION ALL clause.
+Left join or outer join.
+Subquery in the SELECT clause or in the WHERE clause that refers to the table appeared in the FROM clause.
+Reference non-updatable views in the FROM clause.
+Use literal values.
+Multiple references to any column of the base table.
+</code></pre>
+			<ul>
+				<li>
+					If you create a view with the TEMPTABLE algorithm, the view
+					is not updatable.
+				</li>
+				<li>
+					Note that it is possible to create updatable views based on
+					multiple tables using an inner join.
+				</li>
+			</ul>
+			<br />
+			<h2 id="with-check-option">WITH CHECK OPTION</h2>
+			<br />
+			<ul>
+				<li>
+					<p>
+						Sometimes, you create a view to reveal the partial data
+						of a table. However, a simple view is updatable, and
+						therefore, it is possible to update data that is not
+						visible through the view. This update makes the view
+						inconsistent.
+					</p>
+				</li>
+				<li>
+					<p>
+						To ensure the consistency of the view, you use the WITH
+						CHECK OPTION clause when you create or modify the view.
+					</p>
+				</li>
+				<li>
+					<p>
+						The WITH CHECK OPTION is an optional clause of the
+						CREATE VIEW statement. This WITH CHECK OPTION prevents
+						you from updating or inserting rows that are not visible
+						through the view.
+					</p>
+				</li>
+				<li>
+					<p>
+						In other words, whenever you update or insert a row of
+						the base tables through a view, MySQL ensures that the
+						insert or update operation conforms with the definition
+						of the view.
+					</p>
+				</li>
+			</ul>
+			<pre><code class="language-sql">CREATE OR REPLACE VIEW view_name 
+AS
+  select_statement
+WITH CHECK OPTION;
+</code></pre>
+			<br />
+			<h2 id="show-view">Show View</h2>
+			<br />
+			<ul>
+				<li>
+					Note that the SHOW TABLES statement returns only the views
+					that you have the privilege to access.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW FULL TABLES
+[{FROM | IN } database_name]
+WHERE table_type = &#39;VIEW&#39;;
+
+SHOW FULL TABLES
+[{FROM | IN } database_name]
+LIKE pattern;
+
+#Query data from the table information_schema.tables to get the views in a database.
+SELECT * FROM information_schema.tables; 
+</code></pre>
+			<br />
+			<h2 id="show-create-view">SHOW CREATE VIEW</h2>
+			<br />
+			<ul>
+				<li>
+					Use the SHOW CREATE VIEW statement to display the statement
+					used to create the view.
+				</li>
+			</ul>
+			<pre><code class="language-sql">SHOW CREATE VIEW view_name;
+</code></pre>
+			<br />
+			<h2 id="rename-view">Rename View</h2>
+			<br />
+			<pre><code class="language-sql">RENAME TABLE original_view_name TO new_view_name;
+</code></pre>
+			<ul>
+				<li>
+					Another indirect way to rename a view is to use a sequence
+					of the DROP VIEW and CREATE VIEW statement.
+				</li>
+			</ul>
+			<br />
+			<h2 id="drop-view">DROP VIEW</h2>
+			<br />
+			<pre><code class="language-sql">DROP VIEW [IF EXISTS] view_name1 [,view_name2]...;
+</code></pre>
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>

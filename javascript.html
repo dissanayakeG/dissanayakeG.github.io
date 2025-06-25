@@ -1,0 +1,3564 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br />
+			<h1 id="javascript-fundamentals">JavaScript Fundamentals</h1>
+			<br />
+			<br />
+			<h2 id="introduction-to-javascript">Introduction to JavaScript</h2>
+			<br />
+			<p>
+				JavaScript was created in 1995 by Brendan Eich while he was
+				working at Netscape. It was originally called Mocha, then
+				renamed to LiveScript, and finally to JavaScript. Today,
+				JavaScript is one of the most popular programming languages in
+				the world, primarily used for web development.
+			</p>
+			<p>JavaScript consists of three main components:</p>
+			<ul>
+				<li>
+					<strong>ECMAScript</strong>: The core language specification
+				</li>
+				<li>
+					<strong>DOM (Document Object Model)</strong>: Allows
+					JavaScript to interact with HTML and CSS
+				</li>
+				<li>
+					<strong>BOM (Browser Object Model)</strong>: Allows
+					JavaScript to interact with the browser
+				</li>
+			</ul>
+			<br />
+			<h2 id="variables-and-data-types">Variables and Data Types</h2>
+			<br />
+			<br />
+			<h3 id="variable-basics">Variable Basics</h3>
+			<br />
+			<p>
+				In JavaScript, variables are containers for storing data values.
+				Here&#39;s how to create and use them:
+			</p>
+			<pre><code class="language-javascript">// Declaring variables
+let name = &quot;John&quot;;         // Using let (recommended)
+var age = 30;              // Using var (older style)
+const PI = 3.14;           // Using const (for values that won&#39;t change)
+</code></pre>
+			<p>Important rules for variables:</p>
+			<ul>
+				<li>
+					Cannot start with digits or special characters (except $ and
+					_)
+				</li>
+				<li>
+					Use camelCase by convention (e.g., <code>firstName</code>,
+					<code>totalAmount</code>)
+				</li>
+				<li>
+					JavaScript is dynamically typed (you don&#39;t need to
+					specify the type)
+				</li>
+				<li>
+					In contrast, languages like Java and C# are statically typed
+				</li>
+			</ul>
+			<br />
+			<h3 id="data-types">Data Types</h3>
+			<br />
+			<p>JavaScript has two main categories of data types:</p>
+			<br />
+			<h4 id="1-primitive-types">1. Primitive Types</h4>
+			<br />
+			<p>These are simple, immutable data types:</p>
+			<ul>
+				<li>
+					<p>
+						<strong>undefined</strong>: A variable that has been
+						declared but not assigned a value
+					</p>
+					<pre><code class="language-javascript">let undeclaredVar;
+console.log(typeof undeclaredVar); // undefined
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>null</strong>: Represents the intentional
+						absence of any object value
+					</p>
+					<pre><code class="language-javascript">let emptyValue = null;
+console.log(null == undefined); // true (loose equality)
+console.log(null === undefined); // false (strict equality)
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>NaN</strong>: Stands for &quot;Not a
+						Number&quot; - a special numeric value indicating an
+						invalid number
+					</p>
+					<pre><code class="language-javascript">console.log(&#39;a&#39; / 2); // NaN
+console.log(NaN == NaN); // false (NaN doesn&#39;t equal anything, even itself)
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>string</strong>: Text data (immutable in
+						JavaScript)
+					</p>
+					<pre><code class="language-javascript">let greeting = &quot;Hello&quot;;
+// Strings in JavaScript are immutable - operations create new strings
+let newGreeting = greeting + &quot; World&quot;; // Creates a new string
+</code></pre>
+				</li>
+				<li>
+					<p><strong>boolean</strong>: true or false values</p>
+					<pre><code class="language-javascript">let isActive = true;
+let isComplete = false;
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>symbol</strong>: A unique and immutable
+						primitive value
+					</p>
+					<pre><code class="language-javascript">let s1 = Symbol(); // Creates a new unique value
+console.log(Symbol() == Symbol()); // false
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>bigint</strong>: For representing large integers
+					</p>
+					<pre><code class="language-javascript">let bigNumber = 123456789012345678901234567890n; // The &#39;n&#39; suffix makes it a BigInt
+</code></pre>
+				</li>
+			</ul>
+			<br />
+			<h4 id="2-complex-types">2. Complex Types</h4>
+			<br />
+			<p>These are more complex data structures:</p>
+			<ul>
+				<li>
+					<strong>Object</strong>: A collection of properties
+					(key-value pairs)
+					<pre><code class="language-javascript">let person = {
+  name: &quot;John&quot;,
+  age: 25,
+  isEmployed: true
+};
+
+// Accessing properties
+console.log(person.name);        // Using dot notation
+console.log(person[&quot;age&quot;]);      // Using array notation
+
+// Adding/modifying properties
+person.location = &quot;New York&quot;;
+
+// Deleting properties
+delete person.age;
+
+// Checking if a property exists
+console.log(&quot;name&quot; in person);   // true
+</code></pre>
+				</li>
+			</ul>
+			<br />
+			<h2 id="helpful-features">Helpful Features</h2>
+			<br />
+			<br />
+			<h3 id="numeric-separator">Numeric Separator</h3>
+			<br />
+			<p>
+				For better readability of large numbers: It&#39;s important to
+				note that all numbers in JavaScript are floating-point numbers.
+			</p>
+			<pre><code class="language-javascript">let amount = 120_201_123.05; // Same as 120201123.05
+let billion = 1_000_000_000;
+let binary = 0b1010_1010;    // Binary
+let hex = 0x1A_2B_3C;        // Hexadecimal
+</code></pre>
+			<br />
+			<h3 id="boolean-conversion">Boolean Conversion</h3>
+			<br />
+			<p>
+				The <code>Boolean()</code> function converts values to boolean:
+			</p>
+			<pre><code class="language-javascript">// These convert to true
+Boolean(&quot;Hello&quot;);    // Non-empty string
+Boolean(42);         // Non-zero number
+Boolean({});         // Any object
+
+// These convert to false
+Boolean(&quot;&quot;);         // Empty string
+Boolean(0);          // Zero
+Boolean(NaN);        // Not a Number
+Boolean(null);       // Null
+Boolean(undefined);  // Undefined
+</code></pre>
+			<br />
+			<h3 id="string-features">String Features</h3>
+			<br />
+			<br />
+			<h4 id="template-literals">Template Literals</h4>
+			<br />
+			<pre><code class="language-javascript">let name = &quot;Sarah&quot;;
+let greeting = `Hello, I&#39;m ${name}!`; // String interpolation
+</code></pre>
+			<br />
+			<h4 id="string-access">String Access</h4>
+			<br />
+			<pre><code class="language-javascript">let word = &quot;Hello&quot;;
+console.log(word[0]);                 // &quot;H&quot; (first character)
+console.log(word[word.length - 1]);   // &quot;o&quot; (last character)
+</code></pre>
+			<br />
+			<h4 id="string-conversion">String Conversion</h4>
+			<br />
+			<pre><code class="language-javascript">let num = 42;
+let str1 = String(num);    // &quot;42&quot;
+let str2 = num + &quot;&quot;;       // &quot;42&quot;
+let str3 = num.toString(); // &quot;42&quot; (doesn&#39;t work for undefined and null)
+</code></pre>
+			<br />
+			<h2 id="value-types-vs-reference-types">
+				Value Types vs Reference Types
+			</h2>
+			<br />
+			<p>
+				Understanding how JavaScript stores and passes values is
+				crucial:
+			</p>
+			<br />
+			<h3 id="primitive-vs-reference-values">
+				Primitive vs Reference Values
+			</h3>
+			<br />
+			<ul>
+				<li>
+					Primitive values (like numbers, strings) are stored directly
+					in memory (on the stack)
+				</li>
+				<li>
+					Reference values (objects, arrays, functions) store a
+					reference pointing to the actual data (on the heap)
+				</li>
+			</ul>
+			<p>
+				When you assign or pass primitive values, JavaScript creates
+				copies:
+			</p>
+			<pre><code class="language-javascript">let a = 5;
+let b = a;  // &#39;b&#39; gets a copy of the value
+a = 10;     // Changing &#39;a&#39; doesn&#39;t affect &#39;b&#39;
+console.log(b);  // Still 5
+</code></pre>
+			<p>
+				When you assign or pass objects, JavaScript copies the
+				reference, not the actual data:
+			</p>
+			<pre><code class="language-javascript">let obj1 = {name: &quot;John&quot;};
+let obj2 = obj1;           // Both variables reference the same object
+obj1.name = &quot;Mike&quot;;        // Changes affect both variables
+console.log(obj2.name);    // &quot;Mike&quot;
+</code></pre>
+			<p>This diagram helps visualize it:</p>
+			<table>
+				<thead>
+					<tr>
+						<th>Stack (Fixed size)</th>
+						<th>Heap (Dynamic size)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Primitive values</td>
+						<td>Object data</td>
+					</tr>
+					<tr>
+						<td>References to objects →</td>
+						<td>← Referenced by stack variables</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				<img
+					src="./assets/stackAndHeapInJs.png"
+					alt="stackAndHeapInJs.png"
+				/>
+			</p>
+			<br />
+			<h2 id="arrays">Arrays</h2>
+			<br />
+			<p>Arrays are special objects used to store ordered collections:</p>
+			<pre><code class="language-javascript">// Creating arrays
+let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
+let numbers = new Array(1, 2, 3);     // Using constructor
+let emptyWithSize = new Array(5);     // Creates array with 5 empty slots
+
+// Common array operations
+colors.push(&quot;yellow&quot;);       // Add to end: [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;yellow&quot;]
+colors.unshift(&quot;purple&quot;);    // Add to beginning: [&quot;purple&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;yellow&quot;]
+colors.pop();                // Remove from end: [&quot;purple&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]
+colors.shift();              // Remove from beginning: [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]
+let position = colors.indexOf(&quot;green&quot;);  // Find index: 1
+let isArray = Array.isArray(colors);     // Check if array: true
+</code></pre>
+			<br />
+			<h2 id="operators">Operators</h2>
+			<br />
+			<br />
+			<h3 id="arithmetic-operators">Arithmetic Operators</h3>
+			<br />
+			<p>
+				JavaScript handles type conversion automatically in arithmetic
+				operations:
+			</p>
+			<pre><code class="language-javascript">console.log(5 + 2);    // 7
+console.log(&quot;5&quot; + 2);  // &quot;52&quot; (string concatenation)
+console.log(&quot;5&quot; - 2);  // 3 (string converted to number)
+console.log(&quot;5&quot; * 2);  // 10 (string converted to number)
+</code></pre>
+			<br />
+			<h3 id="value-conversion">Value Conversion</h3>
+			<br />
+			<p>Using the unary plus/minus to convert values:</p>
+			<pre><code class="language-javascript">let str = &quot;10&quot;;
+console.log(+str);      // 10 (number)
+console.log(-str);      // -10 (number)
+
+console.log(+true);     // 1
+console.log(+false);    // 0
+</code></pre>
+			<br />
+			<h3 id="incrementdecrement-operators">
+				Increment/Decrement Operators
+			</h3>
+			<br />
+			<p>There are important differences between prefix and postfix:</p>
+			<pre><code class="language-javascript">// Prefix (++x) - increments first, then uses the value
+let a = 5;
+let b = ++a;    // a = 6, b = 6
+
+// Postfix (x++) - uses the original value, then increments
+let c = 5;
+let d = c++;    // c = 6, d = 5
+</code></pre>
+			<br />
+			<h2 id="control-flow-statements">Control Flow Statements</h2>
+			<br />
+			<p>JavaScript provides various ways to control program flow:</p>
+			<pre><code class="language-javascript">// if statement
+if (condition) {
+  // code to execute if condition is true
+} else if (anotherCondition) {
+  // code to execute if anotherCondition is true
+} else {
+  // code to execute if no conditions are true
+}
+
+// Ternary operator
+let result = condition ? valueIfTrue : valueIfFalse;
+
+// Switch statement
+switch (expression) {
+  case value1:
+    // code when expression equals value1
+    break;
+  case value2:
+    // code when expression equals value2
+    break;
+  default:
+    // code when no cases match
+}
+
+// Loops
+for (let i = 0; i &lt; 5; i++) {
+  // repeats 5 times
+}
+
+while (condition) {
+  // executes as long as condition is true
+}
+
+do {
+  // executes at least once, then as long as condition is true
+} while (condition);
+
+// break exits the loop, continue skips to next iteration
+</code></pre>
+			<br />
+			<h1 id="javascript-functions">JavaScript Functions</h1>
+			<br />
+			<br />
+			<h2 id="basic-function-behavior">Basic Function Behavior</h2>
+			<br />
+			<br />
+			<h3 id="return-values">Return Values</h3>
+			<br />
+			<ul>
+				<li>
+					Every function in JavaScript implicitly returns
+					<strong>undefined</strong> unless you explicitly return
+					another value
+				</li>
+			</ul>
+			<br />
+			<h3 id="the-arguments-object">The Arguments Object</h3>
+			<br />
+			<ul>
+				<li>
+					Inside a function, you can access an object called
+					<strong>arguments</strong> that contains all arguments
+					passed to the function
+				</li>
+				<li>
+					The <strong>arguments</strong> object behaves like an array
+					though it is not an instance of the Array type
+				</li>
+				<li>
+					<code>arguments.length</code> shows the number of actual
+					arguments passed to the function
+				</li>
+			</ul>
+			<pre><code class="language-javascript">function add(x, y = 1, z = 2) {
+    console.log(arguments.length);
+    return x + y + z;
+}
+
+add(10);      // outputs: 1
+add(10, 20);  // outputs: 2 
+add(10, 20, 30); // outputs: 3
+</code></pre>
+			<br />
+			<h2 id="hoisting">Hoisting</h2>
+			<br />
+			<br />
+			<h3 id="variable-hoisting">Variable Hoisting</h3>
+			<br />
+			<ul>
+				<li>
+					<strong>Var hoisting</strong>: Variables declared with
+					<code>var</code> are hoisted to the top of their scope and
+					initialized with <strong>undefined</strong>
+				</li>
+				<li>
+					<strong>Let hoisting</strong>: Variables declared with
+					<code>let</code> are also hoisted but not initialized
+					(creating a &quot;temporal dead zone&quot;)
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// With var
+console.log(counter); // outputs: undefined
+var counter = 1;
+
+// With let
+console.log(counter); // ReferenceError: Cannot access &#39;counter&#39; before initialization
+let counter = 1;
+</code></pre>
+			<br />
+			<h3 id="function-hoisting">Function Hoisting</h3>
+			<br />
+			<ul>
+				<li>
+					<strong>Function declarations</strong> are hoisted
+					completely (both declaration and definition)
+				</li>
+				<li>
+					<strong>Function expressions</strong>,
+					<strong>arrow functions</strong>, and
+					<strong>class expressions</strong> are NOT hoisted
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// This works - function declaration is hoisted
+sayHello(); 
+function sayHello() {
+    console.log(&quot;Hello!&quot;);
+}
+
+// This fails - function expression is not hoisted
+sayGoodbye(); // TypeError: sayGoodbye is not a function
+var sayGoodbye = function() {
+    console.log(&quot;Goodbye!&quot;);
+};
+</code></pre>
+			<br />
+			<h2 id="parameters-and-arguments">Parameters and Arguments</h2>
+			<br />
+			<br />
+			<h3 id="parameter-default-values">Parameter Default Values</h3>
+			<br />
+			<ul>
+				<li>
+					In JavaScript, parameters have a default value of
+					<strong>undefined</strong> if no argument is provided
+				</li>
+				<li>You can set explicit default values for parameters:</li>
+			</ul>
+			<pre><code class="language-javascript">function greet(name = &quot;Guest&quot;) {
+    return `Hello, ${name}!`;
+}
+greet();      // &quot;Hello, Guest!&quot;
+greet(&quot;John&quot;); // &quot;Hello, John!&quot;
+</code></pre>
+			<br />
+			<h3 id="passing-arguments">Passing Arguments</h3>
+			<br />
+			<br />
+			<h4 id="primitives-pass-by-value">Primitives (Pass by Value)</h4>
+			<br />
+			<ul>
+				<li>
+					Primitive values (strings, numbers, booleans) are passed by
+					value
+				</li>
+				<li>
+					Changes to parameters inside the function do not affect the
+					original variables
+				</li>
+			</ul>
+			<pre><code class="language-javascript">function increment(x) {
+    x += 1;
+    console.log(&quot;Inside function:&quot;, x);
+}
+
+let num = 5;
+increment(num); // Inside function: 6
+console.log(num); // Still 5
+</code></pre>
+			<br />
+			<h4 id="objects-pass-by-reference-like-behavior">
+				Objects (Pass by Reference-like Behavior)
+			</h4>
+			<br />
+			<ul>
+				<li>Objects are passed by reference-like behavior</li>
+				<li>
+					Modifying object properties inside a function affects the
+					original object
+				</li>
+				<li>
+					However, reassigning the parameter to a new object does not
+					affect the original reference
+				</li>
+			</ul>
+			<pre><code class="language-javascript">let person = {
+    name: &quot;John&quot;,
+    age: 25
+};
+
+function increaseAge(obj) {
+    obj.age += 1;              // Modifies the original object
+    obj = { name: &quot;Jane&quot;, age: 22 }; // Local reassignment, doesn&#39;t affect original
+}
+
+increaseAge(person);
+console.log(person); // { name: &quot;John&quot;, age: 26 }
+</code></pre>
+			<p>
+				<img
+					src="./assets/passByValue-object.png"
+					alt="When an object is passed to function"
+				/>
+				<img
+					src="./assets/passByValue-object-and-change-reference.png"
+					alt="When function changes reference"
+				/>
+			</p>
+			<p>Another example:</p>
+			<pre><code class="language-javascript">const styles = { color: &quot;red&quot; };
+
+function change(styles) {
+    styles = { background: &quot;black&quot; }; // Local reassignment, no effect on original
+}
+
+change(styles);
+console.log(styles); // { color: &#39;red&#39; }
+</code></pre>
+			<br />
+			<h3 id="named-parameters">Named Parameters</h3>
+			<br />
+			<ul>
+				<li>
+					JavaScript doesn&#39;t support true named parameters like
+					some languages
+				</li>
+				<li>
+					To skip parameters, you must use <code>undefined</code>:
+				</li>
+			</ul>
+			<pre><code class="language-javascript">function createDiv(height, width, border) {
+    // Function implementation
+}
+
+// To only set border, you must use:
+createDiv(undefined, undefined, &#39;solid 5px blue&#39;);
+</code></pre>
+			<br />
+			<h4 id="better-alternative-object-parameters">
+				Better Alternative: Object Parameters
+			</h4>
+			<br />
+			<ul>
+				<li>
+					The most effective way to handle optional parameters is by
+					using an object parameter:
+				</li>
+			</ul>
+			<pre><code class="language-javascript">function createDiv(options = {}) {
+    const { 
+        height = &#39;100px&#39;, 
+        width = &#39;100px&#39;, 
+        border = &#39;none&#39; 
+    } = options;
+    
+    // Function implementation using height, width, border
+}
+
+// Call with only needed parameters
+createDiv({ border: &#39;solid 5px blue&#39; });
+</code></pre>
+			<br />
+			<h2 id="first-class-functions">First-Class Functions</h2>
+			<br />
+			<ul>
+				<li>In JavaScript, functions are first-class citizens</li>
+				<li>
+					They can be:
+					<ul>
+						<li>Stored in variables</li>
+						<li>Passed as arguments to other functions</li>
+						<li>Returned from other functions</li>
+						<li>
+							Stored in data structures like arrays and objects
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// Function stored in variable
+const add = function(a, b) { return a + b; };
+
+// Function passed as argument
+[1, 2, 3].map(function(x) { return x * 2; });
+
+// Function returned from another function
+function createMultiplier(factor) {
+    return function(x) {
+        return x * factor;
+    };
+}
+const double = createMultiplier(2);
+console.log(double(5)); // 10
+</code></pre>
+			<br />
+			<h1 id="javascript-objects-amp-prototypes">
+				JavaScript Objects &amp; Prototypes
+			</h1>
+			<br />
+			<br />
+			<h2 id="constructor-functions">Constructor Functions</h2>
+			<br />
+			<p>
+				Constructor functions are a way to create multiple objects with
+				the same structure and behavior.
+			</p>
+			<pre><code class="language-javascript">function Person(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    
+    this.getFullName = function() {
+        return this.firstName + &quot; &quot; + this.lastName;
+    };
+}
+
+// Create a new Person object
+let person = new Person(&quot;John&quot;, &quot;Doe&quot;);
+console.log(person.getFullName()); // &quot;John Doe&quot;
+</code></pre>
+			<br />
+			<h3 id="key-points-about-constructor-functions">
+				Key Points About Constructor Functions:
+			</h3>
+			<br />
+			<ol>
+				<li>
+					<p>
+						<strong>Naming Convention</strong>: Constructor
+						functions start with a capital letter (e.g.,
+						<code>Person</code>) to distinguish them from regular
+						functions.
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>The <code>new</code> Keyword</strong>: When
+						calling a constructor with <code>new</code>:
+					</p>
+					<ul>
+						<li>A new empty object is created</li>
+						<li><code>this</code> is bound to that new object</li>
+						<li>The function code executes</li>
+						<li>The new object is returned automatically</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>Memory Inefficiency Problem</strong>: The
+						original approach creates a new copy of methods like
+						<code>getFullName()</code> for each instance, which
+						wastes memory.
+					</p>
+				</li>
+			</ol>
+			<br />
+			<h3 id="handling-constructor-calls-without-codenewcode">
+				Handling Constructor Calls Without <code>new</code>
+			</h3>
+			<br />
+			<p>
+				If a constructor function is called without the
+				<code>new</code> keyword, it executes as a regular function, and
+				<code>this</code> refers to the global object (or
+				<code>undefined</code> in strict mode):
+			</p>
+			<pre><code class="language-javascript">// Safeguard a constructor function
+function Person(firstName, lastName) {
+    // Check if called without new
+    if (!new.target) {
+        return new Person(firstName, lastName);
+    }
+    
+    this.firstName = firstName;
+    this.lastName = lastName;
+}
+
+// This still works correctly
+let person = Person(&quot;John&quot;, &quot;Doe&quot;);
+console.log(person.firstName); // &quot;John&quot;
+</code></pre>
+			<br />
+			<h2 id="prototypes">Prototypes</h2>
+			<br />
+			<p>
+				Every JavaScript object has a special property called
+				<code>prototype</code>, which enables objects to inherit
+				features from one another.
+			</p>
+			<br />
+			<h3 id="how-prototypes-work">How Prototypes Work:</h3>
+			<br />
+			<ol>
+				<li>
+					Every JavaScript function has a property called
+					<code>prototype</code> (which is itself an object)
+				</li>
+				<li>
+					When you use a function as a constructor with
+					<code>new</code>, the created object gets linked to the
+					constructor&#39;s <code>prototype</code>
+				</li>
+				<li>
+					When you try to access a property on an object:
+					<ul>
+						<li>
+							First, JavaScript looks for the property on the
+							object itself
+						</li>
+						<li>
+							If not found, it looks in the object&#39;s prototype
+						</li>
+						<li>
+							If still not found, it looks in the prototype&#39;s
+							prototype, and so on (forming the &quot;prototype
+							chain&quot;)
+						</li>
+						<li>
+							The chain ends when a prototype is <code>null</code>
+						</li>
+					</ul>
+				</li>
+			</ol>
+			<br />
+			<h3 id="using-prototypes-for-method-sharing">
+				Using Prototypes for Method Sharing
+			</h3>
+			<br />
+			<p>
+				Instead of defining methods inside the constructor (which
+				creates copies), we can add them to the prototype:
+			</p>
+			<pre><code class="language-javascript">function Person(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    // Notice: no methods defined here
+}
+
+// Add method to the prototype (shared by all instances)
+Person.prototype.getFullName = function() {
+    return this.firstName + &quot; &quot; + this.lastName;
+};
+
+let person1 = new Person(&quot;John&quot;, &quot;Doe&quot;);
+let person2 = new Person(&quot;Jane&quot;, &quot;Smith&quot;);
+
+console.log(person1.getFullName()); // &quot;John Doe&quot;
+console.log(person2.getFullName()); // &quot;Jane Smith&quot;
+
+// Both instances share the same method
+console.log(person1.getFullName === person2.getFullName); // true
+</code></pre>
+			<br />
+			<h3 id="prototype-chain-relationships">
+				Prototype Chain Relationships
+			</h3>
+			<br />
+			<p>
+				Every constructor function&#39;s prototype is linked to
+				<code>Object.prototype</code>:
+			</p>
+			<pre><code class="language-javascript">// The constructor property points back to the function
+console.log(Person.prototype.constructor === Person); // true
+
+// Person&#39;s prototype is linked to Object.prototype
+console.log(Object.getPrototypeOf(Person.prototype) === Object.prototype); // true
+
+// Ways to access an object&#39;s prototype
+let p = new Person(&quot;John&quot;, &quot;Doe&quot;);
+console.log(Person.prototype === Object.getPrototypeOf(p)); // true
+console.log(Person.prototype === p.constructor.prototype); // true
+</code></pre>
+
+			<img src="./assets/protoTypeLinkage.png" />
+			<br />
+			<h2 id="prototypal-inheritance">Prototypal Inheritance</h2>
+			<br />
+			<p>
+				In JavaScript, objects can inherit from other objects - this is
+				called prototypal inheritance.
+			</p>
+			<br />
+			<h3 id="using-code__proto__code-legacy-method">
+				Using <code>__proto__</code> (Legacy Method)
+			</h3>
+			<br />
+			<pre><code class="language-javascript">let person = {
+    name: &quot;John Doe&quot;,
+    greet: function() {
+        return &quot;Hi, I&#39;m &quot; + this.name;
+    }
+};
+
+let teacher = {
+    teach: function(subject) {
+        return &quot;I can teach &quot; + subject;
+    }
+};
+
+// Make teacher inherit from person
+teacher.__proto__ = person;
+
+console.log(teacher.greet()); // &quot;Hi, I&#39;m John Doe&quot;
+console.log(teacher.teach(&quot;JavaScript&quot;)); // &quot;I can teach JavaScript&quot;
+</code></pre>
+			<br />
+			<h3 id="modern-ways-to-create-inheritance">
+				Modern Ways to Create Inheritance
+			</h3>
+			<br />
+			<p><strong>ES5 Method</strong>:</p>
+			<pre><code class="language-javascript">let person = {
+    name: &quot;John Doe&quot;,
+    greet: function() {
+        return &quot;Hi, I&#39;m &quot; + this.name;
+    }
+};
+
+// Create a new object with person as its prototype
+let teacher = Object.create(person);
+teacher.teach = function(subject) {
+    return &quot;I can teach &quot; + subject;
+};
+
+console.log(Object.getPrototypeOf(teacher) === person); // true
+</code></pre>
+			<p><strong>ES6 Method</strong>:</p>
+			<pre><code class="language-javascript">class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    greet() {
+        return &quot;Hi, I&#39;m &quot; + this.name;
+    }
+}
+
+class Teacher extends Person {
+    constructor(name) {
+        super(name);
+    }
+    
+    teach(subject) {
+        return &quot;I can teach &quot; + subject;
+    }
+}
+</code></pre>
+			<br />
+			<h2 id="object-properties">Object Properties</h2>
+			<br />
+			<p>JavaScript objects have two types of properties:</p>
+			<ol>
+				<li><strong>Data Properties</strong>: Store values</li>
+				<li>
+					<strong>Accessor Properties</strong>: Functions that get or
+					set values (getters and setters)
+				</li>
+			</ol>
+			<br />
+			<h3 id="property-attributes">Property Attributes</h3>
+			<br />
+			<p>Every property has attributes that control its behavior:</p>
+			<p><strong>Data Properties</strong>:</p>
+			<ul>
+				<li>
+					<strong>Configurable</strong>: If false, the property cannot
+					be deleted or have its attributes changed
+				</li>
+				<li>
+					<strong>Enumerable</strong>: If true, the property appears
+					in for...in loops
+				</li>
+				<li>
+					<strong>Writable</strong>: If false, the property&#39;s
+					value cannot be changed
+				</li>
+				<li>
+					<strong>Value</strong>: The actual value of the property
+				</li>
+			</ul>
+			<p><strong>Accessor Properties</strong>:</p>
+			<ul>
+				<li><strong>Configurable</strong>: Same as above</li>
+				<li><strong>Enumerable</strong>: Same as above</li>
+				<li><strong>Get</strong>: The getter function</li>
+				<li><strong>Set</strong>: The setter function</li>
+			</ul>
+			<br />
+			<h3 id="defining-properties">Defining Properties</h3>
+			<br />
+			<p>
+				You can define or modify property attributes using
+				<code>Object.defineProperty()</code> or
+				<code>Object.defineProperties()</code>:
+			</p>
+			<pre><code class="language-javascript">let product = {};
+
+Object.defineProperties(product, {
+    name: { 
+        value: &#39;Smartphone&#39;, 
+        enumerable: true  // Will show up in for...in loops
+    },
+    price: { 
+        value: 799,
+        writable: true    // Can be changed
+    },
+    tax: { 
+        value: 0.1,
+        configurable: false // Cannot be deleted
+    },
+    netPrice: {
+        // Accessor property with getter
+        get: function() {
+            return this.price * (1 + this.tax);
+        }
+    }
+});
+
+console.log(product.name); // &quot;Smartphone&quot;
+console.log(product.netPrice); // 878.9
+</code></pre>
+			<br />
+			<h3 id="property-enumeration-and-ownership">
+				Property Enumeration and Ownership
+			</h3>
+			<br />
+			<ul>
+				<li>
+					<code>for...in</code> loops iterate over all enumerable
+					properties (including inherited ones)
+				</li>
+				<li>
+					<code>obj.propertyIsEnumerable()</code> checks if a property
+					is enumerable
+				</li>
+				<li>
+					<code>obj.hasOwnProperty()</code> checks if a property
+					belongs to the object itself (not inherited)
+				</li>
+			</ul>
+			<br />
+			<h3 id="computed-properties-es6">Computed Properties (ES6)</h3>
+			<br />
+			<p>Allow you to use expressions as property names:</p>
+			<pre><code class="language-javascript">let propName = &#39;dynamicProperty&#39;;
+let obj = {
+    [propName]: &#39;value&#39;  // Creates property named &quot;dynamicProperty&quot;
+};
+
+// Useful for creating objects dynamically
+function createObj(key, value) {
+    return { [key]: value };
+}
+
+let user = createObj(&#39;username&#39;, &#39;john_doe&#39;);
+console.log(user); // { username: &#39;john_doe&#39; }
+</code></pre>
+			<br />
+			<h2 id="classes-es6">Classes (ES6)</h2>
+			<br />
+			<p>
+				ES6 introduced a cleaner syntax for creating objects and
+				implementing inheritance:
+			</p>
+			<pre><code class="language-javascript">class Person {
+  // Class properties
+  #firstName;  // Private property (with # prefix)
+  #lastName;   // Private property
+  static count = 0;  // Static property (shared by all instances)
+  
+  // Constructor
+  constructor(firstName, lastName) {
+    this.#firstName = firstName;
+    this.#lastName = lastName;
+    Person.count++;  // Increment the counter
+  }
+  
+  // Instance method
+  getFullName() {
+    return `${this.#firstName} ${this.#lastName}`;
+  }
+  
+  // Private method
+  #validateName(name) {
+    return typeof name === &#39;string&#39; &amp;&amp; name.trim().length &gt;= 2;
+  }
+  
+  // Static method
+  static createAnonymous() {
+    return new Person(&quot;Anonymous&quot;, &quot;User&quot;);
+  }
+}
+
+// Create an instance
+let person = new Person(&quot;John&quot;, &quot;Doe&quot;);
+console.log(person.getFullName());  // &quot;John Doe&quot;
+console.log(Person.count);  // 1
+</code></pre>
+			<br />
+			<h3 id="inheritance-with-classes">Inheritance with Classes</h3>
+			<br />
+			<pre><code class="language-javascript">class Employee extends Person {
+  #position;
+  
+  constructor(firstName, lastName, position) {
+    super(firstName, lastName);  // Call parent constructor
+    this.#position = position;
+  }
+  
+  getRole() {
+    return this.#position;
+  }
+  
+  // Override parent method
+  getFullName() {
+    return `${super.getFullName()} (${this.#position})`;
+  }
+}
+
+let employee = new Employee(&quot;Jane&quot;, &quot;Smith&quot;, &quot;Developer&quot;);
+console.log(employee.getFullName());  // &quot;Jane Smith (Developer)&quot;
+</code></pre>
+			<br />
+			<h1 id="javascript-advanced-functions">
+				JavaScript Advanced Functions
+			</h1>
+			<br />
+			<br />
+			<h2 id="functions-as-objects">Functions as Objects</h2>
+			<br />
+			<p>
+				In JavaScript, all functions are actually objects - they are
+				instances of the <code>Function</code> type. This means
+				functions can:
+			</p>
+			<ul>
+				<li>Have properties and methods</li>
+				<li>Be passed as arguments to other functions</li>
+				<li>Be assigned to variables</li>
+				<li>Be returned from other functions</li>
+			</ul>
+			<br />
+			<h2 id="closures">Closures</h2>
+			<br />
+			<p>
+				A closure is a function that retains access to its lexical scope
+				(variables from its parent function) even after the parent
+				function has finished executing.
+			</p>
+			<br />
+			<h3 id="how-closures-work">How Closures Work</h3>
+			<br />
+			<ol>
+				<li>
+					When you define a function inside another function, the
+					inner function has access to the variables of the outer
+					function
+				</li>
+				<li>
+					If the inner function is returned or otherwise preserved
+					(like stored in a variable or passed as a callback), it
+					maintains access to those variables
+				</li>
+				<li>This preserved environment is called a closure</li>
+			</ol>
+			<br />
+			<h3 id="practical-example-of-closure-issues">
+				Practical Example of Closure Issues
+			</h3>
+			<br />
+			<p>
+				Consider this classic problem with loops and
+				<code>setTimeout</code>:
+			</p>
+			<pre><code class="language-javascript">for (var index = 1; index &lt;= 3; index++) {
+    setTimeout(function () {
+        console.log(&#39;after &#39; + index + &#39; second(s): &#39; + index);
+    }, index * 1000);
+}
+// Output:
+// after 4 second(s): 4
+// after 4 second(s): 4
+// after 4 second(s): 4
+</code></pre>
+			<p>
+				What happened? By the time the first callback executes (after
+				1000ms), the loop has already completed, and
+				<code>index</code> is <code>4</code>. All three functions in the
+				closure share the same <code>index</code> variable.
+			</p>
+			<br />
+			<h3 id="solutions-to-the-loop-closure-problem">
+				Solutions to the Loop Closure Problem
+			</h3>
+			<br />
+			<br />
+			<h4 id="solution-1-iife-immediately-invoked-function-expression">
+				Solution 1: IIFE (Immediately Invoked Function Expression)
+			</h4>
+			<br />
+			<p>Create a new scope for each iteration using an IIFE:</p>
+			<pre><code class="language-javascript">for (var index = 1; index &lt;= 3; index++) {
+    (function(currentIndex) {
+        setTimeout(function () {
+            console.log(&#39;after &#39; + currentIndex + &#39; second(s): &#39; + currentIndex);
+        }, currentIndex * 1000);
+    })(index);
+}
+// Output:
+// after 1 second(s): 1
+// after 2 second(s): 2
+// after 3 second(s): 3
+</code></pre>
+			<br />
+			<h4 id="solution-2-block-scoping-with-codeletcode-es6">
+				Solution 2: Block Scoping with <code>let</code> (ES6+)
+			</h4>
+			<br />
+			<p>
+				The <code>let</code> keyword creates a new binding for each loop
+				iteration:
+			</p>
+			<pre><code class="language-javascript">for (let index = 1; index &lt;= 3; index++) {
+    setTimeout(function () {
+        console.log(&#39;after &#39; + index + &#39; second(s): &#39; + index);
+    }, index * 1000);
+}
+// Output:
+// after 1 second(s): 1
+// after 2 second(s): 2
+// after 3 second(s): 3
+</code></pre>
+			<br />
+			<h2 id="the-codethiscode-keyword-in-functions">
+				The <code>this</code> Keyword in Functions
+			</h2>
+			<br />
+			<p>
+				The value of <code>this</code> inside a function depends on how
+				the function is called, not where it&#39;s defined.
+			</p>
+			<br />
+			<h3 id="common-codethiscode-binding-issues">
+				Common <code>this</code> Binding Issues
+			</h3>
+			<br />
+			<pre><code class="language-javascript">function Car() {
+  this.speed = 0;
+  this.speedUp = function(speed) {
+    this.speed = speed;
+    setTimeout(function() {
+      console.log(this.speed); // undefined
+    }, 1000);
+  };
+}
+
+let car = new Car();
+car.speedUp(50);
+</code></pre>
+			<p>
+				Inside the <code>setTimeout</code> callback,
+				<code>this</code> doesn&#39;t refer to the Car instance.
+				Instead, it refers to the global object (or
+				<code>undefined</code> in strict mode).
+			</p>
+			<br />
+			<h3 id="solutions-to-the-codethiscode-problem">
+				Solutions to the <code>this</code> Problem
+			</h3>
+			<br />
+			<br />
+			<h4 id="solution-1-preserve-codethiscode-with-a-variable">
+				Solution 1: Preserve <code>this</code> with a variable
+			</h4>
+			<br />
+			<pre><code class="language-javascript">function Car() {
+  this.speed = 0;
+  this.speedUp = function(speed) {
+    this.speed = speed;
+    let self = this; // Store reference to &#39;this&#39;
+    setTimeout(function() {
+      console.log(self.speed); // 50
+    }, 1000);
+  };
+}
+</code></pre>
+			<br />
+			<h4 id="solution-2-use-an-arrow-function-es6">
+				Solution 2: Use an arrow function (ES6+)
+			</h4>
+			<br />
+			<pre><code class="language-javascript">function Car() {
+  this.speed = 0;
+  this.speedUp = function(speed) {
+    this.speed = speed;
+    setTimeout(() =&gt; {
+      console.log(this.speed); // 50
+    }, 1000);
+  };
+}
+</code></pre>
+			<p>
+				Arrow functions inherit <code>this</code> from their surrounding
+				scope, which solves the problem elegantly.
+			</p>
+			<br />
+			<h2 id="arrow-functions">Arrow Functions</h2>
+			<br />
+			<p>
+				Arrow functions were introduced in ES6 and provide more concise
+				syntax, plus they handle <code>this</code> differently.
+			</p>
+			<br />
+			<h3 id="syntax">Syntax</h3>
+			<br />
+			<pre><code class="language-javascript">// Traditional function
+function add(a, b) {
+  return a + b;
+}
+
+// Arrow function
+const add = (a, b) =&gt; a + b;
+</code></pre>
+			<br />
+			<h3 id="special-characteristics-of-arrow-functions">
+				Special Characteristics of Arrow Functions
+			</h3>
+			<br />
+			<ol>
+				<li>
+					<p>
+						<strong>No <code>this</code> binding</strong>
+					</p>
+					<ul>
+						<li>
+							Arrow functions don&#39;t have their own
+							<code>this</code> - they inherit it from the parent
+							scope
+						</li>
+						<li>
+							This makes them ideal for callbacks inside methods
+							where you want to access the parent&#39;s
+							<code>this</code>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>No <code>arguments</code> object</strong>
+					</p>
+					<ul>
+						<li>
+							Arrow functions don&#39;t have their own
+							<code>arguments</code> object
+						</li>
+						<li>
+							They can access the <code>arguments</code> of their
+							containing function
+						</li>
+					</ul>
+					<pre><code class="language-javascript">function show() {
+  return (x) =&gt; x + arguments[0];
+}
+let display = show(10, 20);
+let result = display(5);
+console.log(result); // 15 (5 + 10)
+// Here, arguments[0] refers to the first argument (10) of the show() function
+</code></pre>
+				</li>
+				<li>
+					<p>
+						<strong>No <code>new.target</code></strong>
+					</p>
+					<ul>
+						<li>Arrow functions cannot be used as constructors</li>
+						<li>
+							They don&#39;t have access to the
+							<code>new.target</code> keyword
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>No <code>prototype</code> property</strong>
+					</p>
+					<ul>
+						<li>
+							Unlike regular functions, arrow functions don&#39;t
+							have a <code>prototype</code> property
+						</li>
+					</ul>
+				</li>
+			</ol>
+			<br />
+			<h3 id="when-not-to-use-arrow-functions">
+				When NOT to Use Arrow Functions
+			</h3>
+			<br />
+			<p>Arrow functions are not suitable for:</p>
+			<ul>
+				<li>
+					Event handlers where <code>this</code> should refer to the
+					event target
+				</li>
+				<li>
+					Object methods where <code>this</code> should refer to the
+					object
+				</li>
+				<li>
+					Prototype methods where <code>this</code> should refer to
+					the instance
+				</li>
+				<li>
+					Functions that need to use the <code>arguments</code> object
+				</li>
+				<li>
+					Functions that need to be used as constructors with
+					<code>new</code>
+				</li>
+			</ul>
+			<br />
+			<h2 id="callbacks-and-higher-order-functions">
+				Callbacks and Higher-Order Functions
+			</h2>
+			<br />
+			<br />
+			<h3 id="callbacks">Callbacks</h3>
+			<br />
+			<p>
+				A callback is a function passed as an argument to another
+				function, to be executed later.
+			</p>
+			<pre><code class="language-javascript">function fetchData(callback) {
+  // Simulate API call
+  setTimeout(() =&gt; {
+    const data = { name: &quot;John&quot;, age: 30 };
+    callback(data);
+  }, 1000);
+}
+
+fetchData(function(data) {
+  console.log(data); // { name: &quot;John&quot;, age: 30 }
+});
+</code></pre>
+			<br />
+			<h3 id="higher-order-functions">Higher-Order Functions</h3>
+			<br />
+			<p>
+				A higher-order function is a function that accepts another
+				function as an argument or returns a function.
+			</p>
+			<pre><code class="language-javascript">// Higher-order function that accepts a function as argument
+function calculate(operation, a, b) {
+  return operation(a, b);
+}
+
+// Functions to pass as arguments
+const add = (x, y) =&gt; x + y;
+const multiply = (x, y) =&gt; x * y;
+
+console.log(calculate(add, 5, 3));      // 8
+console.log(calculate(multiply, 5, 3)); // 15
+
+// Higher-order function that returns a function
+function createMultiplier(factor) {
+  return function(number) {
+    return number * factor;
+  };
+}
+
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+</code></pre>
+			<p>
+				Higher-order functions are a core concept in functional
+				programming and are widely used in JavaScript for operations
+				like array mapping, filtering, and reducing.
+			</p>
+			<br />
+			<h2 id="function-binding">Function Binding</h2>
+			<br />
+			<p>
+				Sometimes you need to explicitly set the value of
+				<code>this</code> in a function, regardless of how it&#39;s
+				called. JavaScript provides three methods for this:
+			</p>
+			<br />
+			<h3 id="1-codebindcode">1. <code>bind()</code></h3>
+			<br />
+			<p>
+				Creates a new function with <code>this</code> permanently bound
+				to a specific value:
+			</p>
+			<pre><code class="language-javascript">const person = {
+  name: &quot;John&quot;,
+  greet: function() {
+    console.log(`Hello, my name is ${this.name}`);
+  }
+};
+
+const greetFunction = person.greet;
+greetFunction(); // &quot;Hello, my name is undefined&quot;
+
+const boundGreet = person.greet.bind(person);
+boundGreet(); // &quot;Hello, my name is John&quot;
+</code></pre>
+			<br />
+			<h3 id="2-codecallcode">2. <code>call()</code></h3>
+			<br />
+			<p>
+				Calls a function with a specified <code>this</code> value and
+				arguments:
+			</p>
+			<pre><code class="language-javascript">function greet(greeting) {
+  console.log(`${greeting}, my name is ${this.name}`);
+}
+
+const person = { name: &quot;John&quot; };
+
+greet.call(person, &quot;Hello&quot;); // &quot;Hello, my name is John&quot;
+</code></pre>
+			<br />
+			<h3 id="3-codeapplycode">3. <code>apply()</code></h3>
+			<br />
+			<p>
+				Similar to <code>call()</code>, but arguments are passed as an
+				array:
+			</p>
+			<pre><code class="language-javascript">function introduce(greeting, message) {
+  console.log(`${greeting}, my name is ${this.name}. ${message}`);
+}
+
+const person = { name: &quot;John&quot; };
+
+introduce.apply(person, [&quot;Hello&quot;, &quot;Nice to meet you&quot;]); 
+// &quot;Hello, my name is John. Nice to meet you&quot;
+</code></pre>
+			<br />
+			<h1 id="javascript-promises-amp-asyncawait">
+				JavaScript Promises &amp; Async/Await
+			</h1>
+			<br />
+			<br />
+			<h2 id="introduction-to-asynchronous-javascript">
+				Introduction to Asynchronous JavaScript
+			</h2>
+			<br />
+			<a href="./asynchronous-js.html" target="_blank"
+				>Complete Example of Asynchronous Javascript</a
+			>
+			<p>
+				JavaScript uses various patterns to handle asynchronous
+				operations:
+			</p>
+			<ol>
+				<li><strong>Callbacks</strong> (traditional approach)</li>
+				<li><strong>Promises</strong> (introduced in ES6/ES2015)</li>
+				<li><strong>Async/Await</strong> (introduced in ES2017)</li>
+			</ol>
+			<p>
+				Each new pattern builds on the previous one, making asynchronous
+				code progressively more readable and maintainable.
+			</p>
+			<br />
+			<h2 id="promises">Promises</h2>
+			<br />
+			<p>
+				A Promise is an object representing the eventual completion or
+				failure of an asynchronous operation. It serves as a placeholder
+				for a value that may not be available yet.
+			</p>
+			<br />
+			<h3 id="creating-promises">Creating Promises</h3>
+			<br />
+			<pre><code class="language-javascript">function getUsers() {
+    return new Promise((resolve, reject) =&gt; {
+        // Asynchronous code goes here, such as:
+        // - API calls
+        // - Database operations
+        // - File system operations
+        
+        // On success:
+        resolve(users);
+        
+        // On failure:
+        // reject(error);
+    });
+}
+</code></pre>
+			<p>A Promise can be in one of three states:</p>
+			<ul>
+				<li>
+					<strong>Pending</strong>: Initial state, neither fulfilled
+					nor rejected
+				</li>
+				<li>
+					<strong>Fulfilled</strong>: Operation completed successfully
+				</li>
+				<li><strong>Rejected</strong>: Operation failed</li>
+			</ul>
+			<br />
+			<h3 id="consuming-promises">Consuming Promises</h3>
+			<br />
+			<p>
+				You can attach callbacks to promises using <code>.then()</code>,
+				<code>.catch()</code>, and <code>.finally()</code> methods:
+			</p>
+			<pre><code class="language-javascript">getUsers()
+  .then((users) =&gt; {
+    // This executes when the promise is fulfilled
+    console.log(users);
+  })
+  .catch((error) =&gt; {
+    // This executes when the promise is rejected
+    console.log(error);
+  })
+  .finally(() =&gt; {
+    // This executes regardless of success or failure
+    console.log(&#39;Operation completed&#39;);
+  });
+</code></pre>
+			<br />
+			<h3 id="alternative-promise-handling-syntax">
+				Alternative Promise Handling Syntax
+			</h3>
+			<br />
+			<p>
+				You can also provide both success and error handlers directly to
+				<code>.then()</code>:
+			</p>
+			<pre><code class="language-javascript">// Option 1: Separate handler functions
+function onFulfilled(users) { console.log(users); }
+function onRejected(error) { console.log(error); }
+
+getUsers().then(onFulfilled, onRejected);
+
+// Option 2: Inline handlers
+getUsers().then(
+    (users) =&gt; console.log(users),
+    (error) =&gt; console.log(error)
+);
+</code></pre>
+			<p>
+				However, using <code>.catch()</code> is generally preferred for
+				error handling as it also catches errors thrown in
+				<code>.then()</code> callbacks.
+			</p>
+			<br />
+			<h3 id="creating-pre-resolved-or-pre-rejected-promises">
+				Creating Pre-Resolved or Pre-Rejected Promises
+			</h3>
+			<br />
+			<pre><code class="language-javascript">// Create a pre-resolved promise
+Promise.resolve(&#39;Success&#39;).then(console.log); // Success
+
+// Create a pre-rejected promise
+Promise.reject(&#39;Error&#39;).catch(console.log); // Error
+
+// Using finally
+Promise.resolve(&#39;Success&#39;)
+  .finally(() =&gt; console.log(&#39;Done&#39;)); // Done
+</code></pre>
+			<br />
+			<h2 id="promise-combinators">Promise Combinators</h2>
+			<br />
+			<p>
+				JavaScript provides several methods to work with multiple
+				promises simultaneously:
+			</p>
+			<br />
+			<h3 id="1-codepromiseallcode">1. <code>Promise.all()</code></h3>
+			<br />
+			<p>
+				Waits for all promises to resolve, or rejects if any promise
+				rejects:
+			</p>
+			<pre><code class="language-javascript">// All promises resolve
+Promise.all([
+    Promise.resolve(1),
+    Promise.resolve(2),
+    Promise.resolve(3)
+]).then(console.log); // [1, 2, 3]
+
+// One promise rejects
+Promise.all([
+    Promise.resolve(1),
+    Promise.reject(&#39;Error&#39;),
+    Promise.resolve(3)
+]).catch(console.log); // Error
+</code></pre>
+			<p>
+				Use <code>Promise.all()</code> when you need all operations to
+				succeed and want to wait for all of them to complete.
+			</p>
+			<br />
+			<h3 id="2-codepromiseracecode">2. <code>Promise.race()</code></h3>
+			<br />
+			<p>
+				Returns the result of the first promise to settle (either
+				resolve or reject):
+			</p>
+			<pre><code class="language-javascript">Promise.race([
+    Promise.resolve(1),
+    new Promise(resolve =&gt; setTimeout(() =&gt; resolve(2), 1000))
+]).then(console.log); // 1
+
+Promise.race([
+    new Promise((_, reject) =&gt; setTimeout(() =&gt; reject(&#39;Timeout&#39;), 500)),
+    fetch(&#39;https://api.example.com/data&#39;)
+]).then(data =&gt; console.log(data))
+  .catch(error =&gt; console.log(error)); // May log &quot;Timeout&quot; if fetch takes longer than 500ms
+</code></pre>
+			<p>
+				Use <code>Promise.race()</code> for implementing timeouts or
+				when you only need the fastest result.
+			</p>
+			<br />
+			<h3 id="3-codepromiseanycode-es2021">
+				3. <code>Promise.any()</code> (ES2021)
+			</h3>
+			<br />
+			<p>
+				Returns the first promise to fulfill (resolve). It only rejects
+				if all promises reject:
+			</p>
+			<pre><code class="language-javascript">Promise.any([
+    Promise.reject(&#39;Error1&#39;),
+    Promise.resolve(&#39;Success1&#39;),
+    Promise.resolve(&#39;Success2&#39;)
+]).then(console.log); // Success1
+
+// If all promises reject
+Promise.any([
+    Promise.reject(&#39;Error1&#39;),
+    Promise.reject(&#39;Error2&#39;)
+]).then(console.log)
+  .catch(error =&gt; console.log(error.errors)); // [&#39;Error1&#39;, &#39;Error2&#39;]
+</code></pre>
+			<p>
+				The key difference between <code>Promise.any()</code> and
+				<code>Promise.race()</code>:
+			</p>
+			<ul>
+				<li>
+					<code>Promise.any()</code> waits for the first promise to
+					fulfill (resolve)
+				</li>
+				<li>
+					<code>Promise.race()</code> waits for the first promise to
+					settle (either resolve or reject)
+				</li>
+			</ul>
+			<br />
+			<h3 id="4-codepromiseallsettledcode-es2020">
+				4. <code>Promise.allSettled()</code> (ES2020)
+			</h3>
+			<br />
+			<p>
+				Waits for all promises to settle (either resolve or reject) and
+				returns an array with the outcome of each promise:
+			</p>
+			<pre><code class="language-javascript">Promise.allSettled([
+    Promise.resolve(&#39;Success&#39;),
+    Promise.reject(&#39;Error&#39;),
+    Promise.resolve(&#39;Another success&#39;)
+]).then(results =&gt; {
+    console.log(results);
+    /* Output:
+    [
+      { status: &#39;fulfilled&#39;, value: &#39;Success&#39; },
+      { status: &#39;rejected&#39;, reason: &#39;Error&#39; },
+      { status: &#39;fulfilled&#39;, value: &#39;Another success&#39; }
+    ]
+    */
+});
+</code></pre>
+			<p>
+				Use <code>Promise.allSettled()</code> when you want to know the
+				outcome of each promise regardless of whether some succeed or
+				fail.
+			</p>
+			<br />
+			<h2 id="asyncawait">Async/Await</h2>
+			<br />
+			<p>
+				Introduced in ES2017, async/await is syntactic sugar built on
+				top of Promises, making asynchronous code look and behave more
+				like synchronous code.
+			</p>
+			<br />
+			<h3 id="basic-syntax">Basic Syntax</h3>
+			<br />
+			<pre><code class="language-javascript">async function functionName() {
+    // Use await keyword inside async functions
+    const result = await somePromise();
+    return result;
+}
+</code></pre>
+			<p>Key points:</p>
+			<ol>
+				<li>
+					Functions with the <code>async</code> keyword always return
+					a Promise
+				</li>
+				<li>
+					The <code>await</code> keyword can only be used inside
+					<code>async</code> functions
+				</li>
+				<li>
+					<code>await</code> pauses execution until the Promise
+					resolves
+				</li>
+			</ol>
+			<br />
+			<h3 id="error-handling-with-trycatch">
+				Error Handling with Try/Catch
+			</h3>
+			<br />
+			<pre><code class="language-javascript">async function showServiceCost() {
+    try {
+        // These lines execute sequentially
+        let user = await getUser(100);
+        let services = await getServices(user);
+        let cost = await getServiceCost(services);
+        console.log(`The service cost is ${cost}`);
+    } catch (error) {
+        // Catches any errors from any of the await expressions
+        console.log(error);
+    }
+}
+</code></pre>
+			<br />
+			<h3 id="benefits-of-asyncawait-over-promise-chains">
+				Benefits of Async/Await Over Promise Chains
+			</h3>
+			<br />
+			<p>Compare these two equivalent implementations:</p>
+			<p><strong>Promise Chain:</strong></p>
+			<pre><code class="language-javascript">function showServiceCost() {
+    return getUser(100)
+        .then(user =&gt; getServices(user))
+        .then(services =&gt; getServiceCost(services))
+        .then(cost =&gt; {
+            console.log(`The service cost is ${cost}`);
+        })
+        .catch(error =&gt; {
+            console.log(error);
+        });
+}
+</code></pre>
+			<p><strong>Async/Await:</strong></p>
+			<pre><code class="language-javascript">async function showServiceCost() {
+    try {
+        let user = await getUser(100);
+        let services = await getServices(user);
+        let cost = await getServiceCost(services);
+        console.log(`The service cost is ${cost}`);
+    } catch (error) {
+        console.log(error);
+    }
+}
+</code></pre>
+			<p>The async/await version is:</p>
+			<ul>
+				<li>More readable (resembles synchronous code)</li>
+				<li>Easier to debug (clearer stack traces)</li>
+				<li>Simpler to reason about (sequential execution)</li>
+			</ul>
+			<br />
+			<h3 id="parallel-execution-with-asyncawait">
+				Parallel Execution with Async/Await
+			</h3>
+			<br />
+			<p>
+				While sequential awaits are easy to read, they may not be
+				efficient if operations can run in parallel:
+			</p>
+			<pre><code class="language-javascript">// Sequential (slower)
+const userData = await fetchUserData(userId);
+const productData = await fetchProductData(productId);
+
+// Parallel (faster)
+const [userData, productData] = await Promise.all([
+    fetchUserData(userId),
+    fetchProductData(productId)
+]);
+</code></pre>
+			<br />
+			<h2 id="evolution-of-asynchronous-patterns">
+				Evolution of Asynchronous Patterns
+			</h2>
+			<br />
+			<br />
+			<h3 id="1-callback-hell-pre-es6">1. Callback Hell (Pre-ES6)</h3>
+			<br />
+			<pre><code class="language-javascript">getUserData(userId, function(userData) {
+    getUserPosts(userData.id, function(posts) {
+        getPostComments(posts[0].id, function(comments) {
+            // Deeply nested and hard to follow
+            console.log(comments);
+        }, handleError);
+    }, handleError);
+}, handleError);
+</code></pre>
+			<br />
+			<h3 id="2-promises-es6es2015">2. Promises (ES6/ES2015)</h3>
+			<br />
+			<pre><code class="language-javascript">getUserData(userId)
+    .then(userData =&gt; getUserPosts(userData.id))
+    .then(posts =&gt; getPostComments(posts[0].id))
+    .then(comments =&gt; {
+        console.log(comments);
+    })
+    .catch(error =&gt; {
+        console.log(&#39;Error:&#39;, error);
+    });
+</code></pre>
+			<br />
+			<h3 id="3-asyncawait-es2017">3. Async/Await (ES2017)</h3>
+			<br />
+			<pre><code class="language-javascript">async function showUserComments(userId) {
+    try {
+        const userData = await getUserData(userId);
+        const posts = await getUserPosts(userData.id);
+        const comments = await getPostComments(posts[0].id);
+        console.log(comments);
+    } catch (error) {
+        console.log(&#39;Error:&#39;, error);
+    }
+}
+</code></pre>
+			<p>
+				Each evolution has made asynchronous code progressively more
+				readable and maintainable.
+			</p>
+			<br />
+			<h1 id="javascript-iterators-and-generators">
+				JavaScript Iterators and Generators
+			</h1>
+			<br />
+			<br />
+			<h2 id="iterators-and-iterables">Iterators and Iterables</h2>
+			<br />
+			<p>
+				JavaScript ES6 introduced a formal way to iterate through data
+				using <strong>iterators</strong> and <strong>iterables</strong>.
+			</p>
+			<br />
+			<h3 id="what-is-an-iterable">What is an Iterable?</h3>
+			<br />
+			<p>
+				An iterable is an object that implements the
+				<strong>iterable protocol</strong>:
+			</p>
+			<ul>
+				<li>
+					It must have a method with the key
+					<code>Symbol.iterator</code>
+				</li>
+				<li>This method returns an iterator object</li>
+			</ul>
+			<p>Built-in iterables in JavaScript include:</p>
+			<ul>
+				<li>Arrays</li>
+				<li>Strings</li>
+				<li>Maps</li>
+				<li>Sets</li>
+				<li>DOM collections</li>
+			</ul>
+			<br />
+			<h3 id="what-is-an-iterator">What is an Iterator?</h3>
+			<br />
+			<p>
+				An iterator is an object that implements the
+				<strong>iterator protocol</strong>:
+			</p>
+			<ul>
+				<li>It must have a <code>next()</code> method</li>
+				<li>
+					This <code>next()</code> method returns an object with two
+					properties:
+					<ul>
+						<li><code>value</code>: The current value</li>
+						<li>
+							<code>done</code>: A boolean indicating whether
+							iteration is complete
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<br />
+			<h3 id="the-codeforofcode-loop">The <code>for...of</code> Loop</h3>
+			<br />
+			<p>
+				The <code>for...of</code> loop provides a clean way to iterate
+				over iterables:
+			</p>
+			<pre><code class="language-javascript">// Basic syntax
+for (const value of iterable) {
+  // code to execute for each value
+}
+</code></pre>
+			<br />
+			<h2 id="using-codeforofcode-with-built-in-iterables">
+				Using <code>for...of</code> with Built-in Iterables
+			</h2>
+			<br />
+			<br />
+			<h3 id="arrays">Arrays</h3>
+			<br />
+			<pre><code class="language-javascript">// Basic iteration
+let scores = [80, 90, 70];
+for (const score of scores) {
+  console.log(score);
+}
+// Output: 80, 90, 70
+
+// Modifying values (requires let instead of const)
+let numbers = [1, 2, 3];
+for (let number of numbers) {
+  number = number * 2;
+  console.log(number);
+}
+// Output: 2, 4, 6 (original array remains unchanged)
+
+// Getting index and value with entries()
+let colors = [&#39;Red&#39;, &#39;Green&#39;, &#39;Blue&#39;];
+for (const [index, color] of colors.entries()) {
+  console.log(`${color} is at index ${index}`);
+}
+// Output:
+// Red is at index 0
+// Green is at index 1
+// Blue is at index 2
+</code></pre>
+			<br />
+			<h3 id="strings">Strings</h3>
+			<br />
+			<pre><code class="language-javascript">let message = &#39;Hello&#39;;
+for (const char of message) {
+  console.log(char);
+}
+// Output: H, e, l, l, o
+</code></pre>
+			<br />
+			<h3 id="maps">Maps</h3>
+			<br />
+			<pre><code class="language-javascript">let colors = new Map();
+colors.set(&#39;red&#39;, &#39;#ff0000&#39;);
+colors.set(&#39;green&#39;, &#39;#00ff00&#39;);
+colors.set(&#39;blue&#39;, &#39;#0000ff&#39;);
+
+// Iterating over key-value pairs
+for (const entry of colors) {
+  console.log(entry); // [key, value] array
+}
+// Output:
+// [&#39;red&#39;, &#39;#ff0000&#39;]
+// [&#39;green&#39;, &#39;#00ff00&#39;]
+// [&#39;blue&#39;, &#39;#0000ff&#39;]
+
+// Destructuring for cleaner code
+for (const [name, hex] of colors) {
+  console.log(`${name} has hex value ${hex}`);
+}
+// Output:
+// red has hex value #ff0000
+// green has hex value #00ff00
+// blue has hex value #0000ff
+</code></pre>
+			<br />
+			<h3 id="sets">Sets</h3>
+			<br />
+			<pre><code class="language-javascript">let uniqueNumbers = new Set([1, 2, 3]);
+for (const num of uniqueNumbers) {
+  console.log(num);
+}
+// Output: 1, 2, 3
+</code></pre>
+			<br />
+			<h3 id="object-destructuring-in-codeforofcode">
+				Object Destructuring in <code>for...of</code>
+			</h3>
+			<br />
+			<p>
+				You can use object destructuring to extract specific properties:
+			</p>
+			<pre><code class="language-javascript">const ratings = [
+  { user: &#39;John&#39;, score: 3 },
+  { user: &#39;Jane&#39;, score: 4 },
+  { user: &#39;David&#39;, score: 5 },
+  { user: &#39;Peter&#39;, score: 2 }
+];
+
+// Only extract the score property
+let sum = 0;
+for (const { score } of ratings) {
+  sum += score;
+}
+console.log(`Total scores: ${sum}`); // Output: Total scores: 14
+
+// Extract multiple properties
+for (const { user, score } of ratings) {
+  console.log(`${user} rated ${score}`);
+}
+// Output:
+// John rated 3
+// Jane rated 4
+// David rated 5
+// Peter rated 2
+</code></pre>
+			<br />
+			<h2 id="codeforofcode-vs-codeforincode">
+				<code>for...of</code> vs <code>for...in</code>
+			</h2>
+			<br />
+			<p>
+				It&#39;s important to understand the difference between these
+				two loops:
+			</p>
+			<ul>
+				<li>
+					<strong><code>for...of</code></strong
+					>: Iterates over the <strong>values</strong> of an iterable
+					object
+				</li>
+				<li>
+					<strong><code>for...in</code></strong
+					>: Iterates over the
+					<strong>enumerable properties</strong> of an object
+				</li>
+			</ul>
+			<pre><code class="language-javascript">const array = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;];
+
+// for...of iterates over values
+for (const value of array) {
+  console.log(value);
+}
+// Output: a, b, c
+
+// for...in iterates over property names (indices for arrays)
+for (const key in array) {
+  console.log(key, array[key]);
+}
+// Output: 
+// 0 a
+// 1 b
+// 2 c
+
+// WARNING: for...in on arrays can be problematic
+// If you add properties to Array.prototype, they will also be iterated
+Array.prototype.customProperty = &#39;surprise!&#39;;
+for (const key in array) {
+  console.log(key, array[key]);
+}
+// Output:
+// 0 a
+// 1 b
+// 2 c
+// customProperty surprise!
+</code></pre>
+			<br />
+			<h2 id="creating-custom-iterables">Creating Custom Iterables</h2>
+			<br />
+			<p>
+				To make your own objects iterable, implement the
+				<code>Symbol.iterator</code> method:
+			</p>
+			<pre><code class="language-javascript">const range = {
+  from: 1,
+  to: 5,
+
+  // Make the object iterable
+  [Symbol.iterator]() {
+    return {
+      current: this.from,
+      last: this.to,
+      
+      // Implement the next() method
+      next() {
+        if (this.current &lt;= this.last) {
+          return { value: this.current++, done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+for (const num of range) {
+  console.log(num);
+}
+// Output: 1, 2, 3, 4, 5
+</code></pre>
+			<br />
+			<h2 id="generators">Generators</h2>
+			<br />
+			<p>
+				Generators provide a more powerful and convenient way to create
+				iterators. They allow you to pause and resume execution.
+			</p>
+			<br />
+			<h3 id="basic-generator-syntax">Basic Generator Syntax</h3>
+			<br />
+			<pre><code class="language-javascript">function* generate() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const generator = generate();
+console.log(generator.next()); // { value: 1, done: false }
+console.log(generator.next()); // { value: 2, done: false }
+console.log(generator.next()); // { value: 3, done: false }
+console.log(generator.next()); // { value: undefined, done: true }
+</code></pre>
+			<p>Some key points about generators:</p>
+			<ol>
+				<li>
+					You define a generator function with <code>function*</code>
+				</li>
+				<li>
+					Inside a generator, <code>yield</code> pauses execution and
+					returns a value
+				</li>
+				<li>
+					Each call to <code>next()</code> resumes execution until the
+					next <code>yield</code>
+				</li>
+				<li>
+					When a generator is called, it returns a generator object
+					without executing its body
+				</li>
+				<li>
+					Generator objects are iterable, so you can use them with
+					<code>for...of</code>
+				</li>
+			</ol>
+			<br />
+			<h3 id="generator-execution-flow">Generator Execution Flow</h3>
+			<br />
+			<pre><code class="language-javascript">function* generate() {
+  console.log(&#39;Start&#39;);
+  yield 1;
+  console.log(&#39;After first yield&#39;);
+  yield 2;
+  console.log(&#39;After second yield&#39;);
+  yield 3;
+  console.log(&#39;End&#39;);
+}
+
+const gen = generate();
+console.log(&#39;Before first next()&#39;);
+console.log(gen.next());
+console.log(&#39;Before second next()&#39;);
+console.log(gen.next());
+</code></pre>
+			<p>Output:</p>
+			<pre><code>Before first next()
+Start
+{ value: 1, done: false }
+Before second next()
+After first yield
+{ value: 2, done: false }
+</code></pre>
+			<br />
+			<h3 id="using-generators-with-codeforofcode">
+				Using Generators with <code>for...of</code>
+			</h3>
+			<br />
+			<p>
+				Since generators produce iterators, they work seamlessly with
+				<code>for...of</code>:
+			</p>
+			<pre><code class="language-javascript">function* colors() {
+  yield &#39;red&#39;;
+  yield &#39;green&#39;;
+  yield &#39;blue&#39;;
+}
+
+for (const color of colors()) {
+  console.log(color);
+}
+// Output: red, green, blue
+</code></pre>
+			<br />
+			<h3 id="practical-use-cases-for-generators">
+				Practical Use Cases for Generators
+			</h3>
+			<br />
+			<br />
+			<h4 id="1-generating-infinite-sequences">
+				1. Generating Infinite Sequences
+			</h4>
+			<br />
+			<pre><code class="language-javascript">function* infiniteSequence() {
+  let i = 0;
+  while (true) {
+    yield i++;
+  }
+}
+
+const numbers = infiniteSequence();
+console.log(numbers.next().value); // 0
+console.log(numbers.next().value); // 1
+console.log(numbers.next().value); // 2
+// Can continue indefinitely without memory issues
+</code></pre>
+			<br />
+			<h4 id="2-creating-custom-iterables-with-generators">
+				2. Creating Custom Iterables with Generators
+			</h4>
+			<br />
+			<pre><code class="language-javascript">// Much simpler than implementing Symbol.iterator directly
+function* rangeGenerator(from, to) {
+  for (let i = from; i &lt;= to; i++) {
+    yield i;
+  }
+}
+
+for (const num of rangeGenerator(1, 5)) {
+  console.log(num);
+}
+// Output: 1, 2, 3, 4, 5
+</code></pre>
+			<br />
+			<h4 id="3-lazy-evaluation">3. Lazy Evaluation</h4>
+			<br />
+			<p>Generators compute values only when needed:</p>
+			<pre><code class="language-javascript">function* lazyMap(array, mappingFunction) {
+  for (const item of array) {
+    yield mappingFunction(item);
+  }
+}
+
+// This doesn&#39;t compute all values immediately
+const lazyDoubles = lazyMap([1, 2, 3, 4], x =&gt; {
+  console.log(`Computing double of ${x}`);
+  return x * 2;
+});
+
+// Values are computed on demand
+for (const value of lazyDoubles) {
+  console.log(`Got value: ${value}`);
+  if (value &gt; 4) break; // We stop early, so not all values are computed
+}
+</code></pre>
+			<p>Output:</p>
+			<pre><code>Computing double of 1
+Got value: 2
+Computing double of 2
+Got value: 4
+Computing double of 3
+Got value: 6
+</code></pre>
+			<br />
+			<h4 id="4-async-flow-control-pre-asyncawait-era">
+				4. Async Flow Control (Pre-async/await Era)
+			</h4>
+			<br />
+			<p>
+				Generators were used for async flow control before async/await:
+			</p>
+			<pre><code class="language-javascript">function* fetchUserData() {
+  try {
+    const user = yield fetchUser(userId);
+    const posts = yield fetchPosts(user.id);
+    const comments = yield fetchComments(posts[0].id);
+    return comments;
+  } catch (error) {
+    console.error(error);
+  }
+}
+</code></pre>
+			<p>
+				This pattern was popular with libraries like co and redux-saga.
+			</p>
+			<br />
+			<h1 id="javascript-modules-explained">
+				JavaScript Modules Explained
+			</h1>
+			<br />
+			<br />
+			<h2 id="what-are-modules">What Are Modules?</h2>
+			<br />
+			<p>A module is a JavaScript file that:</p>
+			<ul>
+				<li>Executes in <strong>strict mode</strong> automatically</li>
+				<li>
+					Keeps variables and functions contained (not added to the
+					global scope)
+				</li>
+				<li>Allows explicit importing and exporting of code</li>
+			</ul>
+			<br />
+			<h2 id="basic-module-usage">Basic Module Usage</h2>
+			<br />
+			<br />
+			<h3 id="exporting-code">Exporting Code</h3>
+			<br />
+			<p>
+				You can export variables, functions, and classes from a module:
+			</p>
+			<pre><code class="language-javascript">// lib.js
+function display(message) {
+  console.log(message);
+}
+
+// Named export
+export { display };
+</code></pre>
+			<br />
+			<h3 id="importing-code">Importing Code</h3>
+			<br />
+			<p>
+				You can import variables, functions, and classes into another
+				module:
+			</p>
+			<pre><code class="language-javascript">// index.js
+import { display } from &#39;./lib.js&#39;;
+
+display(&quot;Hello world!&quot;);
+</code></pre>
+			<br />
+			<h3 id="using-modules-in-html">Using Modules in HTML</h3>
+			<br />
+			<p>
+				To use modules in a web browser, add
+				<code>type=&quot;module&quot;</code> to your script tag:
+			</p>
+			<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;index.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+			<br />
+			<h2 id="renaming-imports-and-exports">
+				Renaming Imports and Exports
+			</h2>
+			<br />
+			<p>You can rename exports when exporting:</p>
+			<pre><code class="language-javascript">// Rename during export
+export { display as showMessage };
+</code></pre>
+			<p>Or rename imports when importing:</p>
+			<pre><code class="language-javascript">// Rename during import
+import { display as showMessage } from &#39;./lib.js&#39;;
+</code></pre>
+			<br />
+			<h2 id="default-exports">Default Exports</h2>
+			<br />
+			<p>
+				A module can have multiple named exports but only one default
+				export:
+			</p>
+			<pre><code class="language-javascript">// greeting.js
+export default function sayHello() {
+  console.log(&quot;Hello!&quot;);
+}
+
+// Also can have named exports
+export const VERSION = &#39;1.0&#39;;
+</code></pre>
+			<p>When importing a default export:</p>
+			<ul>
+				<li>Don&#39;t use curly braces</li>
+				<li>You can name it whatever you want</li>
+			</ul>
+			<pre><code class="language-javascript">// Import the default export
+import sayHello from &#39;./greeting.js&#39;;
+
+// Import both default and named exports
+import sayHello, { VERSION } from &#39;./greeting.js&#39;;
+</code></pre>
+			<br />
+			<h2 id="combining-declaration-and-export">
+				Combining Declaration and Export
+			</h2>
+			<br />
+			<p>
+				You can combine variable/function/class declaration with export:
+			</p>
+			<pre><code class="language-javascript">// Direct exports
+export const MIN = 1;
+export const MAX = 100;
+export function count() { /* ... */ }
+
+// Or export multiple items at once
+const MIN = 1;
+const MAX = 100;
+function count() { /* ... */ }
+export { MIN, MAX, count };
+</code></pre>
+			<br />
+			<h2 id="namespace-imports">Namespace Imports</h2>
+			<br />
+			<p>Import all exports from a module as a single object:</p>
+			<pre><code class="language-javascript">import * as utilities from &#39;./utilities.js&#39;;
+
+// Access exports as properties
+utilities.MIN;
+utilities.count();
+
+// Access default export (if any)
+utilities.default();
+</code></pre>
+			<p>
+				<strong>Note:</strong> You cannot access default exports by name
+				through namespace imports!
+			</p>
+			<br />
+			<h2 id="dynamic-imports">Dynamic Imports</h2>
+			<br />
+			<p>
+				The <code>import()</code> function lets you import modules on
+				demand:
+			</p>
+			<pre><code class="language-javascript">document.querySelector(&#39;.btn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+  // Dynamic import returns a Promise
+  import(&#39;./greeting.js&#39;)
+    .then((greeting) =&gt; {
+      greeting.sayHi();
+    })
+    .catch((error) =&gt; {
+      console.error(error);
+    });
+});
+</code></pre>
+			<p>With async/await:</p>
+			<pre><code class="language-javascript">document.querySelector(&#39;.btn&#39;).addEventListener(&#39;click&#39;, async () =&gt; {
+  try {
+    const greeting = await import(&#39;./greeting.js&#39;);
+    greeting.sayHi();
+  } catch (error) {
+    console.error(error);
+  }
+});
+</code></pre>
+			<p>Load multiple modules:</p>
+			<pre><code class="language-javascript">Promise.all([
+  import(&#39;./module1.js&#39;),
+  import(&#39;./module2.js&#39;)
+]).then(([module1, module2]) =&gt; {
+  // Use modules
+});
+</code></pre>
+			<br />
+			<h2 id="top-level-await">Top-Level Await</h2>
+			<br />
+			<p>
+				Modern JavaScript allows using <code>await</code> directly in
+				modules (not just in async functions):
+			</p>
+			<pre><code class="language-javascript">// user.mjs
+const url = &#39;https://jsonplaceholder.typicode.com/users&#39;;
+const response = await fetch(url);
+export const users = await response.json();
+</code></pre>
+			<pre><code class="language-javascript">// app.mjs
+import { users } from &#39;./user.mjs&#39;;
+
+function render(users) {
+  return users.map(user =&gt; `&lt;div&gt;${user.name}&lt;/div&gt;`).join(&#39;&#39;);
+}
+
+try {
+  document.querySelector(&#39;.container&#39;).innerHTML = render(users);
+} catch (error) {
+  document.querySelector(&#39;.container&#39;).innerHTML = error.message;
+}
+</code></pre>
+			<pre><code class="language-html">&lt;!-- index.html --&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;module&quot; src=&quot;app.mjs&quot;&gt;&lt;/script&gt;
+</code></pre>
+			<p>When a module uses top-level await:</p>
+			<ul>
+				<li>It acts like an async function</li>
+				<li>
+					Modules that import it will wait for it to complete before
+					executing
+				</li>
+			</ul>
+			<br />
+			<h1 id="javascript-symbols-explained">
+				JavaScript Symbols Explained
+			</h1>
+			<br />
+			<br />
+			<h2 id="introduction-to-symbols">Introduction to Symbols</h2>
+			<br />
+			<p>
+				Symbol is a primitive data type introduced in ES6 (ECMAScript
+				2015) that represents a unique, immutable value.
+			</p>
+			<p>Key characteristics:</p>
+			<ul>
+				<li>
+					Symbols are <strong>always unique</strong>, even when
+					created with the same description
+				</li>
+				<li>
+					They provide a way to create non-colliding object properties
+				</li>
+				<li>They are primitive values (not objects)</li>
+			</ul>
+			<br />
+			<h2 id="creating-symbols">Creating Symbols</h2>
+			<br />
+			<p>
+				The basic way to create a symbol is using the
+				<code>Symbol()</code> function:
+			</p>
+			<pre><code class="language-javascript">// Create a symbol with a description (for debugging purposes)
+let firstName = Symbol(&#39;first name&#39;);
+let lastName = Symbol(&#39;last name&#39;);
+
+// Symbols with the same description are still different symbols
+let firstName2 = Symbol(&#39;first name&#39;);
+console.log(firstName === firstName2); // false
+
+// Check the type
+console.log(typeof firstName); // &quot;symbol&quot;
+
+// Symbols are primitives, not objects
+// This will cause an error:
+let s = new Symbol(); // TypeError: Symbol is not a constructor
+</code></pre>
+			<p>
+				The description parameter is optional and is primarily used for
+				debugging purposes. It has no effect on the symbol&#39;s
+				identity.
+			</p>
+			<br />
+			<h2 id="using-symbols-as-object-properties">
+				Using Symbols as Object Properties
+			</h2>
+			<br />
+			<p>One of the main uses of symbols is as unique property keys:</p>
+			<pre><code class="language-javascript">const user = {};
+
+// Using symbols as property keys
+const id = Symbol(&#39;id&#39;);
+user[id] = 12345;
+
+// Regular property
+user.name = &quot;John&quot;;
+
+console.log(user); // {name: &quot;John&quot;, Symbol(id): 12345}
+console.log(user[id]); // 12345
+
+// Symbols don&#39;t show up in regular property enumeration
+console.log(Object.keys(user)); // [&quot;name&quot;]
+console.log(Object.getOwnPropertyNames(user)); // [&quot;name&quot;]
+
+// To get symbol properties, use:
+console.log(Object.getOwnPropertySymbols(user)); // [Symbol(id)]
+</code></pre>
+			<br />
+			<h2 id="global-symbol-registry">Global Symbol Registry</h2>
+			<br />
+			<p>
+				JavaScript provides a global symbol registry that allows you to
+				share symbols across your application:
+			</p>
+			<pre><code class="language-javascript">// Create or retrieve a symbol from the global registry
+let ssn = Symbol.for(&#39;ssn&#39;);
+
+// Retrieve the same symbol again
+let citizenID = Symbol.for(&#39;ssn&#39;);
+
+// These reference the same symbol
+console.log(ssn === citizenID); // true
+
+// Get the key used to register a symbol
+console.log(Symbol.keyFor(citizenID)); // &quot;ssn&quot;
+
+// Regular symbols (not in registry) return undefined
+let regularSymbol = Symbol(&#39;regular&#39;);
+console.log(Symbol.keyFor(regularSymbol)); // undefined
+</code></pre>
+			<p>
+				The registry ensures that symbols with the same key reference
+				the same underlying symbol value.
+			</p>
+			<br />
+			<h2 id="well-known-symbols">Well-Known Symbols</h2>
+			<br />
+			<p>
+				JavaScript defines several built-in symbols called
+				&quot;well-known symbols&quot; that allow you to customize
+				object behavior:
+			</p>
+			<br />
+			<h3 id="symbolhasinstance">Symbol.hasInstance</h3>
+			<br />
+			<p>
+				Customizes the behavior of the <code>instanceof</code> operator:
+			</p>
+			<pre><code class="language-javascript">class MyArray {
+  static [Symbol.hasInstance](instance) {
+    return Array.isArray(instance);
+  }
+}
+
+console.log([] instanceof MyArray); // true
+</code></pre>
+			<br />
+			<h3 id="symboliterator">Symbol.iterator</h3>
+			<br />
+			<p>
+				Defines how an object should be iterated, enabling the
+				<code>for...of</code> loop:
+			</p>
+			<pre><code class="language-javascript">const collection = {
+  items: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;],
+  [Symbol.iterator]() {
+    let index = 0;
+    const items = this.items;
+    
+    return {
+      next() {
+        return {
+          done: index &gt;= items.length,
+          value: items[index++]
+        };
+      }
+    };
+  }
+};
+
+for (const item of collection) {
+  console.log(item); // &quot;A&quot;, &quot;B&quot;, &quot;C&quot;
+}
+</code></pre>
+			<br />
+			<h3 id="symbolisconcatspreadable">Symbol.isConcatSpreadable</h3>
+			<br />
+			<p>
+				Controls how an object behaves when used with
+				<code>Array.prototype.concat()</code>:
+			</p>
+			<pre><code class="language-javascript">const numbers = [1, 2, 3];
+const fakeArray = { 
+  [Symbol.isConcatSpreadable]: true,
+  length: 2,
+  0: 4,
+  1: 5
+};
+
+console.log([0].concat(numbers)); // [0, 1, 2, 3]
+console.log([0].concat(fakeArray)); // [0, 4, 5]
+</code></pre>
+			<br />
+			<h3 id="symboltoprimitive">Symbol.toPrimitive</h3>
+			<br />
+			<p>Customizes how an object is converted to a primitive value:</p>
+			<pre><code class="language-javascript">const user = {
+  name: &quot;John&quot;,
+  age: 30,
+  [Symbol.toPrimitive](hint) {
+    switch (hint) {
+      case &#39;number&#39;:
+        return this.age;
+      case &#39;string&#39;:
+        return this.name;
+      default: // &#39;default&#39; hint
+        return `${this.name}, ${this.age} years old`;
+    }
+  }
+};
+
+console.log(+user); // 30 (number conversion)
+console.log(String(user)); // &quot;John&quot; (string conversion)
+console.log(user + &#39;&#39;); // &quot;John, 30 years old&quot; (default conversion)
+</code></pre>
+			<br />
+			<h2 id="benefits-of-using-symbols">Benefits of Using Symbols</h2>
+			<br />
+			<ol>
+				<li>
+					<strong>Avoiding property name collisions</strong> -
+					especially useful in libraries and frameworks
+				</li>
+				<li>
+					<strong>Creating &quot;hidden&quot; properties</strong> -
+					symbols don&#39;t appear in typical property enumeration
+				</li>
+				<li>
+					<strong>Metaprogramming</strong> - customizing
+					JavaScript&#39;s built-in behavior
+				</li>
+				<li>
+					<strong>Implementing protocols</strong> - like iteration,
+					through well-known symbols
+				</li>
+			</ol>
+			<br />
+			<h2 id="limitations">Limitations</h2>
+			<br />
+			<ul>
+				<li>
+					Symbols are not completely private - they can be accessed
+					via <code>Object.getOwnPropertySymbols()</code>
+				</li>
+				<li>
+					They aren&#39;t automatically serialized to JSON (<code
+						>JSON.stringify()</code
+					>
+					ignores symbol properties)
+				</li>
+			</ul>
+			<br />
+			<h1 id="javascript-map-and-set-collections">
+				JavaScript Map and Set Collections
+			</h1>
+			<br />
+			<br />
+			<h2 id="map-object">Map Object</h2>
+			<br />
+			<p>
+				A <code>Map</code> is a collection of key-value pairs where keys
+				can be any value (including objects, functions, or primitive
+				values). Unlike regular objects, Maps maintain the insertion
+				order of elements and offer better performance for frequent
+				additions and removals.
+			</p>
+			<br />
+			<h3 id="creating-a-map">Creating a Map</h3>
+			<br />
+			<pre><code class="language-javascript">// Create an empty Map
+let userRoles = new Map();
+
+// Sample objects to use as keys
+let john = {name: &#39;John Doe&#39;},
+    lily = {name: &#39;Lily Bush&#39;},
+    peter = {name: &#39;Peter Drucker&#39;};
+
+// Method 1: Add entries using set() method (chainable)
+userRoles
+    .set(john, &#39;admin&#39;)
+    .set(lily, &#39;editor&#39;)
+    .set(peter, &#39;subscriber&#39;);
+
+// Method 2: Initialize with nested arrays
+let userRoles2 = new Map([
+    [john, &#39;admin&#39;],
+    [lily, &#39;editor&#39;],
+    [peter, &#39;subscriber&#39;]
+]);
+</code></pre>
+			<br />
+			<h3 id="basic-map-operations">Basic Map Operations</h3>
+			<br />
+			<pre><code class="language-javascript">// Get a value by key
+userRoles.get(john); // &#39;admin&#39;
+userRoles.get({name: &#39;Unknown&#39;}); // undefined (not found)
+
+// Check if a key exists
+userRoles.has(lily); // true
+userRoles.has({name: &#39;Unknown&#39;}); // false
+
+// Get the number of entries
+console.log(userRoles.size); // 3
+
+// Delete an entry
+userRoles.delete(john); // true (returns true if element existed and was removed)
+
+// Remove all entries
+userRoles.clear();
+</code></pre>
+			<br />
+			<h3 id="iterating-over-maps">Iterating Over Maps</h3>
+			<br />
+			<p>Maps provide several methods for iteration:</p>
+			<pre><code class="language-javascript">// Iterate over keys
+for (const user of userRoles.keys()) {
+    console.log(user.name);
+}
+
+// Iterate over values
+for (let role of userRoles.values()) {
+    console.log(role);
+}
+
+// Iterate over [key, value] pairs (entries)
+for (const entry of userRoles.entries()) {
+    console.log(entry[0].name, entry[1]);
+}
+
+// With destructuring (cleaner approach for entries)
+for (let [user, role] of userRoles.entries()) {
+    console.log(`${user.name}: ${role}`);
+}
+
+// forEach method (callback receives value, key, map)
+userRoles.forEach((role, user) =&gt; {
+    console.log(`${user.name}: ${role}`);
+});
+</code></pre>
+			<br />
+			<h3 id="converting-map-to-arrays">Converting Map to Arrays</h3>
+			<br />
+			<pre><code class="language-javascript">// Convert keys to an array
+const keyArray = [...userRoles.keys()];
+
+// Convert values to an array
+const valueArray = [...userRoles.values()];
+
+// Convert entries to array of arrays
+const entriesArray = [...userRoles.entries()];
+// or simply:
+const entriesArray2 = [...userRoles];
+</code></pre>
+			<br />
+			<h2 id="weakmap">WeakMap</h2>
+			<br />
+			<p>
+				A <code>WeakMap</code> is similar to a Map but with some
+				important differences:
+			</p>
+			<ol>
+				<li>Keys must be objects (primitive values not allowed)</li>
+				<li>
+					Keys are held &quot;weakly&quot; (can be garbage-collected
+					if no other references exist)
+				</li>
+				<li>Not enumerable (no iteration methods)</li>
+				<li>No <code>size</code> property</li>
+			</ol>
+			<pre><code class="language-javascript">// Create a WeakMap
+const weakMap = new WeakMap();
+
+// Valid - using objects as keys
+let obj1 = {};
+weakMap.set(obj1, &#39;value for obj1&#39;);
+
+// Available methods
+weakMap.get(obj1);       // &#39;value for obj1&#39;
+weakMap.has(obj1);       // true
+weakMap.delete(obj1);    // true
+</code></pre>
+			<br />
+			<h3 id="use-cases-for-weakmap">Use Cases for WeakMap</h3>
+			<br />
+			<ul>
+				<li>Storing private data for objects</li>
+				<li>
+					Associating metadata with objects without preventing garbage
+					collection
+				</li>
+				<li>
+					Implementing caches that shouldn&#39;t prevent memory
+					cleanup
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// Example: Private data
+const privateData = new WeakMap();
+
+class User {
+    constructor(name, age) {
+        privateData.set(this, { name, age });
+    }
+    
+    getName() {
+        return privateData.get(this).name;
+    }
+    
+    getAge() {
+        return privateData.get(this).age;
+    }
+}
+</code></pre>
+			<br />
+			<h2 id="set-object">Set Object</h2>
+			<br />
+			<p>
+				A <code>Set</code> is a collection of unique values of any type.
+				It eliminates duplicate values automatically.
+			</p>
+			<br />
+			<h3 id="creating-a-set">Creating a Set</h3>
+			<br />
+			<pre><code class="language-javascript">// Create a Set with initial values (duplicates are automatically removed)
+let chars = new Set([&#39;a&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c&#39;]);
+console.log(chars); // Set { &#39;a&#39;, &#39;b&#39;, &#39;c&#39; }
+
+// Create an empty Set and add values
+let roles = new Set();
+roles.add(&#39;admin&#39;)
+    .add(&#39;editor&#39;)
+    .add(&#39;subscriber&#39;);
+</code></pre>
+			<br />
+			<h3 id="basic-set-operations">Basic Set Operations</h3>
+			<br />
+			<pre><code class="language-javascript">// Get the number of elements
+console.log(chars.size); // 3
+
+// Add elements (chainable)
+chars.add(&#39;d&#39;);
+chars.add(&#39;e&#39;).add(&#39;f&#39;);
+
+// Check if a value exists
+chars.has(&#39;a&#39;); // true
+chars.has(&#39;z&#39;); // false
+
+// Delete an element
+chars.delete(&#39;f&#39;); // true
+
+// Remove all elements
+chars.clear(); // Set{}
+</code></pre>
+			<br />
+			<h3 id="iterating-over-sets">Iterating Over Sets</h3>
+			<br />
+			<pre><code class="language-javascript">// Basic iteration
+for (let role of roles) {
+    console.log(role);
+}
+
+// Using values() method (same as basic iteration)
+for (let role of roles.values()) {
+    console.log(role);
+}
+
+// Using keys() method (identical to values() in Sets)
+for (let role of roles.keys()) {
+    console.log(role);
+}
+
+// Using entries() method (returns [value, value] pairs)
+for (let [key, value] of roles.entries()) {
+    console.log(key, value); // key and value are identical in Sets
+    console.log(key === value); // true
+}
+
+// forEach method
+roles.forEach(role =&gt; {
+    console.log(role.toUpperCase());
+});
+</code></pre>
+			<br />
+			<h3 id="converting-sets-to-arrays">Converting Sets to Arrays</h3>
+			<br />
+			<pre><code class="language-javascript">// Convert Set to Array
+const rolesArray = [...roles];
+// or
+const rolesArray2 = Array.from(roles);
+
+// Useful for creating arrays with unique values
+const numbers = [1, 2, 3, 3, 4, 4, 5];
+const uniqueNumbers = [...new Set(numbers)]; // [1, 2, 3, 4, 5]
+</code></pre>
+			<br />
+			<h2 id="weakset">WeakSet</h2>
+			<br />
+			<p>
+				A <code>WeakSet</code> is similar to a Set but with important
+				differences:
+			</p>
+			<ol>
+				<li>Can only contain objects (no primitive values)</li>
+				<li>
+					References to objects are weak (allows garbage collection)
+				</li>
+				<li>Not enumerable (no iteration methods)</li>
+				<li>No <code>size</code> property</li>
+			</ol>
+			<pre><code class="language-javascript">// Create a WeakSet
+const visitedObjects = new WeakSet();
+
+// Add objects
+let obj1 = {id: 1};
+let obj2 = {id: 2};
+
+visitedObjects.add(obj1);
+visitedObjects.add(obj2);
+
+// Available methods
+visitedObjects.has(obj1);    // true
+visitedObjects.delete(obj1); // true
+</code></pre>
+			<br />
+			<h3 id="use-cases-for-weakset">Use Cases for WeakSet</h3>
+			<br />
+			<ul>
+				<li>
+					Tracking object references without preventing garbage
+					collection
+				</li>
+				<li>
+					Marking objects that have been &quot;visited&quot; or
+					&quot;processed&quot;
+				</li>
+				<li>Implementing object-capability security patterns</li>
+			</ul>
+			<pre><code class="language-javascript">// Example: Tracking processed items
+const processedItems = new WeakSet();
+
+function processItem(item) {
+    if (processedItems.has(item)) {
+        console.log(&#39;Already processed this item&#39;);
+        return;
+    }
+    
+    // Process the item...
+    console.log(&#39;Processing:&#39;, item);
+    
+    // Mark as processed
+    processedItems.add(item);
+}
+</code></pre>
+			<br />
+			<h2 id="map-vs-object-and-set-vs-array">
+				Map vs Object and Set vs Array
+			</h2>
+			<br />
+			<br />
+			<h3 id="map-vs-object">Map vs Object</h3>
+			<br />
+			<ul>
+				<li>
+					Maps can use any value as keys (objects, functions, etc.)
+				</li>
+				<li>Maps maintain insertion order</li>
+				<li>Maps are directly iterable</li>
+				<li>Maps have a <code>size</code> property</li>
+				<li>Better performance for frequent additions/removals</li>
+			</ul>
+			<br />
+			<h3 id="set-vs-array">Set vs Array</h3>
+			<br />
+			<ul>
+				<li>Sets automatically ensure unique values</li>
+				<li>
+					Sets have efficient value lookup with <code>has()</code>
+				</li>
+				<li>Sets don&#39;t have index-based access</li>
+				<li>
+					Sets don&#39;t have order-specific methods like
+					<code>sort()</code>
+				</li>
+			</ul>
+			<br />
+			<h1 id="javascript-variables-and-advanced-operators">
+				JavaScript Variables and Advanced Operators
+			</h1>
+			<br />
+			<br />
+			<h2 id="variable-declarations-var-let-and-const">
+				Variable Declarations: var, let, and const
+			</h2>
+			<br />
+			<p>
+				JavaScript provides three ways to declare variables:
+				<code>var</code>, <code>let</code>, and <code>const</code>.
+				Understanding their differences is crucial for writing effective
+				JavaScript code.
+			</p>
+			<br />
+			<h3 id="var">var</h3>
+			<br />
+			<p>
+				<code>var</code> has function scope and was the original way to
+				declare variables in JavaScript.
+			</p>
+			<p><strong>Characteristics:</strong></p>
+			<ul>
+				<li>
+					<strong>Scope</strong>: Function-scoped (or global if
+					declared outside a function)
+				</li>
+				<li>
+					<strong>Hoisting</strong>: Fully hoisted with initialization
+					to <code>undefined</code>
+				</li>
+				<li>
+					<strong>Redeclaration</strong>: Allows redeclaration of the
+					same variable
+				</li>
+				<li>
+					<strong>Global Object</strong>: When declared globally,
+					creates a property on the global object
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// Function scope
+function test() {
+  var x = 10;
+  if (true) {
+    var x = 20;  // Same variable!
+    console.log(x);  // 20
+  }
+  console.log(x);  // 20 (not 10)
+}
+
+// Hoisting
+console.log(y);  // undefined (not ReferenceError)
+var y = 5;
+
+// Creates global property
+var globalVar = &quot;I&#39;m global&quot;;
+console.log(window.globalVar);  // &quot;I&#39;m global&quot; (in browser)
+</code></pre>
+			<br />
+			<h3 id="let">let</h3>
+			<br />
+			<p>
+				<code>let</code> was introduced in ES6 (ES2015) and provides
+				block scoping.
+			</p>
+			<p><strong>Characteristics:</strong></p>
+			<ul>
+				<li><strong>Scope</strong>: Block-scoped <code>{}</code></li>
+				<li>
+					<strong>Hoisting</strong>: Hoisted but not initialized
+					(temporal dead zone)
+				</li>
+				<li>
+					<strong>Redeclaration</strong>: Does not allow redeclaration
+					in the same scope
+				</li>
+				<li>
+					<strong>Global Object</strong>: Does not create a property
+					on the global object
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// Block scope
+function test() {
+  let x = 10;
+  if (true) {
+    let x = 20;  // Different variable
+    console.log(x);  // 20
+  }
+  console.log(x);  // 10
+}
+
+// Temporal dead zone
+// console.log(y);  // ReferenceError: Cannot access &#39;y&#39; before initialization
+let y = 5;
+
+// No global property
+let globalLet = &quot;I&#39;m global&quot;;
+console.log(window.globalLet);  // undefined (in browser)
+</code></pre>
+			<br />
+			<h3 id="const">const</h3>
+			<br />
+			<p>
+				<code>const</code> also has block scope but creates read-only
+				references.
+			</p>
+			<p><strong>Characteristics:</strong></p>
+			<ul>
+				<li><strong>Scope</strong>: Block-scoped <code>{}</code></li>
+				<li>
+					<strong>Hoisting</strong>: Hoisted but not initialized
+					(temporal dead zone)
+				</li>
+				<li><strong>Reassignment</strong>: Cannot be reassigned</li>
+				<li>
+					<strong>Mutability</strong>: The value itself can be mutable
+					(objects, arrays)
+				</li>
+			</ul>
+			<pre><code class="language-javascript">// Basic usage
+const PI = 3.14159;
+// PI = 3;  // TypeError: Assignment to constant variable
+
+// Objects are mutable
+const person = { name: &quot;John&quot;, age: 30 };
+person.age = 31;  // OK
+console.log(person);  // { name: &quot;John&quot;, age: 31 }
+// person = { name: &quot;Jane&quot; };  // TypeError: Assignment to constant variable
+</code></pre>
+			<br />
+			<h3 id="making-objects-immutable-with-const">
+				Making Objects Immutable with const
+			</h3>
+			<br />
+			<p>
+				While <code>const</code> prevents reassignment, it doesn&#39;t
+				make objects immutable by default:
+			</p>
+			<pre><code class="language-javascript">// Making objects immutable with Object.freeze()
+const immutablePerson = Object.freeze({ name: &quot;John&quot;, age: 30 });
+// immutablePerson.age = 31;  // No error in non-strict mode, but change is not applied
+console.log(immutablePerson.age);  // 30
+
+// Object.freeze() is shallow
+const company = Object.freeze({
+    name: &#39;ABC Corp&#39;,
+    address: {
+        street: &#39;North 1st Street&#39;,
+        city: &#39;San Jose&#39;,
+        state: &#39;CA&#39;,
+        zipcode: 95134
+    }
+});
+
+company.address.country = &#39;USA&#39;;  // Works! (nested object isn&#39;t frozen)
+console.log(company.address.country);  // &quot;USA&quot;
+
+// For deep freezing, you would need a recursive approach
+function deepFreeze(obj) {
+    Object.keys(obj).forEach(prop =&gt; {
+        if (typeof obj[prop] === &#39;object&#39; &amp;&amp; obj[prop] !== null) {
+            deepFreeze(obj[prop]);
+        }
+    });
+    return Object.freeze(obj);
+}
+
+const deepFrozenCompany = deepFreeze({
+    name: &#39;XYZ Corp&#39;,
+    address: { city: &#39;Boston&#39; }
+});
+// deepFrozenCompany.address.state = &#39;MA&#39;;  // No effect
+</code></pre>
+			<br />
+			<h3 id="arrays-with-const">Arrays with const</h3>
+			<br />
+			<p>
+				Arrays declared with <code>const</code> behave similarly to
+				objects:
+			</p>
+			<pre><code class="language-javascript">const colors = [&#39;red&#39;];
+colors.push(&#39;green&#39;);  // OK
+colors.pop();  // OK
+console.log(colors);  // [&quot;red&quot;]
+
+// colors = [&#39;blue&#39;];  // TypeError: Assignment to constant variable
+
+// To make an array immutable:
+const immutableColors = Object.freeze([&#39;red&#39;, &#39;blue&#39;]);
+// immutableColors.push(&#39;green&#39;);  // TypeError in strict mode
+</code></pre>
+			<br />
+			<h3 id="using-const-in-loops">Using const in Loops</h3>
+			<br />
+			<pre><code class="language-javascript">const scores = [75, 80, 95];
+
+// This works - new binding for &#39;score&#39; in each iteration
+for (const score of scores) {
+    console.log(score);  // 75, 80, 95
+}
+
+// This works too - block scope creates new &#39;i&#39; for each loop
+for (let i = 0; i &lt; scores.length; i++) {
+    const currentScore = scores[i];
+    console.log(currentScore);
+}
+
+// This fails - trying to reassign &#39;i&#39;
+// for (const i = 0; i &lt; scores.length; i++) {  // TypeError
+//     console.log(scores[i]);
+// }
+</code></pre>
+			<br />
+			<h2 id="variable-declaration-best-practices">
+				Variable Declaration Best Practices
+			</h2>
+			<br />
+			<ol>
+				<li>
+					<strong>Default to <code>const</code></strong
+					>: Use <code>const</code> for all variables that don&#39;t
+					need to be reassigned
+				</li>
+				<li>
+					<strong>Use <code>let</code></strong
+					>: When you need to reassign a variable
+				</li>
+				<li>
+					<strong>Avoid <code>var</code></strong
+					>: Unless you specifically need its function-scoping
+					behavior
+				</li>
+				<li>
+					<strong>Declare before use</strong>: Always declare
+					variables before using them
+				</li>
+			</ol>
+			<br />
+			<h2 id="advanced-operators">Advanced Operators</h2>
+			<br />
+			<p>
+				JavaScript provides several advanced operators that can make
+				your code more concise and expressive.
+			</p>
+			<br />
+			<h3 id="logical-assignment-operators">
+				Logical Assignment Operators
+			</h3>
+			<br />
+			<p>These operators combine logical operations with assignment.</p>
+			<br />
+			<h4 id="logical-or-assignment-codecode">
+				Logical OR Assignment (<code>||=</code>)
+			</h4>
+			<br />
+			<p>Assigns the right operand only if the left operand is falsy.</p>
+			<pre><code class="language-javascript">// x ||= y is equivalent to x = x || y
+
+let title;
+title ||= &quot;Untitled&quot;;  // title is now &quot;Untitled&quot;
+
+let name = &quot;John&quot;;
+name ||= &quot;Anonymous&quot;;  // name remains &quot;John&quot;
+
+// Beware with falsy values like 0 and &quot;&quot;
+let count = 0;
+count ||= 5;  // count becomes 5 (not always what you want!)
+</code></pre>
+			<br />
+			<h4 id="logical-and-assignment-codeampampcode">
+				Logical AND Assignment (<code>&amp;&amp;=</code>)
+			</h4>
+			<br />
+			<p>Assigns the right operand only if the left operand is truthy.</p>
+			<pre><code class="language-javascript">// x &amp;&amp;= y is equivalent to x = x &amp;&amp; y
+
+let user = { name: &quot;John&quot; };
+user &amp;&amp;= user.admin;  // user is now undefined (user.admin doesn&#39;t exist)
+
+let admin = { name: &quot;Admin&quot;, isAdmin: true };
+admin &amp;&amp;= admin.isAdmin;  // admin is now true
+</code></pre>
+			<br />
+			<h4 id="nullish-coalescing-assignment-codecode">
+				Nullish Coalescing Assignment (<code>??=</code>)
+			</h4>
+			<br />
+			<p>
+				Assigns the right operand only if the left operand is
+				<code>null</code> or <code>undefined</code>.
+			</p>
+			<pre><code class="language-javascript">// x ??= y is equivalent to x = x ?? y
+
+let username;
+username ??= &quot;Guest&quot;;  // username is now &quot;Guest&quot;
+
+let displayName = &quot;User123&quot;;
+displayName ??= &quot;Unknown&quot;;  // displayName remains &quot;User123&quot;
+
+// Works properly with other falsy values
+let count = 0;
+count ??= 5;  // count remains 0
+</code></pre>
+			<br />
+			<h3 id="nullish-coalescing-operator-codecode">
+				Nullish Coalescing Operator (<code>??</code>)
+			</h3>
+			<br />
+			<p>
+				Returns the right operand when the left one is
+				<code>null</code> or <code>undefined</code>, otherwise returns
+				the left operand.
+			</p>
+			<pre><code class="language-javascript">// Comparison with logical OR operator
+let count = 0;
+let result1 = count || 1;  // 1 (because 0 is falsy)
+let result2 = count ?? 1;  // 0 (because 0 is not null/undefined)
+
+let name = &quot;&quot;;
+let displayName1 = name || &quot;Anonymous&quot;;  // &quot;Anonymous&quot; (because &quot;&quot; is falsy)
+let displayName2 = name ?? &quot;Anonymous&quot;;  // &quot;&quot; (because &quot;&quot; is not null/undefined)
+
+let user;
+let defaultUser = user ?? { name: &quot;Guest&quot; };  // defaultUser is { name: &quot;Guest&quot; }
+</code></pre>
+			<br />
+			<h3 id="exponentiation-operator-codecode">
+				Exponentiation Operator (<code>**</code>)
+			</h3>
+			<br />
+			<p>Raises the left operand to the power of the right operand.</p>
+			<pre><code class="language-javascript">// x ** y is equivalent to Math.pow(x, y)
+console.log(2 ** 3);  // 8
+console.log(10 ** -2);  // 0.01
+
+// Can be combined with assignment
+let value = 2;
+value **= 3;  // value is now 8
+</code></pre>
+			<br />
+			<h3 id="short-circuit-evaluation">Short-Circuit Evaluation</h3>
+			<br />
+			<p>
+				Short-circuit evaluation is when the second operand is not
+				evaluated if the first operand determines the result.
+			</p>
+			<pre><code class="language-javascript">// OR (||) short-circuits if the first operand is truthy
+console.log(true || someUndefinedFunction());  // true (function never called)
+
+// AND (&amp;&amp;) short-circuits if the first operand is falsy
+console.log(false &amp;&amp; someUndefinedFunction());  // false (function never called)
+
+// Nullish coalescing (??) short-circuits if the first operand is not null/undefined
+console.log(&quot;value&quot; ?? someUndefinedFunction());  // &quot;value&quot; (function never called)
+</code></pre>
+			<br />
+			<h2 id="understanding-the-temporal-dead-zone">
+				Understanding the Temporal Dead Zone
+			</h2>
+			<br />
+			<p>
+				The &quot;temporal dead zone&quot; (TDZ) is the time between
+				entering a scope where a variable is declared with
+				<code>let</code> or <code>const</code> and the actual
+				declaration.
+			</p>
+			<pre><code class="language-javascript">{
+    // Start of TDZ for x
+    
+    // console.log(x);  // ReferenceError: Cannot access &#39;x&#39; before initialization
+    
+    const x = 10;  // End of TDZ for x
+    
+    console.log(x);  // 10 (works fine)
+}
+</code></pre>
+			<p>
+				The TDZ helps catch errors by preventing access to variables
+				before they&#39;re properly initialized.
+			</p>
+			<br />
+			<h2 id="comparison-var-vs-let-vs-const">
+				Comparison: var vs let vs const
+			</h2>
+			<br />
+			<table>
+				<thead>
+					<tr>
+						<th>Feature</th>
+						<th>var</th>
+						<th>let</th>
+						<th>const</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Scope</td>
+						<td>Function</td>
+						<td>Block</td>
+						<td>Block</td>
+					</tr>
+					<tr>
+						<td>Hoisting</td>
+						<td>Hoisted with <code>undefined</code></td>
+						<td>Hoisted but not initialized</td>
+						<td>Hoisted but not initialized</td>
+					</tr>
+					<tr>
+						<td>Redeclaration</td>
+						<td>Allowed</td>
+						<td>Not allowed</td>
+						<td>Not allowed</td>
+					</tr>
+					<tr>
+						<td>Reassignment</td>
+						<td>Allowed</td>
+						<td>Allowed</td>
+						<td>Not allowed</td>
+					</tr>
+					<tr>
+						<td>Added to global object</td>
+						<td>Yes</td>
+						<td>No</td>
+						<td>No</td>
+					</tr>
+					<tr>
+						<td>Temporal dead zone</td>
+						<td>No</td>
+						<td>Yes</td>
+						<td>Yes</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>
