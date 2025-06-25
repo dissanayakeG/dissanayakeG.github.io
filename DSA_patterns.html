@@ -30,7 +30,7 @@
 
 The <strong>Sliding Window</strong> technique efficiently processes contiguous subarrays or substrings by maintaining a window and sliding it over the data. At each step, we update the result using the previous window's computations. This pattern is ideal for problems requiring analysis of fixed-size or variable-size windows (subarrays/substrings) in an array or string. Below are practice problems that use this pattern:
 
-<br><br><i> <strong>Maximum Sum of Subarray of Size K</strong> (Beginner) GeeksforGeeks</i>: Given an array and integer <br><br><i> <strong>k<br><br><i> <strong>, find the maximum sum of any subarray of size <br><br><i> <strong>k<br><br><i> <strong>. For example, for <br><br><i> <strong>[100,200,300,400]<br><br><i> <strong> with <br><br><i> <strong>k=2<br><br><i> <strong>, the answer is 700 (subarray <br><br><i> <strong>[300,400]<br><br><i> <strong>).
+<br><br><i> <strong>Maximum Sum of Subarray of Size K</strong> (Beginner) GeeksforGeeks</i>: Given an array and integer k, find the maximum sum of any subarray of size k. For example, for [100,200,300,400] with k=2, the answer is 700 (subarray [300,400]).
 
   <pre><code class="language-javascript">
   function maxSubarraySum(arr, k) {
@@ -52,9 +52,9 @@ The <strong>Sliding Window</strong> technique efficiently processes contiguous s
   console.log(maxSubarraySum([1,4,2,10,23,3,1,0,20], 4)); // 39 ([4,2,10,23])
   </code></pre>
 
-  <i>Explanation:</i> We maintain the sum of the current window of size <br><br><i> <strong>k<br><br><i> <strong>, then slide one element at a time. At each slide, we add the new element entering the window and subtract the element leaving the window. This way we compute each subarray sum in O(1) after initial O(k) setup. The sliding window avoids recomputing sums from scratch.
+  <i>Explanation:</i> We maintain the sum of the current window of size k, then slide one element at a time. At each slide, we add the new element entering the window and subtract the element leaving the window. This way we compute each subarray sum in O(1) after initial O(k) setup. The sliding window avoids recomputing sums from scratch.
 
-<br><br><i> <strong>Longest Substring Without Repeating Characters</strong> (Intermediate) GeeksforGeeks</i>: Given a string, find the length of the longest substring without repeating characters. For example, <br><br><i> <strong>"geeksforgeeks"<br><br><i> <strong> yields length 7 (<br><br><i> <strong>"ksforge"<br><br><i> <strong> etc.).
+<br><br><i> <strong>Longest Substring Without Repeating Characters</strong> (Intermediate) GeeksforGeeks</i>: Given a string, find the length of the longest substring without repeating characters. For example, "geeksforgeeks" yields length 7 ("ksforge" etc.).
 
   <pre><code class="language-javascript">
   function lengthOfLongestSubstring(s) {
@@ -74,9 +74,9 @@ The <strong>Sliding Window</strong> technique efficiently processes contiguous s
   console.log(lengthOfLongestSubstring("geeksforgeeks")); // 7
   </code></pre>
 
-  <i>Explanation:</i> This uses a variable-size sliding window on the string. We expand the window by moving <br><br><i> <strong>end<br><br><i> <strong> forward and track the last seen index of each character. If a repeat is found, we slide the <br><br><i> <strong>start<br><br><i> <strong> to one past the previous index of that character. This ensures the window always has unique characters. The window slides efficiently through the string, updating the maximum length.
+  <i>Explanation:</i> This uses a variable-size sliding window on the string. We expand the window by moving end forward and track the last seen index of each character. If a repeat is found, we slide the start to one past the previous index of that character. This ensures the window always has unique characters. The window slides efficiently through the string, updating the maximum length.
 
-<br><br><i> <strong>Smallest Subarray with Sum Greater Than X</strong> (Intermediate) GeeksforGeeks</i>: Given an array of positives and a number <br><br><i> <strong>x<br><br><i> <strong>, find the length of the smallest contiguous subarray whose sum is strictly greater than <br><br><i> <strong>x<br><br><i> <strong>. For instance, in <br><br><i> <strong>[1, 4, 45, 6, 0, 19]<br><br><i> <strong> with <br><br><i> <strong>x=51<br><br><i> <strong>, the smallest subarray length is 3 (<br><br><i> <strong>[4,45,6]<br><br><i> <strong>).
+<br><br><i> <strong>Smallest Subarray with Sum Greater Than X</strong> (Intermediate) GeeksforGeeks</i>: Given an array of positives and a number x, find the length of the smallest contiguous subarray whose sum is strictly greater than x. For instance, in [1, 4, 45, 6, 0, 19] with x=51, the smallest subarray length is 3 ([4,45,6]).
 
   <pre><code class="language-javascript">
   function smallestSubarrayWithSumGreaterThan(arr, target) {
@@ -97,13 +97,13 @@ The <strong>Sliding Window</strong> technique efficiently processes contiguous s
   console.log(smallestSubarrayWithSumGreaterThan([1,4,45,6,0,19], 51)); // 3
   </code></pre>
 
-  <i>Explanation:</i> We expand the window by moving <br><br><i> <strong>right<br><br><i> <strong> and accumulating <br><br><i> <strong>sum<br><br><i> <strong>. Whenever <br><br><i> <strong>sum<br><br><i> <strong> exceeds <br><br><i> <strong>target<br><br><i> <strong>, we shrink the window from the left (increasing <br><br><i> <strong>left<br><br><i> <strong>) to try to find a smaller subarray. We record the smallest window length that satisfies the sum condition. This two-pointer sliding window approach achieves O(n) time.
+  <i>Explanation:</i> We expand the window by moving right and accumulating sum. Whenever sum exceeds target, we shrink the window from the left (increasing left) to try to find a smaller subarray. We record the smallest window length that satisfies the sum condition. This two-pointer sliding window approach achieves O(n) time.
 
 <h2 id="two-pointers"> Two Pointers</h2>
 
 The <strong>Two Pointers</strong> pattern uses two indices (often starting at opposite ends or one fixed and one moving) to solve problems in sorted arrays or linked structures. It often applies to finding pairs, removing duplicates, or container-size problems. The key is that both pointers move toward each other (or in one direction) based on some condition. Typical examples include finding pairs with a given sum or partitioning arrays.
 
-<br><br><i> <strong>Remove Duplicates from Sorted Array</strong> (Beginner) -- GeeksforGeeks</i>: Given a sorted array, remove duplicates in-place such that each element appears only once and return the new length. Example: <br><br><i> <strong>[2,3,3,3,6,9,9]<br><br><i> <strong> becomes <br><br><i> <strong>[2,3,6,9]<br><br><i> <strong> with length 4.
+<br><br><i> <strong>Remove Duplicates from Sorted Array</strong> (Beginner) – GeeksforGeeks</i>: Given a sorted array, remove duplicates in-place such that each element appears only once and return the new length. Example: [2,3,3,3,6,9,9] becomes [2,3,6,9] with length 4.
 
   <pre><code class="language-javascript">
   function removeDuplicates(nums) {
@@ -122,9 +122,9 @@ The <strong>Two Pointers</strong> pattern uses two indices (often starting at op
   console.log(removeDuplicates(arr)); // 4; arr is modified to [2,3,6,9,...]
   </code></pre>
 
-  <i>Explanation:</i> We use two pointers: one (<br><br><i> <strong>i<br><br><i> <strong>) to scan through the array, and one (<br><br><i> <strong>write<br><br><i> <strong>) to build the list of unique elements. Whenever we see a new number (<br><br><i> <strong>nums[i] != nums[i-1]<br><br><i> <strong>), we write it into position <br><br><i> <strong>write<br><br><i> <strong> and increment <br><br><i> <strong>write<br><br><i> <strong>. This ensures all unique values are moved to the front. Because the array is sorted, duplicates are adjacent, making this approach straightforward.
+  <i>Explanation:</i> We use two pointers: one (i) to scan through the array, and one (write) to build the list of unique elements. Whenever we see a new number (nums[i] != nums[i-1]), we write it into position write and increment write. This ensures all unique values are moved to the front. Because the array is sorted, duplicates are adjacent, making this approach straightforward.
 
-<br><br><i> <strong>Two Sum II (Sorted Array)</strong> (Intermediate) -- GeeksforGeeks</i>: Given a sorted 1-indexed array and a target, find the indices of the two numbers that add up to the target. For example, <br><br><i> <strong>numbers = [2,7,11,15], target = 9<br><br><i> <strong> returns <br><br><i> <strong>[1,2]<br><br><i> <strong> (because 2+7=9).
+<br><br><i> <strong>Two Sum II (Sorted Array)</strong> (Intermediate) – GeeksforGeeks</i>: Given a sorted 1-indexed array and a target, find the indices of the two numbers that add up to the target. For example, numbers = [2,7,11,15], target = 9 returns [1,2] (because 2+7=9).
 
   <pre><code class="language-javascript">
   function twoSumSorted(numbers, target) {
@@ -145,9 +145,9 @@ The <strong>Two Pointers</strong> pattern uses two indices (often starting at op
   console.log(twoSumSorted([2,7,11,15], 9)); // [1, 2]
   </code></pre>
 
-  <i>Explanation:</i> We place one pointer (<br><br><i> <strong>left<br><br><i> <strong>) at the start and the other (<br><br><i> <strong>right<br><br><i> <strong>) at the end of the sorted array. We compute the sum; if it's too small, we move <br><br><i> <strong>left<br><br><i> <strong> rightward to increase it, and if it's too large, we move <br><br><i> <strong>right<br><br><i> <strong> leftward to decrease it. This two-pointer strategy finds the pair in O(n) time.
+  <i>Explanation:</i> We place one pointer (left) at the start and the other (right) at the end of the sorted array. We compute the sum; if it's too small, we move left rightward to increase it, and if it's too large, we move right leftward to decrease it. This two-pointer strategy finds the pair in O(n) time.
 
-<br><br><i> <strong>Container With Most Water</strong> (Intermediate) -- GeeksforGeeks</i>: Given an array of non-negative heights representing vertical lines on the x-axis, find two lines that together with the x-axis form a container holding the most water. For example, <br><br><i> <strong>[1,8,6,2,5,4,8,3,7]<br><br><i> <strong> yields area 49 between heights 8 and 7.
+<br><br><i> <strong>Container With Most Water</strong> (Intermediate) – GeeksforGeeks</i>: Given an array of non-negative heights representing vertical lines on the x-axis, find two lines that together with the x-axis form a container holding the most water. For example, [1,8,6,2,5,4,8,3,7] yields area 49 between heights 8 and 7.
 
   <pre><code class="language-javascript">
   function maxContainerArea(height) {
@@ -171,13 +171,13 @@ The <strong>Two Pointers</strong> pattern uses two indices (often starting at op
   console.log(maxContainerArea([1,8,6,2,5,4,8,3,7])); // 49
   </code></pre>
 
-  <i>Explanation:</i> We use two pointers at the ends of the height array and compute the area. To potentially find a larger area, we move the pointer at the shorter line inward (since moving the taller one cannot increase the minimum height). We update <br><br><i> <strong>maxArea<br><br><i> <strong> as we go. This greedy two-pointer approach finds the maximum area in one pass.
+  <i>Explanation:</i> We use two pointers at the ends of the height array and compute the area. To potentially find a larger area, we move the pointer at the shorter line inward (since moving the taller one cannot increase the minimum height). We update maxArea as we go. This greedy two-pointer approach finds the maximum area in one pass.
 
 <h2 id="fast-and-slow-pointers"> Fast and Slow Pointers</h2>
 
-The <strong>Fast and Slow Pointers</strong> (also called Floyd's cycle-finding) pattern uses two pointers that move at different speeds through a linked structure or sequence. It's ideal for detecting cycles or finding midpoints. For instance, moving one pointer by one step (<br><br><i> <strong>slow<br><br><i> <strong>) and another by two steps (<br><br><i> <strong>fast<br><br><i> <strong>) can detect a loop in a linked list or find the middle node in a single pass.
+The <strong>Fast and Slow Pointers</strong> (also called Floyd's cycle-finding) pattern uses two pointers that move at different speeds through a linked structure or sequence. It's ideal for detecting cycles or finding midpoints. For instance, moving one pointer by one step (slow) and another by two steps (fast) can detect a loop in a linked list or find the middle node in a single pass.
 
-<br><br><i> <strong>Linked List Cycle Detection</strong> (Beginner) -- GeeksforGeeks</i>: Given the head of a linked list, determine if there is a cycle (loop) in the list. Using Floyd's algorithm, we advance <br><br><i> <strong>slow = slow.next<br><br><i> <strong> and <br><br><i> <strong>fast = fast.next.next<br><br><i> <strong>; if they ever meet, there is a cycle.
+<br><br><i> <strong>Linked List Cycle Detection</strong> (Beginner) – GeeksforGeeks</i>: Given the head of a linked list, determine if there is a cycle (loop) in the list. Using Floyd's algorithm, we advance slow = slow.next and fast = fast.next.next; if they ever meet, there is a cycle.
 
   <pre><code class="language-javascript">
   function hasCycle(head) {
@@ -191,12 +191,12 @@ The <strong>Fast and Slow Pointers</strong> (also called Floyd's cycle-finding) 
     }
     return false;
   }
-  // (Assumes <br><br><i> <strong>head<br><br><i> <strong> is the start of a linked list.)
+  // (Assumes head is the start of a linked list.)
   </code></pre>
 
-  <i>Explanation:</i> Both pointers start at the head. In each step <br><br><i> <strong>slow<br><br><i> <strong> moves one node, <br><br><i> <strong>fast<br><br><i> <strong> moves two. If there's a cycle, <br><br><i> <strong>fast<br><br><i> <strong> will eventually lap <br><br><i> <strong>slow<br><br><i> <strong> inside the loop, meeting it at some node. If <br><br><i> <strong>fast<br><br><i> <strong> reaches the end (<br><br><i> <strong>null<br><br><i> <strong>), there is no cycle.
+  <i>Explanation:</i> Both pointers start at the head. In each step slow moves one node, fast moves two. If there's a cycle, fast will eventually lap slow inside the loop, meeting it at some node. If fast reaches the end (null), there is no cycle.
 
-<br><br><i> <strong>Middle of Linked List</strong> (Beginner) -- LeetCode 876</i>: Given a linked list, return its middle node. If there are two middle nodes, return the second one. For example, <br><br><i> <strong>1→2→3→4→5<br><br><i> <strong> returns <br><br><i> <strong>3<br><br><i> <strong>, and <br><br><i> <strong>1→2→3→4→5→6<br><br><i> <strong> returns <br><br><i> <strong>4<br><br><i> <strong>.
+<br><br><i> <strong>Middle of Linked List</strong> (Beginner) – LeetCode 876</i>: Given a linked list, return its middle node. If there are two middle nodes, return the second one. For example, 1→2→3→4→5 returns 3, and 1→2→3→4→5→6 returns 4.
 
   <pre><code class="language-javascript">
   function middleNode(head) {
@@ -209,9 +209,9 @@ The <strong>Fast and Slow Pointers</strong> (also called Floyd's cycle-finding) 
   }
   </code></pre>
 
-  <i>Explanation:</i> Again using two pointers, <br><br><i> <strong>fast<br><br><i> <strong> moves twice as fast as <br><br><i> <strong>slow<br><br><i> <strong>. When <br><br><i> <strong>fast<br><br><i> <strong> reaches the end of the list, <br><br><i> <strong>slow<br><br><i> <strong> will be at the midpoint. This finds the middle in one pass without knowing the length in advance.
+  <i>Explanation:</i> Again using two pointers, fast moves twice as fast as slow. When fast reaches the end of the list, slow will be at the midpoint. This finds the middle in one pass without knowing the length in advance.
 
-<br><br><i> <strong>Happy Number</strong> (Intermediate) -- LeetCode 202</i>: A “happy” number is defined by iterating the sum of squares of digits: repeatedly replace the number by the sum of squares of its digits. If this process ends in 1, the number is happy; if it loops endlessly in a cycle not including 1, it's not. For example, 19 is happy. We can use a fast/slow cycle detection:
+<br><br><i> <strong>Happy Number</strong> (Intermediate) – LeetCode 202</i>: A “happy” number is defined by iterating the sum of squares of digits: repeatedly replace the number by the sum of squares of its digits. If this process ends in 1, the number is happy; if it loops endlessly in a cycle not including 1, it's not. For example, 19 is happy. We can use a fast/slow cycle detection:
 
   <pre><code class="language-javascript">
   function isHappy(n) {
@@ -236,13 +236,13 @@ The <strong>Fast and Slow Pointers</strong> (also called Floyd's cycle-finding) 
   console.log(isHappy(19)); // true
   </code></pre>
 
-  <i>Explanation:</i> Here, treating each number as a node in a sequence, we move <br><br><i> <strong>slow<br><br><i> <strong> one step (<br><br><i> <strong>nextNum(slow)<br><br><i> <strong>) and <br><br><i> <strong>fast<br><br><i> <strong> two steps. If a cycle is reached (other than 1), <br><br><i> <strong>slow<br><br><i> <strong> will meet <br><br><i> <strong>fast<br><br><i> <strong> again. If the cycle is at 1, we return true. This is fast/slow pointer applied to a number transformation sequence (Floyd's cycle detection).
+  <i>Explanation:</i> Here, treating each number as a node in a sequence, we move slow one step (nextNum(slow)) and fast two steps. If a cycle is reached (other than 1), slow will meet fast again. If the cycle is at 1, we return true. This is fast/slow pointer applied to a number transformation sequence (Floyd's cycle detection).
 
 <h2 id="merge-intervals"> Merge Intervals</h2>
 
 Problems in the <strong>Merge Intervals</strong> category involve merging or managing overlapping intervals. The common approach is to sort intervals by start time and then iterate, merging any overlapping intervals as you go. This pattern applies to merging schedules, inserting new intervals, or counting overlapping intervals.
 
-<br><br><i> <strong>Merge Intervals</strong> (Beginner) -- LeetCode 56</i>: Given a collection of intervals, merge all overlapping intervals. For example, <br><br><i> <strong>[[1,3],[2,6],[8,10],[15,18]]<br><br><i> <strong> merges to <br><br><i> <strong>[[1,6],[8,10],[15,18]]<br><br><i> <strong>.
+<br><br><i> <strong>Merge Intervals</strong> (Beginner) – LeetCode 56</i>: Given a collection of intervals, merge all overlapping intervals. For example, [[1,3],[2,6],[8,10],[15,18]] merges to [[1,6],[8,10],[15,18]].
 
   <pre><code class="language-javascript">
   function mergeIntervals(intervals) {
@@ -268,7 +268,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
   <i>Explanation:</i> After sorting by start time, we keep a “last merged” interval. For each new interval, if it overlaps (its start is ≤ last end), we extend the last interval's end. Otherwise, we append it as a separate interval. This merges all overlapping intervals in one pass.
 
-<br><br><i> <strong>Insert Interval</strong> (Intermediate) -- LeetCode 57</i>: Given non-overlapping intervals sorted by start and a new interval, insert the new interval and merge if needed. For example, inserting <br><br><i> <strong>[4,8]<br><br><i> <strong> into <br><br><i> <strong>[[1,3],[6,9]]<br><br><i> <strong> yields <br><br><i> <strong>[[1,3],[4,9]]<br><br><i> <strong>.
+<br><br><i> <strong>Insert Interval</strong> (Intermediate) – LeetCode 57</i>: Given non-overlapping intervals sorted by start and a new interval, insert the new interval and merge if needed. For example, inserting [4,8] into [[1,3],[6,9]] yields [[1,3],[4,9]].
 
   <pre><code class="language-javascript">
   function insertInterval(intervals, newInterval) {
@@ -300,7 +300,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
   <i>Explanation:</i> We first add all intervals that come completely before the new one. Then we merge all overlapping intervals with the new one by extending its start/end as needed. Finally, we append the rest. This uses the merge-interval logic after handling the insertion point.
 
-<br><br><i> <strong>Non-overlapping Intervals (Removal)</strong> (Intermediate) -- LeetCode 435</i>: Given intervals, find the minimum number to remove so that the rest are non-overlapping. Example: <br><br><i> <strong>[[1,2],[2,3],[3,4],[1,3]]<br><br><i> <strong> requires removing 1 interval.
+<br><br><i> <strong>Non-overlapping Intervals (Removal)</strong> (Intermediate) – LeetCode 435</i>: Given intervals, find the minimum number to remove so that the rest are non-overlapping. Example: [[1,2],[2,3],[3,4],[1,3]] requires removing 1 interval.
 
   <pre><code class="language-javascript">
   function eraseOverlapIntervals(intervals) {
@@ -329,7 +329,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
 <strong>Binary Search</strong> relies on the data being sorted and repeatedly halves the search space. It's used for finding elements, first/last occurrences, or thresholds in sorted arrays with O(log n) time.
 
-<br><br><i> <strong>Binary Search (Find Element)</strong> (Beginner) -- Example from GeeksforGeeks</i>: Given a sorted array and a target value, return its index or indicate not found. For example, in <br><br><i> <strong>[10,20,40,45,55]<br><br><i> <strong>, searching for 45 returns index 3.
+<br><br><i> <strong>Binary Search (Find Element)</strong> (Beginner) – Example from GeeksforGeeks</i>: Given a sorted array and a target value, return its index or indicate not found. For example, in [10,20,40,45,55], searching for 45 returns index 3.
 
   <pre><code class="language-javascript">
   function binarySearch(arr, target) {
@@ -351,7 +351,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
   <i>Explanation:</i> We compare the target to the middle element. If equal, we're done; if smaller, search left half; if larger, search right half. Each comparison halves the range.
 
-<br><br><i> <strong>Search in Rotated Sorted Array</strong> (Intermediate) -- LeetCode 33</i>: A sorted array is “rotated” at some pivot unknown in advance. Example: <br><br><i> <strong>[4,5,6,7,0,1,2]<br><br><i> <strong>. Search for a target in O(log n) time by identifying which half is normally ordered.
+<br><br><i> <strong>Search in Rotated Sorted Array</strong> (Intermediate) – LeetCode 33</i>: A sorted array is “rotated” at some pivot unknown in advance. Example: [4,5,6,7,0,1,2]. Search for a target in O(log n) time by identifying which half is normally ordered.
 
   <pre><code class="language-javascript">
   function searchRotated(nums, target) {
@@ -422,7 +422,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
 <strong>Depth-First Search (DFS) / Backtracking</strong> explores possible solutions recursively, branching on choices and backtracking when needed. This pattern is common in generating combinations, permutations, subsets, and solving puzzles like word search.
 
-<br><br><i> <strong>Subsets (Power Set)</strong> (Beginner) LeetCode 78</i>: Given a set of distinct integers, return all possible subsets. For example, <br><br><i> <strong>[1,2,3]<br><br><i> <strong> yields <br><br><i> <strong>[[],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]<br><br><i> <strong>.
+<br><br><i> <strong>Subsets (Power Set)</strong> (Beginner) LeetCode 78</i>: Given a set of distinct integers, return all possible subsets. For example, [1,2,3] yields [[],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]].
 
   <pre><code class="language-javascript">
   function subsets(nums) {
@@ -443,9 +443,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   // [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]
   </code></pre>
 
-  <i>Explanation:</i> We recursively decide to include or exclude each element. The <br><br><i> <strong>dfs<br><br><i> <strong> function generates all subsets by branching on each choice. We append the current subset (<br><br><i> <strong>path<br><br><i> <strong>) at each node of the recursion tree, and backtrack correctly.
+  <i>Explanation:</i> We recursively decide to include or exclude each element. The dfs function generates all subsets by branching on each choice. We append the current subset (path) at each node of the recursion tree, and backtrack correctly.
 
-<br><br><i> <strong>Permutations</strong> (Intermediate) LeetCode 46</i>: Given a collection of distinct integers, return all possible permutations. For example, <br><br><i> <strong>[1,2,3]<br><br><i> <strong> yields the six permutations.
+<br><br><i> <strong>Permutations</strong> (Intermediate) LeetCode 46</i>: Given a collection of distinct integers, return all possible permutations. For example, [1,2,3] yields the six permutations.
 
   <pre><code class="language-javascript">
   function permute(nums) {
@@ -470,9 +470,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   // [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
   </code></pre>
 
-  <i>Explanation:</i> We build permutations by choosing each unused number in turn (<br><br><i> <strong>path.includes(num)<br><br><i> <strong> checks usage). The recursion builds sequences and backtracks. Every full-length path is a valid permutation. This approach explores the permutation tree thoroughly.
+  <i>Explanation:</i> We build permutations by choosing each unused number in turn (path.includes(num) checks usage). The recursion builds sequences and backtracks. Every full-length path is a valid permutation. This approach explores the permutation tree thoroughly.
 
-<br><br><i> <strong>Word Search</strong> (Intermediate) LeetCode 79</i>: Given a 2D board and a word, determine if the word exists in the grid moving horizontally or vertically (no letter reuse). Example: In the grid <br><br><i> <strong>[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]<br><br><i> <strong>, the word <br><br><i> <strong>"ABCCED"<br><br><i> <strong> exists.
+<br><br><i> <strong>Word Search</strong> (Intermediate) LeetCode 79</i>: Given a 2D board and a word, determine if the word exists in the grid moving horizontally or vertically (no letter reuse). Example: In the grid [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], the word "ABCCED" exists.
 
   <pre><code class="language-javascript">
   function exist(board, word) {
@@ -509,7 +509,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
 <strong>Breadth-First Search (BFS)</strong> processes nodes level by level and is ideal for shortest paths or minimum steps in unweighted graphs/grids. It uses a queue to explore neighbor nodes in order of distance from the start.
 
-<br><br><i> <strong>Binary Tree Level Order Traversal</strong> (Beginner) LeetCode 102</i>: Given a binary tree, return the level order traversal of its nodes' values. For example, a tree <br><br><i> <strong> [3,9,20,null,null,15,7]<br><br><i> <strong> returns <br><br><i> <strong>[[3],[9,20],[15,7]]<br><br><i> <strong>.
+<br><br><i> <strong>Binary Tree Level Order Traversal</strong> (Beginner) LeetCode 102</i>: Given a binary tree, return the level order traversal of its nodes' values. For example, a tree  [3,9,20,null,null,15,7] returns [[3],[9,20],[15,7]].
 
   <pre><code class="language-javascript">
   function levelOrder(root) {
@@ -533,7 +533,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
   <i>Explanation:</i> We use a queue to traverse each level of the tree. At each level, we dequeue all nodes, record their values, and enqueue their children. This processes the tree one level at a time (BFS on the tree).
 
-<br><br><i> <strong>Rotting Oranges</strong> (Intermediate) LeetCode 994</i>: Given an <br><br><i> <strong>m x n<br><br><i> <strong> grid with <br><br><i> <strong>0<br><br><i> <strong> (empty), <br><br><i> <strong>1<br><br><i> <strong> (fresh orange), and <br><br><i> <strong>2<br><br><i> <strong> (rotten orange), each minute any fresh orange adjacent (4-directionally) to a rotten one becomes rotten. Return the minimum minutes until no fresh oranges remain, or <br><br><i> <strong>-1<br><br><i> <strong> if impossible.
+<br><br><i> <strong>Rotting Oranges</strong> (Intermediate) LeetCode 994</i>: Given an m x n grid with 0 (empty), 1 (fresh orange), and 2 (rotten orange), each minute any fresh orange adjacent (4-directionally) to a rotten one becomes rotten. Return the minimum minutes until no fresh oranges remain, or -1 if impossible.
 
   <pre><code class="language-javascript">
   function orangesRotting(grid) {
@@ -571,7 +571,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
   <i>Explanation:</i> We first enqueue all initially rotten oranges with time 0 and count fresh ones. Then we perform BFS: each rotten orange rots its fresh neighbors in 1 minute (enqueue them with time+1). We track the elapsed minutes. If all fresh oranges eventually rot, we return the time; otherwise, return -1.
 
-<br><br><i> <strong>Word Ladder (Length of Shortest Transformation)</strong> (Intermediate) LeetCode 127</i>: Given two words (<br><br><i> <strong>beginWord<br><br><i> <strong>, <br><br><i> <strong>endWord<br><br><i> <strong>) and a dictionary <br><br><i> <strong>wordList<br><br><i> <strong>, find the length of the shortest transformation sequence from <br><br><i> <strong>beginWord<br><br><i> <strong> to <br><br><i> <strong>endWord<br><br><i> <strong>, changing one letter at a time and using only words in the dictionary. For example, <br><br><i> <strong>["hit","cog","dot","dog","lot","log","cog"]<br><br><i> <strong> from <br><br><i> <strong>"hit"<br><br><i> <strong> to <br><br><i> <strong>"cog"<br><br><i> <strong> returns 5 (the path is “hit”→“hot”→“dot”→“dog”→“cog”).
+<br><br><i> <strong>Word Ladder (Length of Shortest Transformation)</strong> (Intermediate) LeetCode 127</i>: Given two words (beginWord, endWord) and a dictionary wordList, find the length of the shortest transformation sequence from beginWord to endWord, changing one letter at a time and using only words in the dictionary. For example, ["hit","cog","dot","dog","lot","log","cog"] from "hit" to "cog" returns 5 (the path is “hit”→“hot”→“dot”→“dog”→“cog”).
 
   <pre><code class="language-javascript">
   function ladderLength(beginWord, endWord, wordList) {
@@ -597,13 +597,13 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])); // 5
   </code></pre>
 
-  <i>Explanation:</i> We use BFS starting from <br><br><i> <strong>beginWord<br><br><i> <strong>. At each step, we generate all one-letter transformations and enqueue those that are in the dictionary. We mark visited words by removing them from the set. The first time we reach <br><br><i> <strong>endWord<br><br><i> <strong>, the current BFS level (<br><br><i> <strong>steps<br><br><i> <strong>) is the shortest transformation length.
+  <i>Explanation:</i> We use BFS starting from beginWord. At each step, we generate all one-letter transformations and enqueue those that are in the dictionary. We mark visited words by removing them from the set. The first time we reach endWord, the current BFS level (steps) is the shortest transformation length.
 
 <h2 id="dp"> Dynamic Programming</h2>
 
 <strong>Dynamic Programming (DP)</strong> solves problems with overlapping subproblems and optimal substructure by storing intermediate results. Common DP problems include counting or maximizing sequences with recurrence relations.
 
-<br><br><i> <strong>Climbing Stairs</strong> (Beginner) GeeksforGeeks</i>: There are <br><br><i> <strong>n<br><br><i> <strong> stairs and you can climb 1 or 2 steps at a time. Count distinct ways to reach the top. For example, <br><br><i> <strong>n=4<br><br><i> <strong> has 5 ways. The recurrence is <br><br><i> <strong>ways(n) = ways(n-1) + ways(n-2)<br><br><i> <strong>.
+<br><br><i> <strong>Climbing Stairs</strong> (Beginner) GeeksforGeeks</i>: There are n stairs and you can climb 1 or 2 steps at a time. Count distinct ways to reach the top. For example, n=4 has 5 ways. The recurrence is ways(n) = ways(n-1) + ways(n-2).
 
   <pre><code class="language-javascript">
   function climbStairs(n) {
@@ -620,9 +620,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(climbStairs(4)); // 5
   </code></pre>
 
-  <i>Explanation:</i> This is Fibonacci-like DP. We use an array <br><br><i> <strong>dp<br><br><i> <strong> where <br><br><i> <strong>dp[i]<br><br><i> <strong> = ways to reach step <br><br><i> <strong>i<br><br><i> <strong>. Each step can be reached from one step before (<br><br><i> <strong>dp[i-1]<br><br><i> <strong>) or two steps before (<br><br><i> <strong>dp[i-2]<br><br><i> <strong>), so <br><br><i> <strong>dp[i] = dp[i-1] + dp[i-2]<br><br><i> <strong>. This builds up the solution in O(n) time.
+  <i>Explanation:</i> This is Fibonacci-like DP. We use an array dp where dp[i] = ways to reach step i. Each step can be reached from one step before (dp[i-1]) or two steps before (dp[i-2]), so dp[i] = dp[i-1] + dp[i-2]. This builds up the solution in O(n) time.
 
-<br><br><i> <strong>House Robber</strong> (Intermediate) GeeksforGeeks</i>: You have a row of houses with money; you cannot rob adjacent houses. Find the maximum amount you can steal. For example, <br><br><i> <strong>[6,7,1,3,8,2,4]<br><br><i> <strong> yields 19 (rob houses 1,3,5,7).
+<br><br><i> <strong>House Robber</strong> (Intermediate) GeeksforGeeks</i>: You have a row of houses with money; you cannot rob adjacent houses. Find the maximum amount you can steal. For example, [6,7,1,3,8,2,4] yields 19 (rob houses 1,3,5,7).
 
   <pre><code class="language-javascript">
   function rob(houses) {
@@ -642,9 +642,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(rob([6,7,1,3,8,2,4])); // 19
   </code></pre>
 
-  <i>Explanation:</i> We use DP where <br><br><i> <strong>dp[i]<br><br><i> <strong> = max loot up to house <br><br><i> <strong>i<br><br><i> <strong>. For each house, we decide to skip it (<br><br><i> <strong>dp[i-1]<br><br><i> <strong>) or rob it (<br><br><i> <strong>houses[i] + dp[i-2]<br><br><i> <strong>). The recurrence ensures we never rob adjacent houses. The answer is <br><br><i> <strong>dp[n-1]<br><br><i> <strong>.
+  <i>Explanation:</i> We use DP where dp[i] = max loot up to house i. For each house, we decide to skip it (dp[i-1]) or rob it (houses[i] + dp[i-2]). The recurrence ensures we never rob adjacent houses. The answer is dp[n-1].
 
-<br><br><i> <strong>Coin Change (Min Coins)</strong> (Intermediate) LeetCode 322</i>: Given coin denominations and an amount, compute the fewest coins needed to make that amount, or <br><br><i> <strong>-1<br><br><i> <strong> if impossible. For example, <br><br><i> <strong>coins=[1,2,5], amount=11<br><br><i> <strong> returns 3 (5+5+1).
+<br><br><i> <strong>Coin Change (Min Coins)</strong> (Intermediate) LeetCode 322</i>: Given coin denominations and an amount, compute the fewest coins needed to make that amount, or -1 if impossible. For example, coins=[1,2,5], amount=11 returns 3 (5+5+1).
 
   <pre><code class="language-javascript">
   function coinChange(coins, amount) {
@@ -663,13 +663,13 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(coinChange([1,2,5], 11)); // 3
   </code></pre>
 
-  <i>Explanation:</i> We build a DP array where <br><br><i> <strong>dp[i]<br><br><i> <strong> = min coins to make amount <br><br><i> <strong>i<br><br><i> <strong>. For each coin and each amount <br><br><i> <strong>i<br><br><i> <strong>, we see if using that coin leads to a smaller count: <br><br><i> <strong>dp[i] = min(dp[i], dp[i-coin] + 1)<br><br><i> <strong>. The final answer is <br><br><i> <strong>dp[amount]<br><br><i> <strong>.
+  <i>Explanation:</i> We build a DP array where dp[i] = min coins to make amount i. For each coin and each amount i, we see if using that coin leads to a smaller count: dp[i] = min(dp[i], dp[i-coin] + 1). The final answer is dp[amount].
 
 <h2 id="greedy"> Greedy</h2>
 
 <strong>Greedy</strong> algorithms build a solution step-by-step choosing the locally optimal option each time. It's suitable when that choice leads to a globally optimal solution. Examples include interval scheduling, jump games, or change-making problems.
 
-<br><br><i> <strong>Jump Game</strong> (Beginner) LeetCode 55</i>: Given non-negative integers where each element represents max jump length, determine if you can reach the last index. For example, <br><br><i> <strong>[2,3,1,1,4]<br><br><i> <strong> returns <br><br><i> <strong>true<br><br><i> <strong>.
+<br><br><i> <strong>Jump Game</strong> (Beginner) LeetCode 55</i>: Given non-negative integers where each element represents max jump length, determine if you can reach the last index. For example, [2,3,1,1,4] returns true.
 
   <pre><code class="language-javascript">
   function canJump(nums) {
@@ -684,9 +684,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(canJump([2,3,1,1,4])); // true
   </code></pre>
 
-  <i>Explanation:</i> We keep track of the farthest index <br><br><i> <strong>reach<br><br><i> <strong> we can get to. As we iterate, if the current index <br><br><i> <strong>i<br><br><i> <strong> is reachable (<br><br><i> <strong>i <= reach<br><br><i> <strong>), we update <br><br><i> <strong>reach = max(reach, i+nums[i])<br><br><i> <strong>. If <br><br><i> <strong>reach<br><br><i> <strong> reaches the last index, return true. This greedy approach runs in O(n).
+  <i>Explanation:</i> We keep track of the farthest index reach we can get to. As we iterate, if the current index i is reachable (i <= reach), we update reach = max(reach, i+nums[i]). If reach reaches the last index, return true. This greedy approach runs in O(n).
 
-<br><br><i> <strong>Gas Station</strong> (Intermediate) LeetCode 134</i>: Given two arrays <br><br><i> <strong>gas<br><br><i> <strong> and <br><br><i> <strong>cost<br><br><i> <strong> of equal length (circular route), find the starting station index from which you can complete the circuit with an empty tank initially, or <br><br><i> <strong>-1<br><br><i> <strong> if impossible. For example, <br><br><i> <strong>gas=[1,2,3,4,5], cost=[3,4,5,1,2]<br><br><i> <strong> returns <br><br><i> <strong>3<br><br><i> <strong> (start at index 3).
+<br><br><i> <strong>Gas Station</strong> (Intermediate) LeetCode 134</i>: Given two arrays gas and cost of equal length (circular route), find the starting station index from which you can complete the circuit with an empty tank initially, or -1 if impossible. For example, gas=[1,2,3,4,5], cost=[3,4,5,1,2] returns 3 (start at index 3).
 
   <pre><code class="language-javascript">
   function canCompleteCircuit(gas, cost) {
@@ -707,9 +707,9 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
   console.log(canCompleteCircuit([1,2,3,4,5], [3,4,5,1,2])); // 3
   </code></pre>
 
-  <i>Explanation:</i> We accumulate fuel balance (<br><br><i> <strong>gas[i]-cost[i]<br><br><i> <strong>) along the route. If at any point the running sum <br><br><i> <strong>fuel<br><br><i> <strong> drops below 0, the start cannot be any index before <br><br><i> <strong>i+1<br><br><i> <strong>; we reset <br><br><i> <strong>start = i+1<br><br><i> <strong> and continue. If the total gas ≥ total cost (<br><br><i> <strong>totalDiff >= 0<br><br><i> <strong>), a solution exists and <br><br><i> <strong>start<br><br><i> <strong> will be correct.
+  <i>Explanation:</i> We accumulate fuel balance (gas[i]-cost[i]) along the route. If at any point the running sum fuel drops below 0, the start cannot be any index before i+1; we reset start = i+1 and continue. If the total gas ≥ total cost (totalDiff >= 0), a solution exists and start will be correct.
 
-<br><br><i> <strong>Lemonade Change</strong> (Intermediate) LeetCode 860</i>: Each lemonade costs \$5. Customers pay with \$5, \$10, or \$20 in order; determine if you can give change to everyone. Example: <br><br><i> <strong>[5,5,5,10,20]<br><br><i> <strong> returns <br><br><i> <strong>true<br><br><i> <strong>.
+<br><br><i> <strong>Lemonade Change</strong> (Intermediate) LeetCode 860</i>: Each lemonade costs \$5. Customers pay with \$5, \$10, or \$20 in order; determine if you can give change to everyone. Example: [5,5,5,10,20] returns true.
 
   <pre><code class="language-javascript">
   function lemonadeChange(bills) {
@@ -743,7 +743,7 @@ Problems in the <strong>Merge Intervals</strong> category involve merging or man
 
 Topological sorting applies to Directed Acyclic Graphs (DAGs) to order nodes such that all prerequisites come before dependents. A common approach is Kahn's algorithm (BFS on indegrees). This pattern is used in scheduling and dependency problems.
 
-<br><br><i> <strong>Course Schedule (I)</strong> (Beginner) LeetCode 207</i>: There are <br><br><i> <strong>numCourses<br><br><i> <strong> labeled <br><br><i> <strong>0…numCourses-1<br><br><i> <strong> and an array <br><br><i> <strong>prerequisites<br><br><i> <strong> of pairs <br><br><i> <strong>[a,b]<br><br><i> <strong> meaning to take course <br><br><i> <strong>a<br><br><i> <strong> you must have taken <br><br><i> <strong>b<br><br><i> <strong>. Determine if you can finish all courses.
+<br><br><i> <strong>Course Schedule (I)</strong> (Beginner) LeetCode 207</i>: There are numCourses labeled 0…numCourses-1 and an array prerequisites of pairs [a,b] meaning to take course a you must have taken b. Determine if you can finish all courses.
 
   <pre><code class="language-javascript">
   function canFinish(numCourses, prerequisites) {
@@ -774,7 +774,7 @@ Topological sorting applies to Directed Acyclic Graphs (DAGs) to order nodes suc
   }
   </code></pre>
 
-  <i>Explanation:</i> We interpret courses as graph nodes and prerequisites as directed edges. We use Kahn's algorithm: compute indegrees, enqueue nodes with indegree 0, then remove them one by one (decrementing neighbors' indegrees). If we can visit all courses (<br><br><i> <strong>visited === numCourses<br><br><i> <strong>), no cycle exists and scheduling is possible.
+  <i>Explanation:</i> We interpret courses as graph nodes and prerequisites as directed edges. We use Kahn's algorithm: compute indegrees, enqueue nodes with indegree 0, then remove them one by one (decrementing neighbors' indegrees). If we can visit all courses (visited === numCourses), no cycle exists and scheduling is possible.
 
 <br><br><i> <strong>Course Schedule (II)</strong> (Intermediate) LeetCode 210</i>: Same setup as above, but return an order of courses. If impossible, return an empty array.
 
