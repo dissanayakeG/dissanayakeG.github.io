@@ -21,8 +21,7 @@ function createNavLinks(links) {
 
     //create a link for home
     const homeLink = document.createElement("a");
-    const domain = window.location.host;
-    const homeUrl = window.location.protocol+"//"+domain
+    const homeUrl = window.location.protocol+"//"+window.location.host
     homeLink.href = homeUrl;
     homeLink.textContent = "Home";
     navList.appendChild(homeLink);
