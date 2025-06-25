@@ -18,6 +18,14 @@ function createNavLinks(links) {
     let navList = document.createElement("div");
     navList.id = "nav-list";
     navList.className = "nav-list";
+
+    //create a link for home
+    const homeLink = document.createElement("a");
+    homeLink.href = "https://dissanayakeg.github.io/";
+    homeLink.textContent = "Home";
+    navList.appendChild(homeLink);
+
+
     links.forEach((h1, index) => {
         let navItem = document.createElement("a");
         navItem.href = h1.id;
