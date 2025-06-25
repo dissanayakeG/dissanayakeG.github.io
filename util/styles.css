@@ -1,0 +1,76 @@
+html {
+	color: #1a1a1a;
+	background-color: #fdfdfd;
+}
+body {
+	margin: 0 auto;
+	max-width: 36em;
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	hyphens: auto;
+	overflow-wrap: break-word;
+	text-rendering: optimizeLegibility;
+	font-kerning: normal;
+}
+@media (max-width: 600px) {
+	body {
+		font-size: 0.9em;
+		padding: 12px;
+	}
+	h1 {
+		font-size: 1.8em;
+	}
+}
+
+.nav-list {
+	position: fixed;
+	top: 50px;
+	left: 10px;
+	background-color: rgb(255, 255, 255);
+	border: 0.5px solid gray;
+	border-radius: 5px;
+	display: none;
+	flex-direction: column;
+	width: 200px;
+	z-index: 1000; /* ensures it's above everything */
+}
+.show-nav {
+	display: flex !important;
+}
+.nav-list > a {
+	display: flex;
+	justify-items: center;
+	/* justify-content: center; */
+	background-color: rgb(255, 255, 255);
+	border: 0.5px solid gray;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;
+	cursor: pointer;
+	text-decoration: none;
+	color: rgb(0, 0, 0);
+}
+.nav-icon {
+	position: fixed;
+	top: 5px;
+	left: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 30px;
+	margin: 5px;
+}
+.nav-icon > .nav-icon-row {
+	width: 30px;
+	height: 3px;
+	margin-bottom: 2px;
+	background-color: rgb(0, 0, 0) !important;
+}
+
+.content {
+	margin-top: 50px;
+}

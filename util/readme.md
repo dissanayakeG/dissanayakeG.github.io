@@ -2,17 +2,20 @@
 
 # step 1
 
-copy and paste `structure.html`
+copy and paste `util/structure.html`
 rename the new file as you wanted
+update the paths of stylesheet and script
 
-remove this style
+remove this style from newly created html file
 
 ```css
-h1 {
-	height: 200px;
-	width: 600px;
-	border: 1px solid blue;
-}
+<style>
+	h1 {
+		height: 200px;
+		width: 600px;
+		border: 1px solid blue;
+	}
+</style>
 ```
 
 if your markdown has a code blocks, add necessary script tags from `Prism.js`
@@ -46,7 +49,7 @@ fs.writeFileSync("output.html", converted);
 # step 3
 
 add ids for all the `h1/h2/h3...` tags that need to be appeared in the menu bar.
-and edit the `structure.html` file's `getAllH1Tags` function accordingly
+and edit the `structure.html` file's `getAllHTags()` function accordingly
 
 # step 4
 
