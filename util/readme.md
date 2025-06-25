@@ -29,6 +29,10 @@ use search and replace with regex on mode
 ^### (.*)	<h3>$1</h3>
 ^## (.*)	<h2>$1</h2>
 ^# (.*)	    <h1>$1</h1>
+
+#optional
+\*\*(.*?)\*\*	<strong>$1</strong>
+\*(.*?)\*		<i>$1</i>
 ```
 
 or you can create a simple node script
