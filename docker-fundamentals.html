@@ -1,537 +1,543 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>DockerGuide</title>
-  <style>
-html {
-color: #1a1a1a;
-background-color: #fdfdfd;
-}
-body {
-margin: 0 auto;
-max-width: 36em;
-padding-left: 50px;
-padding-right: 50px;
-padding-top: 50px;
-padding-bottom: 50px;
-hyphens: auto;
-overflow-wrap: break-word;
-text-rendering: optimizeLegibility;
-font-kerning: normal;
-}
-@media (max-width: 600px) {
-body {
-font-size: 0.9em;
-padding: 12px;
-}
-h1 {
-font-size: 1.8em;
-}
-}
-@media print {
-html {
-background-color: white;
-}
-body {
-background-color: transparent;
-color: black;
-font-size: 12pt;
-}
-p, h2, h3 {
-orphans: 3;
-widows: 3;
-}
-h2, h3, h4 {
-page-break-after: avoid;
-}
-}
-p {
-margin: 1em 0;
-}
-a {
-color: #1a1a1a;
-}
-a:visited {
-color: #1a1a1a;
-}
-img {
-max-width: 100%;
-}
-svg {
-height: auto;
-max-width: 100%;
-}
-h1, h2, h3, h4, h5, h6 {
-margin-top: 1.4em;
-}
-h5, h6 {
-font-size: 1em;
-font-style: italic;
-}
-h6 {
-font-weight: normal;
-}
-ol, ul {
-padding-left: 1.7em;
-margin-top: 1em;
-}
-li > ol, li > ul {
-margin-top: 0;
-}
-blockquote {
-margin: 1em 0 1em 1.7em;
-padding-left: 1em;
-border-left: 2px solid #e6e6e6;
-color: #606060;
-}
-code {
-font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
-font-size: 85%;
-margin: 0;
-hyphens: manual;
-}
-pre {
-margin: 1em 0;
-overflow: auto;
-}
-pre code {
-padding: 0;
-overflow: visible;
-overflow-wrap: normal;
-}
-.sourceCode {
-background-color: transparent;
-overflow: visible;
-}
-hr {
-background-color: #1a1a1a;
-border: none;
-height: 1px;
-margin: 1em 0;
-}
-table {
-margin: 1em 0;
-border-collapse: collapse;
-width: 100%;
-overflow-x: auto;
-display: block;
-font-variant-numeric: lining-nums tabular-nums;
-}
-table caption {
-margin-bottom: 0.75em;
-}
-tbody {
-margin-top: 0.5em;
-border-top: 1px solid #1a1a1a;
-border-bottom: 1px solid #1a1a1a;
-}
-th {
-border-top: 1px solid #1a1a1a;
-padding: 0.25em 0.5em 0.25em 0.5em;
-}
-td {
-padding: 0.125em 0.5em 0.25em 0.5em;
-}
-header {
-margin-bottom: 4em;
-text-align: center;
-}
-#TOC li {
-list-style: none;
-}
-#TOC ul {
-padding-left: 1.3em;
-}
-#TOC > ul {
-padding-left: 0;
-}
-#TOC a:not(:hover) {
-text-decoration: none;
-}
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 
-ul.task-list[class]{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-font-size: inherit;
-width: 0.8em;
-margin: 0 0.8em 0.2em -1.6em;
-vertical-align: middle;
-}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
 
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-{ counter-reset: source-line 0; }
-pre.numberSource code > span
-{ position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-{ content: counter(source-line);
-position: relative; left: -1em; text-align: right; vertical-align: baseline;
-border: none; display: inline-block;
--webkit-touch-callout: none; -webkit-user-select: none;
--khtml-user-select: none; -moz-user-select: none;
--ms-user-select: none; user-select: none;
-padding: 0 4px; width: 4em;
-color: #aaaaaa;
-}
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
-div.sourceCode
-{ }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } 
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
-code span.at { color: #7d9029; } 
-code span.bn { color: #40a070; } 
-code span.bu { color: #008000; } 
-code span.cf { color: #007020; font-weight: bold; } 
-code span.ch { color: #4070a0; } 
-code span.cn { color: #880000; } 
-code span.co { color: #60a0b0; font-style: italic; } 
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
-code span.do { color: #ba2121; font-style: italic; } 
-code span.dt { color: #902000; } 
-code span.dv { color: #40a070; } 
-code span.er { color: #ff0000; font-weight: bold; } 
-code span.ex { } 
-code span.fl { color: #40a070; } 
-code span.fu { color: #06287e; } 
-code span.im { color: #008000; font-weight: bold; } 
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
-code span.kw { color: #007020; font-weight: bold; } 
-code span.op { color: #666666; } 
-code span.ot { color: #007020; } 
-code span.pp { color: #bc7a00; } 
-code span.sc { color: #4070a0; } 
-code span.ss { color: #bb6688; } 
-code span.st { color: #4070a0; } 
-code span.va { color: #19177c; } 
-code span.vs { color: #4070a0; } 
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
-</style>
-</head>
-<body>
-<section id="basics-list-pull-run-and-delete" class="level1">
-<h1>🐳 Basics (List, Pull, Run and Delete)</h1>
-<p><strong>References</strong> https://docs.docker.com/get-started/introduction/whats-next/ https://www.youtube.com/watch?v=b0HMimUb4f0&amp;ab_channel=mCoding</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> image ls <span class="co">#list down all the images</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="co">#list down the running containers</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span> <span class="co">#list down all the containers</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Pull Images</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull python <span class="co">#Will take around 1GB</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull python:3.11-slim <span class="co">#will takw around 140mb</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull python:3.11-alpine <span class="co">#will takw around 50mb</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#slim images - usually Debial-based Linux</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#alpine images - Alpine Linux</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Stop Docker container</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> stop <span class="op">&lt;</span>container-name<span class="op">&gt;</span> </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Delete Docker Container/s</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> container prune <span class="co">#Remove all stopped containers</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 5000:80 <span class="at">-d</span> <span class="at">--rm</span> nginx <span class="co"># automatically delete when the container is stopped using --rm</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm <span class="at">-f</span> <span class="op">&lt;</span>container-name<span class="op">&gt;</span> <span class="co"># Force remove a container (running or stopped)</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#Delete a Docker image</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="op">&lt;</span>image_name<span class="op">&gt;</span>:<span class="op">&lt;</span>tag<span class="op">&gt;</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="op">&lt;</span>image_id<span class="op">&gt;</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="at">-f</span> <span class="op">&lt;</span>image_name<span class="op">&gt;</span>:<span class="op">&lt;</span>tag<span class="op">&gt;</span></span></code></pre></div>
-<section id="start-and-run-new-container-using-remote-image" class="level2">
-<h2>Start and run new container using remote Image</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span><span class="op">=</span>base-container <span class="at">-ti</span> ubuntu</span></code></pre></div>
-<ul>
-<li>-t: Allocates a pseudo-TTY (terminal) | terminal features like history and auto complete</li>
-<li>-i: Keeps STDIN open (interactive mode) | interactive terminal session</li>
-</ul>
-</section>
-<section id="build-custome-images-with-namestags" class="level2">
-<h2>Build Custome Images with names/tags</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The most basic `docker build` command, build with no name/tag</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#The final `.` in the command provides the path or URL to the build context. At this location,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#the builder will find the Dockerfile and other referenced files.</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build .</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#build with a name/tag</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> my-username/my-image .</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#add another tag for existing image</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> image tag my-username/my-image another-username/another-image:v1</span></code></pre></div>
-</section>
-</section>
-<section id="create-and-run-containers-using-images" class="level1">
-<h1>Create and run containers using Images</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This builds a Docker image from a Dockerfile in the current directory (.), and tags it as mysite.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#You now have a custom Docker image called mysite on your machine.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> mysite .</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#This creates and runs a container from the image mysite, gives it a name, and maps ports so you can access it from your browser.</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> my-container-using-mysite <span class="at">-p</span> 3000:80 mysite</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 3000:80 <span class="at">-d</span> nginx</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#-p : for port mapping</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#-d : for detached mode | Run the container in the background</span></span></code></pre></div>
-<section id="port-mapping-with-nginx" class="level2">
-<h2>Port mapping with NginX</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run nginx <span class="co">#will pull if its not already pulled</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#We can see this is running in the docker desktop, but if we visit localhost in the browser it shows an error</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#This is because by default containers are isolated form the host machine.</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#So, we have to publish the port, so host can see it</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> HOST_PORT:CONTAINER_PORT nginx</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 80:80 nginx</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#If you omit the HOST_PORT the container’s port 80 onto an ephemeral port on the host: and you can find it by</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#now we can see the localhost is working on the browser</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-P</span> nginx <span class="co">#publish all of the exposed ports configured by the image</span></span></code></pre></div>
-</section>
-<section id="debugging" class="level2">
-<h2>Debugging</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> <span class="op">&lt;</span>name or GUID<span class="op">&gt;</span> /bin/bash</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#-i : interactive terminal session</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#-t : terminal features like history and auto complete</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs <span class="op">&lt;</span>container-name<span class="op">&gt;</span> or GUID <span class="co">#Get logs</span></span></code></pre></div>
-</section>
-<section id="publishing" class="level2">
-<h2>Publishing</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push my-username/my-image</span></code></pre></div>
-</section>
-</section>
-<section id="dockerfile" class="level1">
-<h1>Dockerfile</h1>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">FROM</span> node:20-alpine <span class="co">#define your base image</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">WORKDIR</span> /app <span class="co"># This will specify where future commands will run and the directory files will be copied inside the container image.</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> package.json yarn.lock ./ <span class="co"># Read below note</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> . . <span class="co">#Copy all of the files from your project on your machine into the container image</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> yarn install <span class="at">--production</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">EXPOSE</span> 3000</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="ex">CMD</span> [<span class="st">&quot;node&quot;</span>, <span class="st">&quot;./src/index.js&quot;</span>] <span class="co"># start command</span></span></code></pre></div>
-<p><strong>Note:</strong> For Node-based applications, dependencies are defined in the package.json file. You’ll want to reinstall the dependencies if that file changes, but use cached dependencies if the file is <strong>unchanged</strong>. So, start by copying only that file first, then install the dependencies, and finally copy everything else. Then, you only need to recreate the yarn dependencies if there was a change to the package.json file.</p>
-<p>Great start! Here’s an improved and polished version of your Docker short note, with grammar corrections, clearer phrasing, and some extra helpful information added:</p>
-</section>
-<section id="overriding-container-defaults" class="level1">
-<h1>Overriding container defaults</h1>
-<section id="overriding-the-network-ports" class="level2">
-<h2>Overriding the network ports</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#You can use the -p option in docker run to map container ports to host ports, allowing you to run the multiple instances of the container without any conflict.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> HOST_PORT:CONTAINER_PORT postgres</span></code></pre></div>
-</section>
-<section id="setting-environment-variables" class="level2">
-<h2>Setting environment variables</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-e</span> foo=bar postgres env</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#The .env file acts as a convenient way to set environment variables for your Docker containers without cluttering your command line #with numerous -e flags. To use a .env file, you can pass --env-file option with the docker run command.</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--env-file</span> .env postgres env</span></code></pre></div>
-</section>
-<section id="restricting-the-container-to-consume-the-resources" class="level2">
-<h2>Restricting the container to consume the resources</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#You can use the --memory and --cpus flags with the docker run command to restrict how much CPU and memory a container can use</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-e</span> POSTGRES_PASSWORD=secret <span class="at">--memory</span><span class="op">=</span><span class="st">&quot;512m&quot;</span> <span class="at">--cpus</span><span class="op">=</span><span class="st">&quot;0.5&quot;</span> postgres</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#You can use the docker stats command to monitor the real-time resource usage of running containers. </span></span></code></pre></div>
-</section>
-<section id="run-postgres-container-in-a-controlled-network" class="level2">
-<h2>Run Postgres container in a controlled network</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#By default, containers automatically connect to a special network called a bridge network when you run them. This bridge network acts like a virtual bridge, allowing containers on the same host to communicate with each other while keeping them isolated from the outside world and other hosts.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#You create a custom network by passing --network flag with the docker run command. All containers without a --network flag are attached to the default bridge network.</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> network create mynetwork</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> network ls</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Connect Postgres to the custom network by using the following command:</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-e</span> POSTGRES_PASSWORD=secret <span class="at">-p</span> 5434:5432 <span class="at">--network</span> mynetwork postgres</span></code></pre></div>
-</section>
-</section>
-<section id="persisting-container-data" class="level1">
-<h1>Persisting container data</h1>
-<ul>
-<li>For example, if you restart a database container, you might not want to start with an empty database. So, how do you persist files?</li>
-</ul>
-<section id="container-volumes" class="level2">
-<h2>Container volumes</h2>
-<ul>
-<li>Volumes are a storage mechanism that provide the ability to persist data beyond the lifecycle of an individual container. Think of it like providing a shortcut or symlink from inside the container to outside the container.</li>
-</ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume create log-data <span class="co"># create a volume named log-data</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 80:80 <span class="at">-v</span> log-data:/logs docker/welcome-to-docker <span class="co"># the volume will be mounted (or attached) into the container at /logs</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mounts a named volume called log-data to the container’s /logs directory.</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Any files written by the container to /logs will be stored in the log-data volume on your host, which persists even if the container is removed.</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume ls</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume inspect log-data</span></code></pre></div>
-<ul>
-<li>If the volume log-data doesn’t exist, Docker will automatically create it for you.</li>
-<li>When the container runs, all files it writes into the /logs folder will be saved in this volume, outside of the container. If you delete the container and start a new container using the same volume, the files will still be there.</li>
-<li>You can attach the same volume to multiple containers to share files between containers.</li>
-<li>Volumes have their own lifecycle beyond that of containers and can grow quite large depending on the type of data and applications you’re using.</li>
-</ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume ls <span class="co"># list all volumes</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume rm <span class="op">&lt;</span>volume-name-or-id<span class="op">&gt;</span> <span class="co">#  remove a volume (only works when the volume is not attached to any containers)</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume prune <span class="co"># remove all unused (unattached) volumes</span></span></code></pre></div>
-</section>
-</section>
-<section id="sharing-local-files-with-containers" class="level1">
-<h1>Sharing local files with containers</h1>
-<ul>
-<li><strong>Containers are isolated</strong>, meaning they don’t access the host’s filesystem by default.</li>
-<li>To <strong>persist data</strong> or <strong>share files</strong> between host and container, Docker provides:
-<ul>
-<li><strong>Volumes</strong>: Managed by Docker, ideal for <strong>persistent storage</strong>. Survive container restarts.</li>
-<li><strong>Bind mounts</strong>: Link specific host directories/files to the container. Great for <strong>development</strong> and real-time updates.</li>
-</ul></li>
-</ul>
-<section id="v-vs---mount" class="level3">
-<h3>🔹 <code>-v</code> vs <code>--mount</code></h3>
-<ul>
-<li><code>-v /host/path:/container/path</code>:
-<ul>
-<li>Simple and auto-creates missing host dirs.</li>
-<li>Good for quick tasks.</li>
-</ul></li>
-<li><code>--mount type=bind,source=/host/path,target=/container/path</code>:
-<ul>
-<li>More readable and feature-rich.</li>
-<li>Fails if the host path doesn’t exist.</li>
-<li><strong>Recommended by Docker</strong> for better control.</li>
-</ul></li>
-</ul>
-<p>Use <strong>volumes</strong> for persistent container data, and <strong>bind mounts</strong> to share real-time code or config files during development.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /HOST/PATH:/CONTAINER/PATH <span class="at">-it</span> nginx</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--mount</span> type=bind,source=/HOST/PATH,target=/CONTAINER/PATH,readonly nginx</span></code></pre></div>
-</section>
-<section id="docker-bind-mount-permissions-performance-summary" class="level3">
-<h3>Docker Bind Mount Permissions &amp; Performance Summary</h3>
-<ul>
-<li><strong>Bind mounts</strong> allow containers to access and share files from the host system.</li>
-<li>Use access flags with the mount to control permissions:
-<ul>
-<li><p><code>:ro</code> → <strong>Read-only</strong>: container can read but <strong>not modify/delete</strong> host files.</p></li>
-<li><p><code>:rw</code> → <strong>Read-write</strong>: container can <strong>read, modify, or delete</strong> host files.</p></li>
-<li><p>Example:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /host/dir:/container/dir:rw nginx</span></code></pre></div></li>
-</ul></li>
-<li><strong>Best practice</strong>: Use <code>:ro</code> for config files to prevent accidental modification.</li>
-</ul>
-</section>
-<section id="synchronized-file-share" class="level3">
-<h3>Synchronized File Share</h3>
-<ul>
-<li>For large or frequently accessed codebases, bind mounts can be slow.</li>
-<li><strong>Synchronized file shares</strong> enhance performance using <strong>filesystem caching</strong>, especially in VM-based Docker setups (like Docker Desktop).</li>
-<li>They ensure faster and more efficient file access between host and container in development environments.</li>
-</ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> public_html</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> public_html</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> index.html <span class="co">#add some html content in the file</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">--name</span> my_site <span class="at">-p</span> 8080:80 <span class="at">-v</span> .:/usr/local/apache2/htdocs/ httpd:2.4</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">OR</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">--name</span> my_site <span class="at">-p</span> 8080:80 <span class="at">--mount</span> type=bind,source=./,target=/usr/local/apache2/htdocs/ httpd:2.4</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Now go to the docker desktop</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the container</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Goto the Files tab</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Search in /usr/local/apache2/htdocs/</span></span></code></pre></div>
-</section>
-</section>
-<section id="caching" class="level1">
-<h1>Caching</h1>
-<ul>
-<li>Docker uses a <strong>layered file system</strong>: each instruction in a <code>Dockerfile</code> creates a new layer.</li>
-<li>When a layer changes, <strong>all layers after it are invalidated</strong> and must be rebuilt.</li>
-<li>Most instructions are <strong>cached by default</strong> to improve build speed.</li>
-<li>Using <code>RUN</code> commands to delete files doesn’t remove them from earlier layers; it just <strong>creates a new layer</strong>.<br />
-&gt; 🔐 <strong>Tip</strong>: Never store sensitive information in Docker images (e.g., API keys, passwords), as layers can be inspected.</li>
-</ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">--no-cache</span> .  <span class="co"># Build image without using any cached layers</span></span></code></pre></div>
-</section>
-<section id="multi-container-applications" class="level1">
-<h1>Multi-container applications</h1>
-<ul>
-<li>Used to <strong>separate build environment</strong> from the final runtime environment.</li>
-<li>Helps reduce image size and keep the final image clean.</li>
-<li>You can <strong>target a specific stage</strong> when building:</li>
-</ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> mysite-frontend <span class="at">--target</span> runner .</span></code></pre></div>
-<section id="docker-compose" class="level2">
-<h2>Docker Compose</h2>
-<ul>
-<li>Managing multiple containers (frontend, backend, DB) individually is complex.</li>
-<li><strong>Docker Compose</strong> simplifies orchestration of multi-container applications.</li>
-<li>Define all services in a single <code>docker-compose.yml</code> file.</li>
-</ul>
-<section id="example-docker-compose.yml" class="level3">
-<h3>Example <code>docker-compose.yml</code></h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;3.8&quot;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">backend</span><span class="kw">:</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> mysite-backend</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">container_name</span><span class="kw">:</span><span class="at"> mysite-backend</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pull_policy</span><span class="kw">:</span><span class="at"> never</span><span class="co">  # Prevents accidentally pulling from Docker Hub</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> ./backend</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">dockerfile</span><span class="kw">:</span><span class="at"> Dockerfile</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">target</span><span class="kw">:</span><span class="at"> runner</span><span class="co">  # Use specific stage from Dockerfile</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;8000:8000&quot;</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">frontend</span><span class="kw">:</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> mysite-frontend</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">container_name</span><span class="kw">:</span><span class="at"> mysite-frontend</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pull_policy</span><span class="kw">:</span><span class="at"> never</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">context</span><span class="kw">:</span><span class="at"> ./frontend</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">dockerfile</span><span class="kw">:</span><span class="at"> Dockerfile</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;80:80&quot;</span></span></code></pre></div>
-</section>
-<section id="commands" class="level3">
-<h3>Commands</h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build       <span class="co"># Build all services</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up          <span class="co"># Start all services</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down        <span class="co"># Stop and remove containers</span></span></code></pre></div>
-<ul>
-<li><code>pull_policy: never</code> helps avoid pulling images with the same name from Docker Hub.</li>
-<li>Docker Compose allows you to run <strong>the full stack with a single command</strong> — great for development and testing!</li>
-</ul>
-</section>
-</section>
-</section>
-</body>
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br />
+			<h1 id="basics-list-pull-run-and-delete">
+				🐳 Basics (List, Pull, Run and Delete)
+			</h1>
+			<br />
+			<p>
+				<strong>References</strong>
+				<a
+					href="https://docs.docker.com/get-started/introduction/whats-next/"
+					>https://docs.docker.com/get-started/introduction/whats-next/</a
+				>
+				<a
+					href="https://www.youtube.com/watch?v=b0HMimUb4f0&ab_channel=mCoding"
+					>https://www.youtube.com/watch?v=b0HMimUb4f0&amp;ab_channel=mCoding</a
+				>
+			</p>
+			<pre><code class="language-bash">docker image ls #list down all the images
+docker ps #list down the running containers
+docker ps -a #list down all the containers
+
+#Pull Images
+docker pull python #Will take around 1GB
+docker pull python:3.11-slim #will takw around 140mb
+docker pull python:3.11-alpine #will takw around 50mb
+
+#slim images - usually Debial-based Linux
+#alpine images - Alpine Linux
+
+#Stop Docker container
+docker stop &lt;container-name&gt; 
+
+#Delete Docker Container/s
+docker container prune #Remove all stopped containers
+docker run -p 5000:80 -d --rm nginx # automatically delete when the container is stopped using --rm
+docker rm -f &lt;container-name&gt; # Force remove a container (running or stopped)
+
+#Delete a Docker image
+docker rmi &lt;image_name&gt;:&lt;tag&gt;
+docker rmi &lt;image_id&gt;
+docker rmi -f &lt;image_name&gt;:&lt;tag&gt;
+</code></pre>
+			<br />
+			<h2 id="start-and-run-new-container-using-remote-image">
+				Start and run new container using remote Image
+			</h2>
+			<br />
+			<pre><code class="language-bash">docker run --name=base-container -ti ubuntu
+</code></pre>
+			<ul>
+				<li>
+					-t: Allocates a pseudo-TTY (terminal) | terminal features
+					like history and auto complete
+				</li>
+				<li>
+					-i: Keeps STDIN open (interactive mode) | interactive
+					terminal session
+				</li>
+			</ul>
+			<br />
+			<h2 id="build-custome-images-with-namestags">
+				Build Custome Images with names/tags
+			</h2>
+			<br />
+			<pre><code class="language-bash">#The most basic `docker build` command, build with no name/tag
+#The final `.` in the command provides the path or URL to the build context. At this location,
+#the builder will find the Dockerfile and other referenced files.
+
+docker build .
+
+#build with a name/tag
+docker build -t my-username/my-image .
+
+#add another tag for existing image
+docker image tag my-username/my-image another-username/another-image:v1
+</code></pre>
+			<br />
+			<h1 id="create-and-run-containers-using-images">
+				Create and run containers using Images
+			</h1>
+			<br />
+			<pre><code class="language-bash">#This builds a Docker image from a Dockerfile in the current directory (.), and tags it as mysite.
+#You now have a custom Docker image called mysite on your machine.
+docker build -t mysite .
+
+#This creates and runs a container from the image mysite, gives it a name, and maps ports so you can access it from your browser.
+docker run --name my-container-using-mysite -p 3000:80 mysite
+
+docker run -p 3000:80 -d nginx
+
+#-p : for port mapping
+#-d : for detached mode | Run the container in the background
+</code></pre>
+			<br />
+			<h2 id="port-mapping-with-nginx">Port mapping with NginX</h2>
+			<br />
+			<pre><code class="language-bash">docker run nginx #will pull if its not already pulled
+
+#We can see this is running in the docker desktop, but if we visit localhost in the browser it shows an error
+#This is because by default containers are isolated form the host machine.
+#So, we have to publish the port, so host can see it
+
+docker run -p HOST_PORT:CONTAINER_PORT nginx
+docker run -p 80:80 nginx
+
+#If you omit the HOST_PORT the container’s port 80 onto an ephemeral port on the host: and you can find it by
+docker ps
+#now we can see the localhost is working on the browser
+
+docker run -P nginx #publish all of the exposed ports configured by the image
+</code></pre>
+			<br />
+			<h2 id="debugging">Debugging</h2>
+			<br />
+			<pre><code class="language-bash">docker exec -it &lt;name or GUID&gt; /bin/bash
+
+#-i : interactive terminal session
+#-t : terminal features like history and auto complete
+
+docker logs &lt;container-name&gt; or GUID #Get logs
+</code></pre>
+			<br />
+			<h2 id="publishing">Publishing</h2>
+			<br />
+			<pre><code class="language-bash">docker push my-username/my-image
+</code></pre>
+			<br />
+			<h1 id="dockerfile">Dockerfile</h1>
+			<br />
+			<pre><code class="language-bash">FROM node:20-alpine #define your base image
+
+WORKDIR /app # This will specify where future commands will run and the directory files will be copied inside the container image.
+
+COPY package.json yarn.lock ./ # Read below note
+
+COPY . . #Copy all of the files from your project on your machine into the container image
+
+RUN yarn install --production
+
+EXPOSE 3000
+
+CMD [&quot;node&quot;, &quot;./src/index.js&quot;] # start command
+</code></pre>
+			<p>
+				<strong>Note:</strong> For Node-based applications, dependencies
+				are defined in the package.json file. You&#39;ll want to
+				reinstall the dependencies if that file changes, but use cached
+				dependencies if the file is <strong>unchanged</strong>. So,
+				start by copying only that file first, then install the
+				dependencies, and finally copy everything else. Then, you only
+				need to recreate the yarn dependencies if there was a change to
+				the package.json file.
+			</p>
+			<p>
+				Great start! Here&#39;s an improved and polished version of your
+				Docker short note, with grammar corrections, clearer phrasing,
+				and some extra helpful information added:
+			</p>
+			<br />
+			<h1 id="overriding-container-defaults">
+				Overriding container defaults
+			</h1>
+			<br />
+			<br />
+			<h2 id="overriding-the-network-ports">
+				Overriding the network ports
+			</h2>
+			<br />
+			<pre><code class="language-bash">#You can use the -p option in docker run to map container ports to host ports, allowing you to run the multiple instances of the container without any conflict.
+docker run -d -p HOST_PORT:CONTAINER_PORT postgres
+</code></pre>
+			<br />
+			<h2 id="setting-environment-variables">
+				Setting environment variables
+			</h2>
+			<br />
+			<pre><code class="language-bash">docker run -e foo=bar postgres env
+
+#The .env file acts as a convenient way to set environment variables for your Docker containers without cluttering your command line #with numerous -e flags. To use a .env file, you can pass --env-file option with the docker run command.
+
+docker run --env-file .env postgres env
+</code></pre>
+			<br />
+			<h2 id="restricting-the-container-to-consume-the-resources">
+				Restricting the container to consume the resources
+			</h2>
+			<br />
+			<pre><code class="language-bash">#You can use the --memory and --cpus flags with the docker run command to restrict how much CPU and memory a container can use
+docker run -e POSTGRES_PASSWORD=secret --memory=&quot;512m&quot; --cpus=&quot;0.5&quot; postgres
+
+#You can use the docker stats command to monitor the real-time resource usage of running containers. 
+</code></pre>
+			<br />
+			<h2 id="run-postgres-container-in-a-controlled-network">
+				Run Postgres container in a controlled network
+			</h2>
+			<br />
+			<pre><code class="language-bash">#By default, containers automatically connect to a special network called a bridge network when you run them. This bridge network acts like a virtual bridge, allowing containers on the same host to communicate with each other while keeping them isolated from the outside world and other hosts.
+
+#You create a custom network by passing --network flag with the docker run command. All containers without a --network flag are attached to the default bridge network.
+
+docker network create mynetwork
+docker network ls
+
+#Connect Postgres to the custom network by using the following command:
+docker run -d -e POSTGRES_PASSWORD=secret -p 5434:5432 --network mynetwork postgres
+</code></pre>
+			<br />
+			<h1 id="persisting-container-data">Persisting container data</h1>
+			<br />
+			<ul>
+				<li>
+					For example, if you restart a database container, you might
+					not want to start with an empty database. So, how do you
+					persist files?
+				</li>
+			</ul>
+			<br />
+			<h2 id="container-volumes">Container volumes</h2>
+			<br />
+			<ul>
+				<li>
+					Volumes are a storage mechanism that provide the ability to
+					persist data beyond the lifecycle of an individual
+					container. Think of it like providing a shortcut or symlink
+					from inside the container to outside the container.
+				</li>
+			</ul>
+			<pre><code class="language-bash">docker volume create log-data # create a volume named log-data
+docker run -d -p 80:80 -v log-data:/logs docker/welcome-to-docker # the volume will be mounted (or attached) into the container at /logs
+
+# Mounts a named volume called log-data to the container’s /logs directory.
+
+# Any files written by the container to /logs will be stored in the log-data volume on your host, which persists even if the container is removed.
+docker volume ls
+docker volume inspect log-data
+</code></pre>
+			<ul>
+				<li>
+					If the volume log-data doesn&#39;t exist, Docker will
+					automatically create it for you.
+				</li>
+				<li>
+					When the container runs, all files it writes into the /logs
+					folder will be saved in this volume, outside of the
+					container. If you delete the container and start a new
+					container using the same volume, the files will still be
+					there.
+				</li>
+				<li>
+					You can attach the same volume to multiple containers to
+					share files between containers.
+				</li>
+				<li>
+					Volumes have their own lifecycle beyond that of containers
+					and can grow quite large depending on the type of data and
+					applications you’re using.
+				</li>
+			</ul>
+			<pre><code class="language-bash">docker volume ls # list all volumes
+docker volume rm &lt;volume-name-or-id&gt; #  remove a volume (only works when the volume is not attached to any containers)
+docker volume prune # remove all unused (unattached) volumes
+</code></pre>
+			<br />
+			<h1 id="sharing-local-files-with-containers">
+				Sharing local files with containers
+			</h1>
+			<br />
+			<ul>
+				<li>
+					<strong>Containers are isolated</strong>, meaning they don’t
+					access the host’s filesystem by default.
+				</li>
+				<li>
+					To <strong>persist data</strong> or
+					<strong>share files</strong> between host and container,
+					Docker provides:
+					<ul>
+						<li>
+							<strong>Volumes</strong>: Managed by Docker, ideal
+							for <strong>persistent storage</strong>. Survive
+							container restarts.
+						</li>
+						<li>
+							<strong>Bind mounts</strong>: Link specific host
+							directories/files to the container. Great for
+							<strong>development</strong> and real-time updates.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<br />
+			<h3 id="code-vcode-vs-code--mountcode">
+				🔹 <code>-v</code> vs <code>--mount</code>
+			</h3>
+			<br />
+			<ul>
+				<li>
+					<code>-v /host/path:/container/path</code>:
+					<ul>
+						<li>Simple and auto-creates missing host dirs.</li>
+						<li>Good for quick tasks.</li>
+					</ul>
+				</li>
+				<li>
+					<code
+						>--mount
+						type=bind,source=/host/path,target=/container/path</code
+					>:
+					<ul>
+						<li>More readable and feature-rich.</li>
+						<li>Fails if the host path doesn&#39;t exist.</li>
+						<li>
+							<strong>Recommended by Docker</strong> for better
+							control.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				Use <strong>volumes</strong> for persistent container data, and
+				<strong>bind mounts</strong> to share real-time code or config
+				files during development.
+			</p>
+			<pre><code class="language-bash">docker run -v /HOST/PATH:/CONTAINER/PATH -it nginx
+docker run --mount type=bind,source=/HOST/PATH,target=/CONTAINER/PATH,readonly nginx
+</code></pre>
+			<br />
+			<h3 id="docker-bind-mount-permissions-amp-performance-summary">
+				Docker Bind Mount Permissions &amp; Performance Summary
+			</h3>
+			<br />
+			<ul>
+				<li>
+					<p>
+						<strong>Bind mounts</strong> allow containers to access
+						and share files from the host system.
+					</p>
+				</li>
+				<li>
+					<p>
+						Use access flags with the mount to control permissions:
+					</p>
+					<ul>
+						<li>
+							<code>:ro</code> → <strong>Read-only</strong>:
+							container can read but
+							<strong>not modify/delete</strong> host files.
+						</li>
+						<li>
+							<code>:rw</code> → <strong>Read-write</strong>:
+							container can
+							<strong>read, modify, or delete</strong> host files.
+						</li>
+						<li>
+							Example:
+							<pre><code class="language-bash">docker run -v /host/dir:/container/dir:rw nginx
+</code></pre>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>Best practice</strong>: Use <code>:ro</code> for
+						config files to prevent accidental modification.
+					</p>
+				</li>
+			</ul>
+			<br />
+			<h3 id="synchronized-file-share">Synchronized File Share</h3>
+			<br />
+			<ul>
+				<li>
+					For large or frequently accessed codebases, bind mounts can
+					be slow.
+				</li>
+				<li>
+					<strong>Synchronized file shares</strong> enhance
+					performance using <strong>filesystem caching</strong>,
+					especially in VM-based Docker setups (like Docker Desktop).
+				</li>
+				<li>
+					They ensure faster and more efficient file access between
+					host and container in development environments.
+				</li>
+			</ul>
+			<pre><code class="language-bash">mkdir public_html
+cd public_html
+touch index.html #add some html content in the file
+docker run -d --name my_site -p 8080:80 -v .:/usr/local/apache2/htdocs/ httpd:2.4
+OR
+docker run -d --name my_site -p 8080:80 --mount type=bind,source=./,target=/usr/local/apache2/htdocs/ httpd:2.4
+# Now go to the docker desktop
+# Open the container
+# Goto the Files tab
+# Search in /usr/local/apache2/htdocs/
+</code></pre>
+			<br />
+			<h1 id="caching">Caching</h1>
+			<br />
+			<ul>
+				<li>
+					Docker uses a <strong>layered file system</strong>: each
+					instruction in a <code>Dockerfile</code> creates a new
+					layer.
+				</li>
+				<li>
+					When a layer changes,
+					<strong>all layers after it are invalidated</strong> and
+					must be rebuilt.
+				</li>
+				<li>
+					Most instructions are <strong>cached by default</strong> to
+					improve build speed.
+				</li>
+				<li>
+					Using <code>RUN</code> commands to delete files doesn&#39;t
+					remove them from earlier layers; it just
+					<strong>creates a new layer</strong>.
+					<blockquote>
+						<p>
+							🔐 <strong>Tip</strong>: Never store sensitive
+							information in Docker images (e.g., API keys,
+							passwords), as layers can be inspected.
+						</p>
+					</blockquote>
+				</li>
+			</ul>
+			<pre><code class="language-bash">docker build --no-cache .  # Build image without using any cached layers
+</code></pre>
+			<br />
+			<h1 id="multi-container-applications">
+				Multi-container applications
+			</h1>
+			<br />
+			<ul>
+				<li>
+					Used to <strong>separate build environment</strong> from the
+					final runtime environment.
+				</li>
+				<li>Helps reduce image size and keep the final image clean.</li>
+				<li>
+					You can <strong>target a specific stage</strong> when
+					building:
+				</li>
+			</ul>
+			<pre><code class="language-bash">docker build -t mysite-frontend --target runner .
+</code></pre>
+			<br />
+			<h2 id="docker-compose">Docker Compose</h2>
+			<br />
+			<ul>
+				<li>
+					Managing multiple containers (frontend, backend, DB)
+					individually is complex.
+				</li>
+				<li>
+					<strong>Docker Compose</strong> simplifies orchestration of
+					multi-container applications.
+				</li>
+				<li>
+					Define all services in a single
+					<code>docker-compose.yml</code> file.
+				</li>
+			</ul>
+			<br />
+			<h3 id="example-codedocker-composeymlcode">
+				Example <code>docker-compose.yml</code>
+			</h3>
+			<br />
+			<pre><code class="language-yaml">version: &quot;3.8&quot;
+
+services:
+  backend:
+    image: mysite-backend
+    container_name: mysite-backend
+    pull_policy: never  # Prevents accidentally pulling from Docker Hub
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runner  # Use specific stage from Dockerfile
+    ports:
+      - &quot;8000:8000&quot;
+
+  frontend:
+    image: mysite-frontend
+    container_name: mysite-frontend
+    pull_policy: never
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - &quot;80:80&quot;
+</code></pre>
+			<br />
+			<h3 id="commands">Commands</h3>
+			<br />
+			<pre><code class="language-bash">docker compose build       # Build all services
+docker compose up          # Start all services
+docker compose down        # Stop and remove containers
+</code></pre>
+			<ul>
+				<li>
+					<code>pull_policy: never</code> helps avoid pulling images
+					with the same name from Docker Hub.
+				</li>
+				<li>
+					Docker Compose allows you to run
+					<strong>the full stack with a single command</strong> —
+					great for development and testing!
+				</li>
+			</ul>
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
 </html>
