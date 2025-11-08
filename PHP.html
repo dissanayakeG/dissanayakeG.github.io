@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php-extras.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br><h1 id="php">PHP</h1><br>
+<br><h2 id="create-a-local-php-server">Create a local PHP Server</h2><br>
+<ul>
+<li>If you want to run a PHP project or test a PHP file outside of the default web server directories (like <code>/var/www/html</code> on <code>Linux</code> or <code>xampp/htdocs</code> on <code>Windows</code>), you can use PHP’s built-in development server.</li>
+</ul>
+<pre><code class="language-bash">php -S localhost:&lt;port&gt; -&gt; php -S localhost:8000 # -S should be uppercase
+php -S localhost:8000 -t public
+#-t public -&gt; Sets the document root (the folder PHP serves) to the public/ directory.
+</code></pre>
+<br><h2 id="what-is-php">What is PHP</h2><br>
+<ul>
+<li>php is a scripting language like js, not a programming language</li>
+<li>programming language = compile</li>
+<li>scripting language = interpreted</li>
+<li>static keyword can use for caching the values.</li>
+</ul>
+<br><h2 id="how-php-works-simple">How PHP works (simple)</h2><br>
+<ol>
+<li>Browser requests a URL (e.g. <code>https://example.com/</code> → server receives <code>GET /</code>).</li>
+<li>Web server (Apache, Nginx, etc.) checks the document root for configured index files (e.g. <code>index.php</code>, <code>index.html</code>).</li>
+<li>If an index file is found and PHP is configured, the server hands the .php file to the PHP handler (via mod_php or PHP-FPM).</li>
+<li>PHP parses and compiles the script into opcodes (cached by OPcache for performance), executes it, and returns the output (HTML, JSON, etc.) to the web server → then to the browser.</li>
+<li>If no index file exists and directory listing is enabled, the server returns a file listing (a security risk).</li>
+<li>Use server config (e.g. <code>Options -Indexes</code> in Apache or <code>autoindex off</code> in Nginx) to prevent directory listings.</li>
+</ol>
+<!-- ## PHP Fundamentals -->
+
+<br><h2 id="php-types">PHP Types</h2><br>
+<ul>
+<li>PHP keywords are case-insensitive -&gt; null,NULL,NuLL</li>
+</ul>
+<br><h3 id="type-juggling">Type juggling</h3><br>
+<ul>
+<li>When comparing variables of different types, PHP will convert them to the common, comparable type.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+$qty = 20;
+if($qty == &#39;20&#39;) {
+    echo &#39;Equal&#39;; //Equal
+}
+
+$total = 100;
+$qty = &quot;20 pieces&quot;;
+$total = $total + $qty;
+
+echo $total; // 120 //PHP casts the string “20 pieces” as an integer 20 before calculating the sum
+</code></pre>
+<!-- ## Operators -->
+
+<!-- ## Control flow -->
+
+<br><h2 id="functions">Functions</h2><br>
+<ul>
+<li>PHP 8.0 introduced named parameters.</li>
+<li>Use named arguments to pass arguments to a function based on the parameter names.</li>
+<li>Put the named arguments after the positional arguments in function calls.</li>
+<li>you can ignore passing values for default parameters</li>
+<li>A variadic function accepts a variable number of arguments.</li>
+<li>Do use the ... operator to define a variadic function.</li>
+<li>Only the last parameter can be variadic.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+function sum($a, $b, int ...$numbers): int
+{
+    return array_sum($numbers);
+}
+</code></pre>
+<!-- ## Array -->
+
+<!-- ## Sorting Arrays -->
+
+<br><h2 id="advanced-functions">Advanced Functions</h2><br>
+<br><h3 id="anonymous-functions">Anonymous functions</h3><br>
+<ul>
+<li>An anonymous function is a function without a name.</li>
+<li>An anonymous function is a Closure object.</li>
+<li>To access the variables from the parent scope inside an anonymous function, place the variables in the use construct.</li>
+<li>An anonymous function can be assigned to a variable, passed to a function, or returned from a function.</li>
+</ul>
+<br><h3 id="arrow-functions-php-74">Arrow functions (php 7.4)</h3><br>
+<ul>
+<li>An arrow function provides a shorter syntax for writing a short anonymous function.</li>
+<li>An arrow function starts with the fn keyword and contains only one expression, the function’s return value.</li>
+<li>An arrow function has access to the variables in its parent scope automatically.</li>
+</ul>
+<br><h3 id="variable-functions">Variable functions</h3><br>
+<ul>
+<li>Append parentheses () to a variable name to call the function whose name is the same as the variable’s value.</li>
+<li>Use the <code>$this-&gt;$variable()</code> to call a method of a class.</li>
+<li>Use the className::$variable() to call a static method of a class.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$f = &#39;strlen&#39;;
+echo $f(&#39;Hello&#39;); # strlen(&#39;Hello) -&gt; 5
+</code></pre>
+<br><h2 id="variable-constructslanguage-construct">Variable constructs(language construct)</h2><br>
+<ul>
+<li>These are built-in language constructs, not regular functions.</li>
+<li>This means you cannot assign them to a variable, return them from a function, or call them dynamically<blockquote>
+<p>(e.g., $f = &#39;isset&#39;; $f($var) won’t work).</p>
+</blockquote>
+</li>
+<li>There are 3 Variable constructs -&gt; <code>isset($a1,$$a2, $a3,...)</code> | <code>empty($val)</code> | <code>is_null($val)</code></li>
+<li><code>isset()</code> is a language construct, not a function.</li>
+<li><code>isset()</code> returns true if a variable is set and not null.</li>
+<li><code>isset()</code> returns true if an array element exists and is not null.</li>
+<li><code>isset()</code> returns true if a string index is valid or false otherwise.</li>
+<li><code>isset()</code> returns true if all variables are set and not null. It’ll stop evaluating once it encounters an unset variable.</li>
+<li><code>empty()</code> returns true for all of these <code>[false, 0, 0.0, &quot;0&quot;, &#39;&#39;, null, []]</code></li>
+<li>Use the PHP <code>empty()</code> construct to check if a variable is not set or its value is false.</li>
+<li>The <code>is_null()</code> checks a value and returns true if that value is exactly null. Otherwise, it returns false.</li>
+<li>The <code>is_null()</code> behaves the same as the identity operator <code>(===)</code>.</li>
+</ul>
+<br><h2 id="advanced-array-operations">Advanced Array Operations</h2><br>
+<ul>
+<li>Use the PHP <code>array_map()</code> method to create a new array by applying a callback function to every element of another array.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$lengths = [10, 20, 30];
+// calculate areas
+$areas = array_map(
+	fn ($length) =&gt; $length * $length,
+	$lengths
+);
+print_r($areas);
+</code></pre>
+<ul>
+<li>When you want to filter elements of an array, you often iterate over the elements and check whether the result array should include each element. You can do that by using <code>array_filter()</code>.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$numbers = [1, 2, 3, 4, 5];
+$odd_numbers = array_filter(
+	$numbers,
+	fn ($number) =&gt; $number % 2 === 1
+);
+print_r($odd_numbers);
+
+# Using callback as a method of a class
+array_filter($numbers,[**new Odd()**, &#39;isOdd&#39;]) //if isOdd is a public method of Odd class
+array_filter($numbers,[&#39;Odd&#39;, &#39;isOdd&#39;]) //if isOdd is a static method of Odd class
+array_filter($numbers,new Odd()) //if you want to pass __invoke() as the callback function
+</code></pre>
+<ul>
+<li><p>you can pass 3rd argument as well.</p>
+</li>
+<li><p><code>ARRAY_FILTER_USE_KEY</code> if you want to filter by <code>$key</code> from the callback funcion.</p>
+</li>
+<li><p><code>ARRAY_FILTER_USE_BOTH</code> if you want to pass both the key and value of the element to the callback function.</p>
+</li>
+<li><p>Use the PHP <code>array_reduce()</code> function to reduce an array to a single value using a callback function.</p>
+</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$numbers = [10,20,30];
+$total  = array_reduce(
+    $numbers,
+    fn ($previous, $current) =&gt; $previous + $current
+);
+echo $total; // 60
+</code></pre>
+<!-- ## Organizing PHP files -->
+
+<!-- ## State Management -->
+
+<br><h2 id="processing-forms">Processing Forms</h2><br>
+<ul>
+<li>users can input scripts like <code>&lt;script&gt;alert(&#39;Hello&#39;);&lt;/script&gt;</code> into input fields.</li>
+<li>Hackers can input malicious code from another server to the user’s web browser, the risk is higher.</li>
+<li>This type of attack is called <code>cross-site scripting (XSS)</code> attack.</li>
+<li>Therefore, before displaying user input on a webpage, you should always escape the data. To do that, 
+  you use the <code>htmlspecialchars()</code> function:</li>
+<li>When you use get request <code>($_GET)</code>, it appends input as query data, so use <code>htmlspecialchars()</code> to prevent XSS.</li>
+<li>When submiting a form to same file, use htmlspecialchars() to prevent XSS.</li>
+</ul>
+<pre><code class="language-php"># ex 1
+&lt;?php
+if (isset($_POST[&#39;name&#39;], $_POST[&#39;email&#39;])) {
+	$name = htmlspecialchars($_POST[&#39;name&#39;]);
+	$email = htmlspecialchars($_POST[&#39;email&#39;]);
+
+	// show the $name and $email
+	echo &quot;Thanks $name for your subscription.&lt;br&gt;&quot;;
+	echo &quot;Please confirm it in your inbox of the email $email.&quot;;
+} else {
+	echo &#39;You need to provide your name and email address.&#39;;
+}
+
+# ex 2
+&lt;form action=&quot;&lt;?php echo htmlspecialchars($_SERVER[&#39;PHP_SELF&#39;]) ?&gt;&quot; method=&quot;post&quot;&gt;
+</code></pre>
+<br><h3 id="form-validation-flow">Form validation flow</h3><br>
+<p><code>Validate → Sanitize → Escape</code></p>
+<p>Validate</p>
+<ul>
+<li>Ensure the input has the correct format, type, and value before using it.</li>
+<li>Use validation filters or regex — e.g. <code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></li>
+</ul>
+<p>Sanitize</p>
+<ul>
+<li>Clean the input by removing or altering unwanted or dangerous characters before storing or processing.</li>
+<li>Use sanitization filters — e.g. <code>filter_var($name, FILTER_SANITIZE_STRING) or FILTER_SANITIZE_EMAIL</code></li>
+</ul>
+<p>Escape</p>
+<ul>
+<li>Neutralize special characters before displaying or outputting (HTML, JS, SQL, etc.) to prevent injection attacks.</li>
+<li>Use <code>htmlspecialchars()</code> when displaying in HTML, and <code>PDO prepared statements</code> when inserting into a database.</li>
+</ul>
+<br><h3 id="isset-vs-filter_has_var">isset() vs filter_has_var()</h3><br>
+<pre><code class="language-php">&lt;?php
+	$_POST[&#39;email&#39;] = &#39;example@phptutorial.net&#39;;
+	if(isset($_POST[&#39;email&#39;])) // return true
+
+	$_POST[&#39;email&#39;] = &#39;example@phptutorial.net&#39;;
+	if(filter_has_var(INPUT_POST, &#39;email&#39;)) // return false //check request body
+
+
+   //Use the filter_has_var() function to check if a variable exists in a specified type,
+   //including INPUT_POST, INPUT_GET, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+</code></pre>
+<ul>
+<li>Use <code>filter_input()</code> and <code>filter_var()</code> functions to validate and sanitize data.</li>
+</ul>
+<br><h3 id="filter_var-for-sanitize-and-validate-data">filter_var() for sanitize and validate data</h3><br>
+<pre><code class="language-php">//filter_var ( mixed $value , int $filter = FILTER_DEFAULT , array|int $options = 0 ) : mixed
+
+&lt;?php
+
+if (filter_has_var(INPUT_GET, &#39;id&#39;)) {
+	// sanitize id
+	// FILTER_SANITIZE_NUMBER_INT will remove all characters except the digits, plus, and minus signs from the id variable.
+	$clean_id = filter_var($_GET[&#39;id&#39;], FILTER_SANITIZE_NUMBER_INT);
+
+	// validate id
+	$id = filter_var($clean_id, FILTER_VALIDATE_INT);
+
+	// validate id with options
+    $id = filter_var($clean_id, FILTER_VALIDATE_INT, [&#39;options&#39; =&gt; [&#39;min_range&#39; =&gt; 10]]);
+
+	// show the id if it&#39;s valid
+	echo $id === false ? &#39;Invalid id&#39; : $id;
+} else {
+	echo &#39;id is required.&#39;;
+}
+</code></pre>
+<br><h3 id="filter_input-for-sanitize-and-validate-user-inputs-http">filter_input() for sanitize and validate user inputs (HTTP)</h3><br>
+<ul>
+<li><code>filter_input ( int $type , string $var_name , int $filter = FILTER_DEFAULT , array|int $options = 0 ) : mixed</code></li>
+<li>allows you to get an external variable by its name and filter it using one or more built-in filters.</li>
+<li>The following example uses the filter_input() function to sanitize data for a search form:</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$term_html = filter_input(INPUT_GET, &#39;term&#39;, FILTER_SANITIZE_SPECIAL_CHARS); //value for showing on the search field
+$term_url = filter_input(INPUT_GET, &#39;term&#39;, FILTER_SANITIZE_ENCODED); //value for displaying on the page
+
+?&gt;
+&lt;form action=&quot;search.php&quot; method=&quot;get&quot;&gt;
+    &lt;label for=&quot;term&quot;&gt; Search &lt;/label&gt;
+    &lt;input type=&quot;search&quot; name=&quot;term&quot; id=&quot;term&quot; value=&quot;&lt;?php echo $term_html ?&gt;&quot;&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Search&quot;&gt;
+&lt;/form&gt;
+
+&lt;?php
+
+if (null !== $term_html) {
+	echo &quot;The search result for &lt;mark&gt; $term_html &lt;/mark&gt;.&quot;;
+}
+</code></pre>
+<br><h3 id="filter_input-vs-filter_var">filter_input vs. filter_var</h3><br>
+<ul>
+<li><code>filter_input</code> Validate and sanitize inputs like <code>POST request</code>. -&gt; <code>INPUT_GET</code> and <code>INPUT_POST</code></li>
+<li><code>filter_var</code> Validate and sanitize a variable you already have in memory. -&gt; <code>Any local variable</code></li>
+<li>you just can <code>$input = $_POST[&#39;email&#39;]</code>, if you want to use<code> filter_var</code>, instead of <code>filter_input</code></li>
+</ul>
+<pre><code class="language-php">$input = $_POST[&#39;email&#39;] ?? &#39;&#39;;
+$validated = filter_var($input, FILTER_VALIDATE_EMAIL);
+
+//OR just
+$validated = filter_input(INPUT_POST, &#39;email&#39;, FILTER_VALIDATE_EMAIL);
+</code></pre>
+<ul>
+<li><code>filter_input</code> Filtered value on success, false on failure or not found</li>
+<li><code>filter_var</code> Filtered value on success, false on validation failure</li>
+<li><code>filter_input</code> fails when Variable is not set in the input type or validation fails</li>
+<li><code>filter_var</code> fails when Variable is invalid or fails validation</li>
+<li><code>filter_input</code> can be used for Validate / sanitize form input</li>
+<li><code>filter_var</code> can be used for validate/ sanitize variables</li>
+<li>If a variable doesn’t exist, the <code>filter_input()</code> function returns <code>null</code> while the <code>filter_var()</code> function returns an <code>empty string</code> and issues a <code>notice of an undefined index</code>.</li>
+<li>Also, the <code>filter_input()</code> function doesn’t get the current values of the <code>$_GET</code>, <code>$_POST</code>, … superglobal variables. Instead, it uses the <code>original values submitted in the HTTP request</code>. For example:</li>
+</ul>
+<br><h3 id="csrf">CSRF</h3><br>
+<ul>
+<li><p>CSRF (Cross-Site Request Forgery) is when another website tricks your browser into sending a legitimate request to a site where you’re already logged in.</p>
+</li>
+<li><p>The trick works because your browser automatically includes cookies/session data for any site you’re logged into — even if the request didn’t come directly from you.</p>
+</li>
+</ul>
+<br><h4 id="1-youre-logged-into-your-bank">1️⃣ You’re logged into your bank</h4><br>
+<ul>
+<li>You log in at <code>yourbank.com</code>.</li>
+<li>Your browser now has a session cookie (e.g. <code>sessionid=abc123</code>) that keeps you logged in.</li>
+<li>So, any request sent to <code>yourbank.com</code> will automatically include that cookie — even if you didn’t type or click anything.</li>
+</ul>
+<br><h4 id="2-you-visit-a-malicious-website">2️⃣ You visit a malicious website</h4><br>
+<ul>
+<li>You go to <code>malicious-site.com</code>.</li>
+<li>That site secretly contains some HTML like this:</li>
+</ul>
+<pre><code class="language-html">&lt;form action=&quot;https://yourbank.com/transfer-fund&quot; method=&quot;POST&quot; id=&quot;attackForm&quot;&gt;
+	&lt;input type=&quot;hidden&quot; name=&quot;amount&quot; value=&quot;10000&quot; /&gt;
+	&lt;input type=&quot;hidden&quot; name=&quot;to_account&quot; value=&quot;attacker123&quot; /&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+	document.getElementById(&quot;attackForm&quot;).submit(); // auto-submit when the page loads
+&lt;/script&gt;
+</code></pre>
+<br><h4 id="3-what-happens-next">3️⃣ What happens next</h4><br>
+<ul>
+<li>As soon as the page loads:<ul>
+<li>That hidden form automatically submits a POST request to <code>https://yourbank.com/transfer-fund</code>.</li>
+<li>Your browser includes your bank’s login cookie (since you’re logged in there).</li>
+<li>To your bank’s server, it looks like you legitimately submitted the transfer form — even though you didn’t.</li>
+<li>So the bank would execute the transfer if it doesn’t have protection (CSRF defense).</li>
+</ul>
+</li>
+</ul>
+<br><h4 id="4-why-csrf-works">4️⃣ Why CSRF works</h4><br>
+<ul>
+<li>It abuses the browser’s automatic cookie handling.</li>
+<li>The attacker’s page never sees your cookies, but it can trigger a request that includes them.</li>
+</ul>
+<br><h4 id="how-websites-defend-against-it">How websites defend against it</h4><br>
+<ul>
+<li>A secure website adds a CSRF token to every sensitive form.</li>
+</ul>
+<pre><code class="language-php">session_start();
+$_SESSION[&#39;token&#39;] = bin2hex(random_bytes(35));
+
+// in the form
+&lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;&lt;?= $_SESSION[&#39;token&#39;] ?? &#39;&#39; ?&gt;&quot;&gt;
+
+//Check the submitted token with the one stored in the $_SESSION to prevent the CSRF attacks.
+</code></pre>
+<ul>
+<li>Then the server checks:<ul>
+<li>If the request includes this token.</li>
+<li>If it matches the token stored in your session.</li>
+</ul>
+</li>
+<li>The malicious site can’t know or guess that token, so the forged request fails.</li>
+</ul>
+<br><h3 id="prg-post-redirect-get">PRG (Post-Redirect-Get)</h3><br>
+<p>When a user submits a form (like a registration form or payment form):</p>
+<ul>
+<li>The form sends data with a POST request.</li>
+<li>The server processes it (e.g., inserts into DB, sends an email).</li>
+<li>The server then displays a “Success” page.</li>
+<li>Now, if the user refreshes the page, the browser says: “Resubmit the form data?”</li>
+<li>If they click Yes, the same POST request runs again — meaning the same data might get inserted twice, or payment might process again.</li>
+<li>That’s the double-submit problem.</li>
+</ul>
+<p>The PRG Solution</p>
+<ul>
+<li><code>POST</code>:The user submits the form → server processes the data.</li>
+<li><code>REDIRECT</code>:Instead of showing a success message directly, the server sends a redirect response (HTTP 302 or 303) to a GET URL.</li>
+<li><code>GET</code>:The browser then automatically loads that new URL — a normal GET request — where you display the success message.</li>
+<li><code>Result</code>: Refreshing the page now only reloads the GET page, not the original POST submission.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+session_start();
+
+if ($_SERVER[&#39;REQUEST_METHOD&#39;] === &#39;POST&#39;) {
+    // Process form (e.g., save to DB)
+    $_SESSION[&#39;message&#39;] = &#39;Form submitted successfully!&#39;;
+
+    // Redirect to the same page using GET
+    header(&#39;Location: &#39; . $_SERVER[&#39;PHP_SELF&#39;]);
+    exit;
+}
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;title&gt;PRG Example&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;?php
+  if (!empty($_SESSION[&#39;message&#39;])) {
+      echo &#39;&lt;p&gt;&#39; . htmlspecialchars($_SESSION[&#39;message&#39;]) . &#39;&lt;/p&gt;&#39;;
+      unset($_SESSION[&#39;message&#39;]); // clear after showing
+  }
+  ?&gt;
+
+  &lt;form method=&quot;post&quot;&gt;
+      &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Enter name&quot; required&gt;
+      &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<br><h3 id="file-upload">File Upload</h3><br>
+<ul>
+<li>Use the input with <code>type=&quot;file&quot;</code> to create a file input element and include the <code>enctype=&quot;multipart/form-data&quot;</code> attribute in the form to allow the file upload.</li>
+<li>Access the uploaded file information via the <code>$_FILES</code> array.</li>
+<li>Never trust the information on the <code>$_FILES</code> except the <code>tmp_name</code>.</li>
+<li>Always validate the information on the <code>$_FILES</code>.</li>
+<li>Use the <code>move_uploaded_file()</code> function to move the file from the temporary directory to another folder.</li>
+<li>File input element must have the multiple attribute and its name must have the square brackets <code>([])</code> like this</li>
+</ul>
+<pre><code class="language-php">&lt;input type=&quot;file&quot; name=&quot;files[]&quot; id=&quot;files&quot; multiple /&gt;
+</code></pre>
+<br><h3 id="password_hash-and-password_verify">password_hash and password_verify</h3><br>
+<ul>
+<li>Use the PHP <code>password_hash()</code> function to create a hash password using a secure one-way hashing algorithm.</li>
+<li>Use the PHP <code>password_verify()</code> function to check if a password matches a hashed password created by the <code>password_hash()</code> function.</li>
+</ul>
+<pre><code class="language-php">password_hash(
+     string $password,
+     string|int|null $algo,
+     array $options = []
+): string
+
+//PASSWORD_DEFAULT -&gt; bcrypt
+//PASSWORD_BCRYPT -&gt; CRYPT_BLOWFISH
+//PASSWORD_ARGON2I -&gt; Argon2i
+//PASSWORD_ARGON2ID -&gt; Argon2id
+
+&lt;?php
+
+$password = &#39;Password1&#39;;
+echo password_hash($password, PASSWORD_DEFAULT);
+
+password_verify(string $password, string $hash): bool
+// $password is a plain text password to match.
+// $hash is a hash created by the password_hash() function.
+</code></pre>
+<!-- ## Login System -->
+
+<!-- ## Working with Files -->
+
+<!-- ## Working with Directories -->
+
+<!-- ## String operations -->
+
+<br><h2 id="regular-expressions">Regular Expressions</h2><br>
+<ul>
+<li><p>PHP regular expressions are strings with pattern enclosing in delimiters for example <code>&quot;/pattern/&quot;</code>.</p>
+</li>
+<li><p>The <code>preg_match()</code> function searches for a match to a pattern in a string.</p>
+</li>
+<li><p>The <code>preg_match_all()</code> function searches for all matches to a pattern in a string.</p>
+</li>
+<li><p>The <code>preg_replace()</code> function searches a string for matches to a pattern and replaces them with a new string or pattern.</p>
+</li>
+<li><p>The forward-slashes are delimiters. The delimiters can be one of the following characters <code>~, !, @, #, $</code> or braces including <code>{}, (), [], &lt;&gt;</code>. The braces help improve regular expressions’ readability in some cases.</p>
+</li>
+<li><p><code>&#39;/\d+/&#39; is similar to &#39;{\d+}&#39;</code></p>
+</li>
+<li><p>Anchors<code>(^, $)</code> – match at the beginning (^) and/or end ($) of a string or line.</p>
+<ol>
+<li>preg_match_all(&#39;/P/&#39; , &#39;PHP&#39;, $matches) //match any &#39;P&#39;</li>
+<li>preg_match_all(&#39;/^P/&#39; , &#39;PHP&#39;, $matches) //match &#39;P&#39; at the begining (1st character)</li>
+</ol>
+</li>
+<li><p>Special characters must be escaped like <code>/\./g,  /\(/g</code></p>
+</li>
+<li><p>With character classes use back slash before <code>d,w,s</code> for escape, otherwise it will match character <code>d,w or s</code>.</p>
+</li>
+<li><p>Use <code>\d</code> character class to match any single digit.</p>
+</li>
+<li><p>Use <code>\w</code> character class to match any word character.</p>
+</li>
+<li><p>Use <code>\s</code> character class to match any whitespace.</p>
+</li>
+<li><p>The <code>\D, \W, \S</code> character class are the inverse sets of <code>\d, \w, and \s</code> character class.</p>
+</li>
+<li><p>Use the dot character class <code>(.)</code> to match any character but a new line.</p>
+</li>
+</ul>
+<br><h3 id="common-regex-patterns">Common regex patterns</h3><br>
+<pre><code class="language-bash">/				start
+/ 				end
+/g 				global
+/gi 			case insensitive
+/\d/g 			select single digit
+/\d+/g 			select one or more digits
+/\d{9}/g 		select 9 digits in a row
+/e+/g 			one or more than one e
+/a?/g 			a is optional
+/a*/g 			match 0 or more, and a is optional
+/./g 			match anything except new line
+/\. /g 			match . (dot)
+/.\./g 			match any character before .
+/\w/g 			match any word character , negative is /\W
+/\s/g 			match and white space, negative is /\S
+/\w{4}/g 		select any words with or more than 4 characters
+/\w{4,5}/g 		select any words with 4 or 5 characters
+/[fc]at/g 		words start with f or c but end with at
+/[q-z,A-Z]at/g	any character followed by “at”
+/(t|T)he/g 		match the words &quot;the&quot; or &quot;The&quot;
+/(t|e|r){2,3}/g match the word like &quot;street&quot; &quot;stttreet&quot; &quot;strrret&quot;
+/^I/g			select beginning with I for whole chunk
+/\.$/g 			select end of line with . for whole statements
+/\.$/gm 		select end of line with . for multiple line
+/(?&lt;=[tT]he)./g	match very first character after the/The
+/(?&lt;![tT]he)./g select anything that does not have the/The before
+/.(?=at)/g 		select any character followed by at
+/.(?!at)/g 		select everything that not followed by at
+</code></pre>
+<!-- ## PHP Date & Time -->
+
+<br><h1 id="oop-with-php">OOP with PHP</h1><br>
+<br><h2 id="objects-amp-classes">Objects &amp; Classes</h2><br>
+<ul>
+<li>The <code>$this</code> variable references the current object of the class.</li>
+<li>Do use the method chaining by returning <code>$this</code> from a method to make the code more concise.</li>
+</ul>
+<br><h2 id="constructor-and-destructor">Constructor and Destructor</h2><br>
+<br><h3 id="constructor-promotion-php-80">constructor promotion (PHP 8.0)</h3><br>
+<ul>
+<li>When a constructor parameter includes an access modifier (public, private, or protected) PHP will treat it as both a constructor’s argument and an object’s property. And it assigns the constructor argument to the property.</li>
+<li>PHP automatically invokes the destructor when the object is deleted or the script is terminated.</li>
+</ul>
+<br><h2 id="properties">Properties</h2><br>
+<ul>
+<li>Typed properties were introduced in PHP 7.4.</li>
+<li>Untyped properties default to null.</li>
+<li>Typed properties start uninitialized until you explicitly assign a value.</li>
+<li>You can’t access a typed property before it’s initialized — doing so causes a Fatal Error.</li>
+<li>To allow null and avoid errors, you can declare the property as nullable and initialize it:</li>
+</ul>
+<pre><code class="language-php">public ?string $name = null;
+</code></pre>
+<br><h2 id="inheritance">Inheritance</h2><br>
+<ul>
+<li>The constructor of the child class doesn’t automatically call the constructor of its parent class.</li>
+<li>Use <code>parent::__construct(arguments)</code> to call the parent constructor from the constructor in the child class.</li>
+<li>Use <code>parent::</code> to call the overridden method in the overriding method. You can&#39;t use <code>$this-&gt;</code>, it will recursively call the same method.</li>
+<li>Use the <code>final</code> method when you don’t want a child class’s method to override a parent class’s method.</li>
+</ul>
+<br><h2 id="abstract-classes">Abstract classes</h2><br>
+<ul>
+<li>Abstract classes cannot be instantiated. Typically, an abstract defines an interface for other classes to extend.</li>
+<li>Similar to an abstract class, an abstract method is a method that does not have an implementation.</li>
+<li>If a class contains one or more abstract methods, it must be an abstract class.</li>
+<li>A class that extends an abstract class needs to implement the abstract methods of the abstract class.</li>
+<li>Note that all the methods in the interface must be public.</li>
+</ul>
+<br><h2 id="abstract-classes">Abstract classes</h2><br>
+<ul>
+<li>An interface can also include constants.</li>
+<li>A class can inherit from one class only. However, it can implement multiple interfaces.</li>
+<li>When a class implements an interface, it’s called a <code>concrete class</code>.</li>
+</ul>
+<br><h2 id="polymorphism">Polymorphism</h2><br>
+<ul>
+<li>To implement polymorphism in PHP, you can use either abstract classes or interfaces.</li>
+<li>Polymorphism helps you create a generic framework that takes the different object types that share the same interface.</li>
+<li>By using polymorphism, you can reduce coupling and increase code reusability.</li>
+</ul>
+<br><h2 id="traits">Traits</h2><br>
+<ul>
+<li>Inheritance makes the code very tightly coupled -&gt; introduced <code>traits</code> (php 5.4).</li>
+<li>Inheritance allows classes to reuse the code vertically while the traits allow classes reuse the code horizontally.</li>
+<li>PHP allows you to compose multiple traits into a trait by using the use statement in the trait’s declaration.</li>
+</ul>
+<br><h3 id="php-traits-method-conflict-resolution">PHP trait’s method conflict resolution</h3><br>
+<br><h4 id="overriding-trait-method">Overriding trait method</h4><br>
+<ul>
+<li>When a class uses multiple traits that share the same method name, PHP will raise a fatal error.</li>
+<li>use <code>inteadof</code> keyword</li>
+</ul>
+<pre><code class="language-php">trait FileLogger
+{
+	public function log($msg)
+	{
+		echo &#39;File Logger &#39; . date(&#39;Y-m-d h:i:s&#39;) . &#39;:&#39; . $msg . &#39;&lt;br/&gt;&#39;;
+	}
+}
+
+trait DatabaseLogger
+{
+	public function log($msg)
+	{
+		echo &#39;Database Logger &#39; . date(&#39;Y-m-d h:i:s&#39;) . &#39;:&#39; . $msg . &#39;&lt;br/&gt;&#39;;
+	}
+}
+
+class Logger
+{
+	use FileLogger, DatabaseLogger{
+		FileLogger::log insteadof DatabaseLogger;
+	}
+}
+
+$logger = new Logger();
+$logger-&gt;log(&#39;this is a test message #1&#39;);
+$logger-&gt;log(&#39;this is a test message #2&#39;);
+</code></pre>
+<br><h4 id="aliasing-trait-method">Aliasing trait method</h4><br>
+<ul>
+<li>if you want to use both log() methods from the FileLogger and DatabaseLogger traits, you can use an alias for the method of the trait within the class that uses the trait.</li>
+</ul>
+<pre><code class="language-php">class Logger
+{
+	use FileLogger, DatabaseLogger{
+		DatabaseLogger::log as logToDatabase;
+		FileLogger::log insteadof DatabaseLogger;
+	}
+}
+
+$logger = new Logger();
+$logger-&gt;log(&#39;this is a test message #1&#39;);
+$logger-&gt;logToDatabase(&#39;this is a test message #2&#39;);
+</code></pre>
+<br><h2 id="working-with-objects">Working with Objects</h2><br>
+<br><h1 id="serialization-in-php">Serialization in PHP</h1><br>
+<p>Serialization is the process of converting a PHP value (object, array, etc.) into a storable string representation that can be saved to a file, database, or transmitted over a network. Unserialization (or deserialization) is the reverse process—reconstructing the original PHP value from that string.</p>
+<br><h2 id="why-use-serialization">Why Use Serialization?</h2><br>
+<ul>
+<li>Persistence: Store objects in sessions, databases, or files</li>
+<li>Caching: Save expensive-to-create objects for later reuse</li>
+<li>Data transfer: Send complex data structures between systems</li>
+<li>Message queues: Pass objects between different parts of an application</li>
+</ul>
+<br><h3 id="serialize">serialize</h3><br>
+<ul>
+<li>The <code>serialize()</code> function converts an object into a storable string representation (a byte stream).</li>
+<li>It only serializes object properties, not methods.</li>
+<li>If the class defines a <code>__sleep()</code> method, PHP will automatically call it before serialization.<ul>
+<li><code>__sleep()</code> must return an array of property names that should be serialized.</li>
+<li>This method is mainly used to clean up or prepare data before serialization.</li>
+</ul>
+</li>
+<li>If the class defines a <code>__serialize()</code> method, PHP will call it instead.<ul>
+<li><code>__serialize()</code> must return an associative array of property names and values.</li>
+<li>This method was introduced in PHP 7.4 to replace <code>__sleep()</code>.</li>
+</ul>
+</li>
+<li>If both <code>__sleep()</code> and <code>__serialize()</code> are defined, <code>__sleep()</code> will be ignored.</li>
+</ul>
+<br><h3 id="unserialize">unserialize</h3><br>
+<ul>
+<li>Use the <code>unserialize()</code> method to convert a serialized string into an object.</li>
+<li>The <code>unserialize()</code> method calls the <code>__unserialize()</code> or <code>__wakeup()</code> method of the object to perform re-initialization tasks.</li>
+<li>The <code>unserialize()</code> method calls the <code>__unserialize()</code> method only if an object has both <code>__unserialize()</code> and <code>__wakeup()</code> methods.</li>
+<li>The <code>unserialize()</code> function creates a completely new object that does not reference the original object.</li>
+</ul>
+<br><h3 id="complete-example-session-cache">Complete Example: Session Cache</h3><br>
+<pre><code class="language-php">class UserSession {
+    public $userId;
+    public $username;
+    public $loginTime;
+    private $cache; // Large temporary data
+    private $apiClient; // Non-serializable resource
+    
+    public function __construct($userId, $username) {
+        $this-&gt;userId = $userId;
+        $this-&gt;username = $username;
+        $this-&gt;loginTime = time();
+        $this-&gt;cache = []; // Loaded separately
+        $this-&gt;apiClient = new ApiClient(); // Resource
+    }
+    
+    public function __sleep() {
+        // Save session to disk
+        // Exclude cache (too large) and apiClient (resource)        
+        // Could perform cleanup here
+        $this-&gt;cache = null;        
+        return [&#39;userId&#39;, &#39;username&#39;, &#39;loginTime&#39;];
+    }
+    
+    public function __wakeup() {
+        // Restore session from disk        
+        // Reinitialize resources
+        $this-&gt;cache = [];
+        $this-&gt;apiClient = new ApiClient();
+        
+        // Validate session isn&#39;t expired
+        if (time() - $this-&gt;loginTime &gt; 3600) {
+            throw new Exception(&#39;Session expired&#39;);
+        }
+    }
+}
+
+// Usage
+$session = new UserSession(123, &#39;alice&#39;);
+$_SESSION[&#39;user&#39;] = serialize($session); // __sleep() called
+
+// Later request
+$session = unserialize($_SESSION[&#39;user&#39;]); // __wakeup() called
+
+# after PHP 7.4
+class ModernUser {
+    private $data;
+    
+    public function __serialize(): array {
+        // Return array of data to serialize
+        return [
+            &#39;data&#39; =&gt; $this-&gt;data,
+            &#39;timestamp&#39; =&gt; time()
+        ];
+    }
+    
+    public function __unserialize(array $data): void {
+        // Receive the serialized data
+        $this-&gt;data = $data[&#39;data&#39;];
+        // Can use the timestamp for validation
+    }
+}
+</code></pre>
+<br><h3 id="clone-object">Clone Object</h3><br>
+<ul>
+<li>When you copy an object using the assignment operator (=), both variables refer to the same object in memory.</li>
+<li>Any changes made to one will affect the other.</li>
+</ul>
+<br><h4 id="shallow-copy">Shallow Copy</h4><br>
+<ul>
+<li>we can use <code>clone</code> keyword to create a <code>shallow copy of an object</code>.</li>
+</ul>
+<pre><code class="language-php">$bob = new Person(&#39;Bob&#39;);
+
+// clone an object
+$alex = clone $bob;
+$alex-&gt;name = &#39;Alex&#39;;
+
+// show both objects
+var_dump($bob);
+var_dump($alex);
+
+# output
+object(Person)#1 (1) {
+  [&quot;name&quot;]=&gt; string(3) &quot;Bob&quot;
+}
+object(Person)#2 (1) {
+  [&quot;name&quot;]=&gt; string(4) &quot;Alex&quot;
+}
+</code></pre>
+<ul>
+<li>A shallow copy means PHP copies all properties of the object.</li>
+<li>However, if a property references another object, the reference is copied — both cloned and original objects will still point to the same referenced object.</li>
+</ul>
+<br><h3 id="deep-copy-with-__clone-method">Deep copy with __clone method</h3><br>
+<ul>
+<li>A deep copy duplicates not just the object itself, but also any referenced objects within it.</li>
+<li>PHP automatically calls the <code>__clone()</code> method after cloning an object.</li>
+<li>We can implement <code>__clone()</code> to manually clone the referenced objects, ensuring full independence between the original and the clone.</li>
+</ul>
+<br><h3 id="deep-copy-using-serialize-and-unserialize-functions">Deep copy using serialize and unserialize functions</h3><br>
+<pre><code class="language-php">&lt;?php
+
+function deep_clone($object)
+{
+	return unserialize(serialize($object));
+}
+</code></pre>
+<br><h3 id="compare-objects">Compare Objects</h3><br>
+<ul>
+<li>The comparison operator <code>(==)</code> returns true if two objects are the same or different instances of a class with the same properties’ values.</li>
+<li>The identity operator <code>(===)</code> returns true if two objects reference the exact same object instance in memory.</li>
+</ul>
+<pre><code class="language-php">$p1 = new Point(10, 20);
+$p2 = new Point(10, 20);
+
+var_dump($p1 == $p2);  // true  → same class, same property values
+var_dump($p1 === $p2); // false → different instances
+
+$p3 = $p1;
+
+var_dump($p1 === $p3); // true  → same reference (identical instance)
+</code></pre>
+<br><h3 id="anonymous-class">Anonymous Class</h3><br>
+<ul>
+<li>An anonymous class is a class without a declared name.</li>
+<li>Inside the parentheses, you can define constructor, destructor, properties, and methods for the anonymous class like a regular class.</li>
+<li>An anonymous can implement one or multiple interfaces.</li>
+<li>Like a regular class, a class can inherit from one named class.</li>
+<li>To pass an argument to the constructor, we place it in parentheses that follow the class keyword.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$myObject = new class {}; //syntax
+
+# Example
+$logger = new class(true) extends SimpleLogger { //pass an argument, and extend from named abstract class
+    public function __construct(bool $newLine)
+    {
+        parent::__construct($newLine);
+    }
+};
+
+$logger-&gt;log(&#39;Hello&#39;);
+$logger-&gt;log(&#39;Bye&#39;);
+</code></pre>
+<br><h2 id="namespaces-and-autoloading">Namespaces and Autoloading</h2><br>
+<ul>
+<li>We can give a namespace to a class and import it for use.</li>
+<li>We can use aliases to prevent name collision.</li>
+<li>We can use <code>(\)</code> to use global classes such as built-in classes or user-defined classes without a namespace.</li>
+</ul>
+<pre><code class="language-php">
+&lt;?php
+
+namespace Store\Model;
+class Customer{}
+
+#index.php
+&lt;?php
+
+require &#39;src/Model/Customer.php&#39;;
+use Store\Model\Customer;
+$customer = new Customer(&#39;Bob&#39;);
+</code></pre>
+<ul>
+<li>We can use <code>spl_autoload_register</code> function to autoload the classes, interfaces, and traits.</li>
+<li>The <code>spl_autoload_register()</code> function allows you to use multiple autoloading functions.</li>
+</ul>
+<pre><code class="language-php"># functions.php
+&lt;?php
+
+function load_model($class_name)
+{
+	$path_to_file = &#39;models/&#39; . $class_name . &#39;.php&#39;;
+
+	if (file_exists($path_to_file)) {
+		require $path_to_file;
+	}
+}
+spl_autoload_register(&#39;load_model&#39;);
+
+# index.php
+&lt;?php
+
+require &#39;functions.php&#39;;
+
+$contact = new Contact(&#39;john.doe@example.com&#39;);
+</code></pre>
+<br><h4 id="composer-autoload">Composer Autoload</h4><br>
+<ul>
+<li>There are two ways to use composer for auto loading</li>
+</ul>
+<ol>
+<li>classmap</li>
+<li>PSR-4</li>
+</ol>
+<pre><code class="language-php"># composer.json
+{
+	&quot;autoload&quot;: {
+		&quot;classmap&quot;: [&quot;app/models&quot;, &quot;app/services&quot;]
+    }
+}
+
+# run composer dump-autoload and it will generate /vendor/autoload.php
+# You just can import /vendor/autoload.php in the index.php 
+
+# index.php
+&lt;?php
+
+require_once __DIR__ . &#39;/../vendor/autoload.php&#39;;
+$user = new User(&#39;admin&#39;, &#39;$ecurePa$$w0rd1&#39;);
+</code></pre>
+<ul>
+<li>PSR-4 is auto-loading standard</li>
+</ul>
+<pre><code class="language-php"># composer.json
+{
+    &quot;autoload&quot;: {
+        &quot;psr-4&quot;: {
+            &quot;Acme\\&quot;:&quot;app/Acme&quot;
+        }
+    }
+}
+# run the composer dump-autoload command to generate the autoload.php file
+# index.php
+&lt;?php
+
+require_once __DIR__ . &#39;/../vendor/autoload.php&#39;;
+
+use Acme\Auth\User as User;
+$user = new User(&#39;admin&#39;, &#39;$ecurePa$$w0rd1&#39;);
+</code></pre>
+
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>
