@@ -341,7 +341,7 @@ $validated = filter_input(INPUT_POST, &#39;email&#39;, FILTER_VALIDATE_EMAIL);
 <li>You go to <code>malicious-site.com</code>.</li>
 <li>That site secretly contains some HTML like this:</li>
 </ul>
-<pre><code class="language-html">&lt;form action=&quot;https://yourbank.com/transfer-fund&quot; method=&quot;POST&quot; id=&quot;attackForm&quot;&gt;
+<pre><code class="language-php">&lt;form action=&quot;https://yourbank.com/transfer-fund&quot; method=&quot;POST&quot; id=&quot;attackForm&quot;&gt;
 	&lt;input type=&quot;hidden&quot; name=&quot;amount&quot; value=&quot;10000&quot; /&gt;
 	&lt;input type=&quot;hidden&quot; name=&quot;to_account&quot; value=&quot;attacker123&quot; /&gt;
 &lt;/form&gt;
