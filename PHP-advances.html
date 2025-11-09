@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php-extras.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br><h1 id="php-advance">PHP Advance</h1><br>
+<br><h2 id="laravel-apache-nginx-and-php-built-in-server">Laravel, Apache, Nginx, and PHP Built-in Server</h2><br>
+<ul>
+<li><code>php -S</code> and <code>php artisan serve</code> both use PHP’s built-in dev server — not Apache or Nginx.</li>
+<li><code>.htaccess</code> is only read by Apache. Nginx and built in php server ignores it completely.</li>
+<li>You cannot run Apache/Nginx and PHP’s built-in server on the same port simultaneously.</li>
+<li>Laravel works fine outside <code>/var/www/html</code> since <code>php artisan serve</code> uses PHP’s built-in dev server.</li>
+<li>There is no need to use <code>php artisan serve</code> if you use <code>Virtual Hosts (Apache)</code> or <code>Server Blocks (Nginx)</code>.</li>
+<li>For production, always use <code>Apache</code> or <code>Nginx</code> + <code>PHP-FPM</code> — never the built-in server.</li>
+<li>Nginx is generally faster and more scalable, while Apache is simpler to configure if you rely on <code>.htaccess</code>.</li>
+<li>Local dev best practice:<ul>
+<li>Use <code>php artisan serve</code> for quick testing.</li>
+<li>Use <code>Apache/Nginx</code> with custom domains to simulate real hosting.</li>
+</ul>
+</li>
+</ul>
+<br><h3 id="create-an-apache-virtual-host">create an apache virtual host</h3><br>
+<pre><code class="language-bash">sudo nano /etc/apache2/sites-available/laravel.test.conf # Create a new virtual host
+sudo a2ensite laravel.test.conf # Enable it
+sudo systemctl reload apache2 # Reload Apache
+# Apache reads only configs in /etc/apache2/sites-enabled/, but you always edit/add them in /etc/apache2/sites-available/.
+</code></pre>
+<br><h3 id="apache-log-directories">Apache Log Directories</h3><br>
+<ul>
+<li>Access logs	-&gt; <code>/var/log/apache2/access.log</code> -&gt;	<code>Request logs</code></li>
+<li>Error logs	-&gt; <code>/var/log/apache2/error.log</code> -&gt;	<code>PHP/Apache errors per site</code></li>
+</ul>
+<br><h3 id="create-a-new-nginx-server-block">Create a new Nginx server block</h3><br>
+<pre><code class="language-bash">sudo nano /etc/nginx/sites-available/laravel.test # Create a new server block
+sudo ln -s /etc/nginx/sites-available/laravel.test /etc/nginx/sites-enabled/ # Enable it
+sudo nginx -t # Test and reload
+sudo systemctl reload nginx
+# Nginx only reads configs in /etc/nginx/sites-enabled/, but you create/edit them in /etc/nginx/sites-available/.
+</code></pre>
+<br><h3 id="nginx-log-directories">Nginx Log Directories</h3><br>
+<ul>
+<li>Access logs	-&gt; <code>/var/log/nginx/access.log</code> -&gt;	<code>All incoming requests</code></li>
+<li>Error logs	-&gt; <code>/var/log/nginx/error.log</code>	-&gt; <code>Errors &amp; PHP-FPM issues</code></li>
+</ul>
+<br><h2 id="how-php-works">How PHP works</h2><br>
+<ol>
+<li>Browser requests a URL (e.g. <code>https://example.com/</code> → server receives <code>GET /</code>).</li>
+<li>Web server (Apache, Nginx, etc.) receives the request and determines which file or resource to serve based on its configuration and routing rules.</li>
+<li>The server checks for a default index file (e.g. index.php, index.html), as defined by:
+ Apache → DirectoryIndex
+ Nginx → index</li>
+<li>If the target file is not a PHP file (e.g., .html, .css, .jpg), the web server serves it directly to the client.</li>
+<li>If the target file is a PHP script, the web server forwards it to the PHP interpreter using:
+ Apache: mod_php (built-in module) or php-fpm via FastCGI
+ Nginx: always uses php-fpm via FastCGI (Nginx cannot execute PHP directly)</li>
+<li>PHP Engine Execution Process:<ol>
+<li>PHP reads the <code>.php</code> source file.</li>
+<li>Parses and compiles it into <code>Zend opcodes</code> (intermediate bytecode).</li>
+<li>Executes those opcodes using the <code>Zend Engine</code>.</li>
+<li>If <code>OPcache</code> is enabled:<ul>
+<li>PHP stores compiled opcodes in memory for faster reuse.</li>
+<li>When a file changes, OPcache <code>detects the change and recompiles that specific script</code> (it doesn’t “update” the existing cache, it replaces it).</li>
+<li>it doesn’t slow down the entire app. Only that one updated file gets recompiled once.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>PHP generates output (HTML, JSON, etc.) → returns it to the web server.</li>
+<li>Web server sends the response back to the browser.</li>
+</ol>
+<br><h3 id="what-happens-when-there-is-no-index-file">What happens when there is no index file</h3><br>
+<ul>
+<li>If there is no index file and the request targets a directory, the server’s behavior depends on configuration:<ul>
+<li>If <code>directory listing (autoindex)</code> is enabled, the server will generate and return an HTML listing of files -  this <code>can</code> be a security issue (exposes filenames, potentially sensitive files).</li>
+<li>If directory listing is disabled, the server will typically return <code>403 Forbidden</code> or fall back to another configured action (like <code>index.php</code> rewrite rules).</li>
+</ul>
+</li>
+<li>important: another risk is misconfiguration where PHP files are <code>not</code> handled by PHP (server treats them as static files) — then the <code>raw PHP source</code> can be served, which is a critical security leak.</li>
+</ul>
+<br><h3 id="how-to-prevent-directory-listing-common-fixes">How to prevent directory listing / common fixes</h3><br>
+<p><strong>Apache (.htaccess)</strong></p>
+<pre><code class="language-bash"># disable directory listing
+Options -Indexes
+# set preferred index files
+DirectoryIndex index.php index.html
+</code></pre>
+<p><strong>Nginx (server block)</strong></p>
+<pre><code class="language-bash"># disable autoindex
+autoindex off;
+
+# common PHP try_files config
+location / {
+  try_files $uri $uri/ /index.php?$query_string;
+}
+</code></pre>
+<br><h3 id="prevent-serving-source-if-php-handler-breaks">Prevent serving source if PHP handler breaks</h3><br>
+<ul>
+<li>Ensure PHP is properly configured (php-fpm or mod_php).</li>
+<li>Keep sensitive files outside webroot or block access via server rules.</li>
+<li>Use correct MIME/handler settings so <code>.php</code> is always processed, not served.</li>
+</ul>
+<br><h3 id="extra-security-notes-dont-ignore">Extra security notes (don’t ignore)</h3><br>
+<ul>
+<li>Disable directory listing (<code>Options -Indexes</code> / <code>autoindex off</code>).</li>
+<li>Ensure <code>php</code> is executed (not served as text) — misconfig can leak source.</li>
+<li>Restrict access to config files (<code>.env</code>, <code>.git</code>, etc.) — deny or move outside web root.</li>
+<li>Use least-privilege file permissions and keep backups out of webroot.</li>
+<li>Consider adding an index.html placeholder if you want an explicit page instead of directory index.</li>
+</ul>
+<pre><code class="language-php">Browser
+   ↓
+Web Server (Apache/Nginx)
+   ↓ (detects .php)
+PHP Engine (mod_php or PHP-FPM)
+   ↓ (executes PHP)
+Output (HTML/JSON)
+   ↓
+Browser
+</code></pre>
+<pre><code class="language-php">Browser
+   ↓
+[Optional] Forward Proxy (client-side, e.g., corporate proxy)
+# Often used for filtering, caching, or anonymity.
+   ↓
+[Optional] Load Balancer (distributes requests across servers)
+# Distributes requests across multiple backend servers.
+# Can be before or after the reverse proxy, depending on architecture.
+   ↓
+Reverse Proxy (e.g., Nginx or Apache in front, handles SSL, caching, routing)
+# Front-facing server that handles SSL termination, caching, request routing, or compression.
+# Passes requests to the actual web server running PHP.
+   ↓
+Web Server (Apache/Nginx)
+   ↓ (detects .php)
+PHP Engine (mod_php or PHP-FPM)
+   ↓ (executes PHP)
+Output (HTML/JSON)
+   ↓
+Reverse Proxy
+   ↓
+[Optional] Load Balancer response aggregation
+   ↓
+[Optional] Forward Proxy
+   ↓
+Browser
+</code></pre>
+<p>🔧1. Apache with mod_php</p>
+<ul>
+<li>PHP runs as an Apache module (mod_php).</li>
+<li>Apache itself executes PHP directly within the same process.</li>
+<li>The file never leaves Apache — it just calls the PHP interpreter internally.
+✅ Pros: Simple, fast for small setups.
+❌ Cons: Not efficient for high traffic or multi-user environments (tightly coupled to Apache process).</li>
+</ul>
+<p>⚙️ 2. PHP-FPM (FastCGI Process Manager)</p>
+<ul>
+<li>Modern, high-performance setup used with Nginx (and sometimes Apache).</li>
+<li>PHP runs as a separate background process (the “PHP-FPM” service).</li>
+<li>The web server and PHP communicate using the FastCGI protocol — basically, the server says “Hey PHP, run this file and give me the result.”
+✅ Pros: Scalable, fast, and secure.
+❌ Cons: Slightly more complex setup.</li>
+</ul>
+<p>⚙️ 3. CGI / FastCGI (legacy)</p>
+<ul>
+<li>Older systems used CGI — each request spawned a new PHP process.</li>
+<li>That’s very slow, so FastCGI was introduced to reuse PHP worker processes.</li>
+<li>Modern setups (like PHP-FPM) are advanced implementations of FastCGI.</li>
+</ul>
+<br><h1 id="htaccess-hypertext-access">.htaccess (hypertext access)</h1><br>
+<ul>
+<li>is a configuration file used by Apache web servers to control the behavior of your website without editing the main Apache configuration. It’s particularly useful for PHP developers because you can tweak site rules—security, redirects, caching, URL rewriting, etc.—on a per-directory basis.</li>
+</ul>
+<br><h2 id="what-codehtaccesscode-does">What <code>.htaccess</code> Does</h2><br>
+<ul>
+<li>When placed in your site’s root or a subdirectory, <code>.htaccess</code> lets you<blockquote>
+<p>Override default Apache settings
+Define custom error pages
+Rewrite URLs (e.g., for “pretty” URLs)
+Control access (authentication, IP restrictions)
+Redirect requests
+Set PHP configurations (if <code>AllowOverride</code> is enabled in Apache)
+Caching and Compression
+Password Protection</p>
+</blockquote>
+</li>
+</ul>
+<br><h2 id="example-codehtaccesscode-file">Example <code>.htaccess</code> file</h2><br>
+<pre><code class="language-bash"># ============================================================
+# Enable URL rewriting
+# ============================================================
+# Turn on the rewrite engine so we can use RewriteRule below.
+RewriteEngine On
+
+# ============================================================
+# Force HTTPS (redirect all HTTP requests to HTTPS)
+# ============================================================
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ============================================================
+# Redirect to &quot;www&quot; version (optional — choose one)
+# ============================================================
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
+
+# ============================================================
+# Remove &quot;index.php&quot; from URLs for clean routing
+# ============================================================
+# Example: example.com/index.php/about → example.com/about
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.)$ index.php?route=$1 [L,QSA]
+
+# ============================================================
+# Deny direct access to sensitive files
+# ============================================================
+&lt;FilesMatch &quot;\.(env|json|config|log|sh)$&quot;&gt;
+    Require all denied
+&lt;/FilesMatch&gt;
+
+# ============================================================
+# Set custom error pages
+# ============================================================
+ErrorDocument 404 /errors/404.html
+ErrorDocument 500 /errors/500.html
+
+# ============================================================
+# Enable browser caching for static files
+# ============================================================
+&lt;IfModule mod_expires.c&gt;
+    ExpiresActive On
+    ExpiresByType image/jpg &quot;access plus 1 month&quot;
+    ExpiresByType image/jpeg &quot;access plus 1 month&quot;
+    ExpiresByType image/png &quot;access plus 1 month&quot;
+    ExpiresByType text/css &quot;access plus 1 week&quot;
+    ExpiresByType application/javascript &quot;access plus 1 week&quot;
+&lt;/IfModule&gt;
+
+# ============================================================
+# Enable GZIP compression for faster load times
+# ============================================================
+&lt;IfModule mod_deflate.c&gt;
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript
+&lt;/IfModule&gt;
+
+# ============================================================
+# Basic directory password protection (optional)
+# ============================================================
+# Protect sensitive admin areas by requiring login
+# &lt;Directory &quot;/var/www/html/admin&quot;&gt;
+#     AuthType Basic
+#     AuthName &quot;Restricted Area&quot;
+#     AuthUserFile /path/to/.htpasswd
+#     Require valid-user
+# &lt;/Directory&gt;
+
+# ============================================================
+# Override some PHP configurations (if allowed)
+# ============================================================
+php_value upload_max_filesize 20M
+php_value post_max_size 25M
+php_flag display_errors Off
+</code></pre>
+<br><h2 id="test-and-debug-codehtaccesscode-rules-properly">test and debug <code>.htaccess</code> rules properly</h2><br>
+<ol>
+<li>Make Sure <code>.htaccess</code> Is Even Working</li>
+</ol>
+<ul>
+<li>By default, Apache sometimes ignores <code>.htaccess</code> files. You need to ensure your site’s configuration allows them.</li>
+</ul>
+<p>Check Apache Config</p>
+<ul>
+<li>Open your Apache site config (e.g., <code>/etc/apache2/sites-available/000-default.conf</code> or your project’s <code>.conf</code> file) and find your site’s <code>&lt;Directory&gt;</code> block. It should look like this:</li>
+</ul>
+<pre><code class="language-bash">&lt;Directory /var/www/html&gt;
+    AllowOverride All
+    Require all granted
+&lt;/Directory&gt;
+ # `AllowOverride All` → lets `.htaccess` override settings (like rewrite rules).
+ # Restart Apache after editing:
+   sudo systemctl restart apache2
+#If `AllowOverride` is `None`, `.htaccess` does nothing — period.
+</code></pre>
+<ol start="2">
+<li>Test That It’s Active</li>
+</ol>
+<pre><code class="language-bash">#Create a temporary `.htaccess` in your web root with
+Options -Indexes
+#Then put a random file in that folder (like `test.txt`), and open that folder URL in a browser 
+e.g.:http://localhost/test-folder/
+#If you get a 403 Forbidden instead of a directory listing, `.htaccess` is working.
+</code></pre>
+<ol start="3">
+<li>Debug Rewrite Rules</li>
+</ol>
+<ul>
+<li>If your rewrites aren’t behaving, turn on rewrite logging temporarily.</li>
+<li>Add this inside your <code>.htaccess</code>:</li>
+</ul>
+<pre><code class="language-bash">RewriteEngine On
+RewriteLog &quot;/var/log/apache2/rewrite.log&quot;
+RewriteLogLevel 3
+
+#Then check the log
+sudo tail -f /var/log/apache2/rewrite.log
+
+#Note: On newer Apache versions (2.4+), `RewriteLog` is deprecated. Instead, use this in your main config (not `.htaccess`):
+
+LogLevel alert rewrite:trace3
+
+#Then view logs in:
+sudo tail -f /var/log/apache2/error.log
+</code></pre>
+<ul>
+<li>You’ll see detailed rewrite traces showing what rules triggered.</li>
+</ul>
+<ol start="4">
+<li>Use Built-In Testing Tools</li>
+</ol>
+<ul>
+<li><code>curl</code> for Redirects</li>
+<li>Test your redirects and rewrites directly in the terminal:</li>
+</ul>
+<pre><code class="language-bash">curl -I http://example.com/old-page
+</code></pre>
+<ul>
+<li>You should see something like:</li>
+</ul>
+<pre><code class="language-bash">HTTP/1.1 301 Moved Permanently
+Location: https://example.com/new-page
+</code></pre>
+<ol start="5">
+<li>Check for Rule Conflicts</li>
+</ol>
+<ul>
+<li><p>If something fails:</p>
+</li>
+<li><p>Comment out all rules and re-enable one at a time.</p>
+</li>
+<li><p>Make sure there’s no nested <code>.htaccess</code> overriding your rules in subdirectories.</p>
+</li>
+<li><p>Ensure modules are enabled:</p>
+<pre><code class="language-bash">sudo a2enmod rewrite
+sudo a2enmod headers
+sudo a2enmod expires
+sudo a2enmod deflate
+sudo systemctl restart apache2
+</code></pre>
+</li>
+</ul>
+<ol start="6">
+<li>Validate Access Restrictions</li>
+</ol>
+<ul>
+<li>If you’re blocking <code>.env</code>, <code>.json</code>, or <code>.log</code> files:</li>
+</ul>
+<pre><code class="language-bash">curl -I http://example.com/.env
+</code></pre>
+<ul>
+<li>Should return:</li>
+</ul>
+<pre><code class="language-bash">HTTP/1.1 403 Forbidden
+</code></pre>
+<ul>
+<li>If it returns <code>200 OK</code>, your rule or <code>AllowOverride</code> setting is wrong.</li>
+</ul>
+<ol start="7">
+<li>Enable Error Reporting Temporarily</li>
+</ol>
+<ul>
+<li>During testing only — not production:</li>
+</ul>
+<pre><code class="language-bash">php_flag display_errors On
+</code></pre>
+<ul>
+<li>Then trigger errors intentionally to verify your <code>.htaccess</code> is being read (like calling a missing PHP function). Once confirmed, turn it off.</li>
+</ul>
+<ol start="8">
+<li>Use a Local Debug Page</li>
+</ol>
+<ul>
+<li>Create a <code>rewrite-test.php</code> with:</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+echo &quot;&lt;pre&gt;&quot;;
+print_r($_SERVER);
+</code></pre>
+<ul>
+<li>This shows what Apache actually sends to PHP (like <code>REQUEST_URI</code> and <code>REDIRECT_URL</code>). It’s perfect for debugging rewrite variable mismatches.</li>
+</ul>
+<ol start="9">
+<li>Typical Apache Module Check</li>
+</ol>
+<ul>
+<li>To confirm which modules are active:</li>
+</ul>
+<pre><code class="language-bash">apache2ctl -M | grep rewrite
+</code></pre>
+<ul>
+<li>If you don’t see <code>rewrite_module (shared)</code>, that’s your problem.</li>
+</ul>
+<br><h1 id="file-importing-in-php">File Importing in PHP</h1><br>
+<br><h2 id="include-include_once-require-require_once">include, include_once, require, require_once</h2><br>
+<p> <code>include</code>  Loads and executes a file.
+  If the file doesn’t exist → shows a warning but continues executing the rest of the script.</p>
+<p> <code>require</code>  Loads and executes a file.
+  If the file doesn’t exist → throws a fatal error and stops execution.</p>
+<p> <code>include_once</code>  Works like <code>include</code>, but prevents re-including the same file.
+  Useful to avoid “cannot redeclare function/variable/class” warnings.</p>
+<p> <code>require_once</code>  Works like <code>require</code>, but ensures the file is included only once.
+  Commonly used in large projects to safely load config or class files.</p>
+<blockquote>
+<p>When your project grows, using <code>require_once</code> everywhere can make the code messy.
+Instead, you can use <code>spl_autoload_register()</code> to automatically load classes on demand.</p>
+</blockquote>
+<br><h1 id="php-streams">PHP Streams</h1><br>
+<p>PHP Streams are a unified way of working with file and network resources in PHP. They provide a common interface for reading from and writing to various data sources, abstracting away the differences between files, network sockets, compressed files, and other I/O operations.</p>
+<br><h2 id="core-concepts">Core Concepts</h2><br>
+<p>A stream is referenced using the syntax: <code>scheme://target</code></p>
+<p>Common stream wrappers include:</p>
+<ul>
+<li><code>file://</code> - Local filesystem (default)</li>
+<li><code>http://</code>, <code>https://</code> - HTTP(S) requests</li>
+<li><code>ftp://</code> - FTP access</li>
+<li><code>php://</code> - Various I/O streams (stdin, stdout, memory, temp)</li>
+<li><code>zip://</code>, <code>zlib://</code> - Compressed files</li>
+<li><code>data://</code> - Data URIs</li>
+</ul>
+<br><h2 id="why-streams-matter-for-large-files">Why Streams Matter for Large Files</h2><br>
+<p>The key advantage is memory efficiency. Instead of loading an entire file into memory at once, streams let you process data in small chunks, making it possible to handle files larger than available RAM.</p>
+<br><h2 id="practical-examples-for-large-file-handling">Practical Examples for Large File Handling</h2><br>
+<br><h3 id="1-reading-large-files-line-by-line">1. Reading Large Files Line by Line</h3><br>
+<pre><code class="language-php">$handle = fopen(&#39;large_file.csv&#39;, &#39;r&#39;);
+if ($handle) {
+    while (($line = fgets($handle)) !== false) {
+        // Process one line at a time
+        processLine($line);
+    }
+    fclose($handle);
+}
+</code></pre>
+<br><h3 id="2-using-stream-contexts-for-http">2. Using Stream Contexts for HTTP</h3><br>
+<pre><code class="language-php">$context = stream_context_create([
+    &#39;http&#39; =&gt; [
+        &#39;method&#39; =&gt; &#39;GET&#39;,
+        &#39;header&#39; =&gt; &#39;Authorization: Bearer token123&#39;
+    ]
+]);
+
+$stream = fopen(&#39;https://api.example.com/large-data&#39;, &#39;r&#39;, false, $context);
+while (!feof($stream)) {
+    echo fread($stream, 8192); // Read 8KB chunks
+}
+fclose($stream);
+</code></pre>
+<br><h3 id="3-copying-large-files-efficiently">3. Copying Large Files Efficiently</h3><br>
+<pre><code class="language-php">// stream_copy_to_stream handles buffering automatically
+$source = fopen(&#39;large_source.zip&#39;, &#39;r&#39;);
+$dest = fopen(&#39;large_dest.zip&#39;, &#39;w&#39;);
+stream_copy_to_stream($source, $dest);
+fclose($source);
+fclose($dest);
+</code></pre>
+<br><h3 id="4-using-phptemp-for-memory-efficient-processing">4. Using php://temp for Memory-Efficient Processing</h3><br>
+<pre><code class="language-php">// Automatically switches from memory to temp file if data exceeds 5MB
+$temp = fopen(&#39;php://temp/maxmemory:5242880&#39;, &#39;r+&#39;);
+fwrite($temp, $largeData);
+rewind($temp);
+
+while (!feof($temp)) {
+    $chunk = fread($temp, 8192);
+    // Process chunk
+}
+fclose($temp);
+</code></pre>
+<br><h3 id="5-stream-filters-for-on-the-fly-processing">5. Stream Filters for On-the-Fly Processing</h3><br>
+<pre><code class="language-php">// Read and decompress a gzipped file without loading it all into memory
+$handle = fopen(&#39;compress.zlib://large_file.gz&#39;, &#39;r&#39;);
+
+// Or apply filters to existing streams
+$fp = fopen(&#39;large_file.txt&#39;, &#39;r&#39;);
+stream_filter_append($fp, &#39;string.toupper&#39;);
+while ($line = fgets($fp)) {
+    echo $line; // Automatically converted to uppercase
+}
+fclose($fp);
+</code></pre>
+<br><h3 id="6-custom-stream-buffer-size">6. Custom Stream Buffer Size</h3><br>
+<pre><code class="language-php">$handle = fopen(&#39;huge_file.log&#39;, &#39;r&#39;);
+// Set 1MB buffer for better performance with large sequential reads
+stream_set_read_buffer($handle, 1024  1024);
+
+while (!feof($handle)) {
+    $data = fread($handle, 8192);
+    processData($data);
+}
+fclose($handle);
+</code></pre>
+<br><h2 id="best-practices">Best Practices</h2><br>
+<ol>
+<li>Always close streams using <code>fclose()</code> to free resources</li>
+<li>Check for errors - <code>fopen()</code> returns <code>false</code> on failure</li>
+<li>Use appropriate chunk sizes - 8KB to 1MB depending on your use case</li>
+<li>Consider stream filters for transformations instead of loading data into memory</li>
+<li>Use <code>php://temp</code> instead of <code>php://memory</code> for potentially large data</li>
+<li>Leverage <code>stream_copy_to_stream()</code> for efficient file copying</li>
+</ol>
+<p>Streams are essential for building scalable PHP applications that handle large datasets, file uploads, or API responses without exhausting server memory.</p>
+
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>

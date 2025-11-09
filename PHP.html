@@ -28,7 +28,7 @@
 		<div id="nav-container" class="nav-container"></div>
 
 		<section class="content">
-			<br><h1 id="php">PHP</h1><br>
+            <br><h1 id="php">PHP</h1><br>
 <br><h2 id="create-a-local-php-server">Create a local PHP Server</h2><br>
 <ul>
 <li>If you want to run a PHP project or test a PHP file outside of the default web server directories (like <code>/var/www/html</code> on <code>Linux</code> or <code>xampp/htdocs</code> on <code>Windows</code>), you can use PHP’s built-in development server.</li>
@@ -53,8 +53,13 @@ php -S localhost:8000 -t public
 <li>If no index file exists and directory listing is enabled, the server returns a file listing (a security risk).</li>
 <li>Use server config (e.g. <code>Options -Indexes</code> in Apache or <code>autoindex off</code> in Nginx) to prevent directory listings.</li>
 </ol>
-<!-- ## PHP Fundamentals -->
-
+<br><h2 id="php-fundamentals">PHP Fundamentals</h2><br>
+<br><h3 id="echo-print_r-vs-var_dump">echo, print_r vs var_dump</h3><br>
+<ul>
+<li>echo only print strings/numbers, return value is void</li>
+<li>print_r can print arrays and objects, return value is true or string, result is human-readable</li>
+<li>var_dump support all data types (strings, integers, floats, arrays, objects, booleans, NULL, etc), return value is void, result has more details (type, length...)</li>
+</ul>
 <br><h2 id="php-types">PHP Types</h2><br>
 <ul>
 <li>PHP keywords are case-insensitive -&gt; null,NULL,NuLL</li>
@@ -84,7 +89,7 @@ echo $total; // 120 //PHP casts the string “20 pieces” as an integer 20 befo
 <li>PHP 8.0 introduced named parameters.</li>
 <li>Use named arguments to pass arguments to a function based on the parameter names.</li>
 <li>Put the named arguments after the positional arguments in function calls.</li>
-<li>you can ignore passing values for default parameters</li>
+<li>You can ignore passing values for default parameters</li>
 <li>A variadic function accepts a variable number of arguments.</li>
 <li>Do use the ... operator to define a variadic function.</li>
 <li>Only the last parameter can be variadic.</li>
@@ -175,7 +180,7 @@ array_filter($numbers,[&#39;Odd&#39;, &#39;isOdd&#39;]) //if isOdd is a static m
 array_filter($numbers,new Odd()) //if you want to pass __invoke() as the callback function
 </code></pre>
 <ul>
-<li><p>you can pass 3rd argument as well.</p>
+<li><p>You can pass 3rd argument as well.</p>
 </li>
 <li><p><code>ARRAY_FILTER_USE_KEY</code> if you want to filter by <code>$key</code> from the callback funcion.</p>
 </li>
@@ -195,11 +200,95 @@ echo $total; // 60
 </code></pre>
 <!-- ## Organizing PHP files -->
 
-<!-- ## State Management -->
+<br><h2 id="state-management">State Management</h2><br>
+<br><h3 id="cookie">cookie</h3><br>
+<ul>
+<li>The web works based on the HTTP protocol. The HTTP protocol is stateless.</li>
+<li>Stateless means each request is independent and the server doesn’t automatically remember previous interactions.</li>
+<li>Cookies help solve this problem by allowing servers to store small pieces of data on the client (browser).</li>
+<li>A cookie is a small data record that the server sends to the browser, usually via the Set-Cookie response header.</li>
+<li>The browser stores this cookie and automatically includes it in subsequent requests to the same server using the Cookie request header.</li>
+<li>The browser will only send cookies to the same domain, path, and protocol (based on the cookie’s attributes like domain, path, secure, and samesite).</li>
+<li>Usually cookie used for enhance the user experience<ul>
+<li>Session management: to remember users and their login information</li>
+<li>Personalization: store user’s preferences, themes, and other settings.</li>
+<li>Tracking: cookies store user behavior.</li>
+</ul>
+</li>
+<li>Use the PHP setcookie() function to set a cookie sent along with an HTTP header from the web server to the web browser.</li>
+<li>Use the superglobal variable $_COOKIE to access the cookies in PHP.</li>
+</ul>
+<pre><code class="language-php"># Setting a cookie
+setcookie ( 
+    string $name , 
+    string $value = &quot;&quot; , 
+    array $options = [] ) : bool //expires, path, domain, secure, httponly and samesite
 
+setcookie(&#39;name&#39;,&#39;value&#39;,
+          [	
+            &#39;expires&#39; =&gt; time() + 7 * 86400,  // 7 days from now,
+          	&#39;path&#39; =&gt; &#39;/&#39;,
+        	&#39;secure&#39; =&gt; true,
+        	&#39;httponly&#39; =&gt; true,
+        	&#39;samesite&#39; =&gt; &#39;Lax&#39;
+          ]);
+
+# samesite can take a value of None, Lax, or Strict
+# if $secure is set to true , the cookie should be transmitted over a secured HTTP (HTTPS) 
+# connection from the web browser.
+# if $httponly is true, the cookie can be accessed only via the HTTP protocol, not JavaScript.
+
+# Reading a cookie
+    if (isset($_COOKIE[&#39;cookie_name&#39;])) {...)
+# Deleting a cookie
+    unset($_COOKIE[&#39;cookie_name&#39;]);
+	setcookie(&#39;cookie_name&#39;, null, time()-3600); //can be deleted by setting a past date as the expiry date
+</code></pre>
+<br><h3 id="session">Session</h3><br>
+<ul>
+<li>HTTP is stateless, so to persist user-specific data across multiple requests, web applications use sessions.</li>
+<li>A session is managed by the application layer (e.g., PHP) — not by Apache or Nginx.</li>
+<li>Unlike cookies, you can store any data in the session.</li>
+<li>PHP allows you to work with multiple sessions with different names on the same script.</li>
+<li>When the <code>ession_start()</code> runs at the first time, PHP generates a unique session id and passes it to the web browser in the form of a cookie named <code>PHPSESSID</code>(usually <code>Set-Cookie: PHPSESSID=xyz</code>).</li>
+<li>If a session already exists, PHP checks the <code>PHPSESSID</code> cookie sent by the browser, the <code>session_start()</code> function will resume the existing session instead of creating a new one.</li>
+<li>Since PHP sends the <code>PHPSESSID</code> cookie in the header of the HTTP response, you need to call the <code>session_start()</code> function before any statement that outputs the content to the web browser.</li>
+<li>Otherwise, you will get a warning message saying the header cannot be modified because it is already sent. This is a well-known error message in PHP.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+# get session data stored location
+# /tmp folder of the web server
+echo ini_get(&#39;session.save_path&#39;);
+echo session_save_path();
+
+# store values
+// store scalar value
+$_SESSION[&#39;user&#39;] = &#39;admin&#39;;
+// store an array
+$_SESSION[&#39;roles&#39;] = [&#39;administrator&#39;, &#39;approver&#39;, &#39;editor&#39;];
+
+# deleting session values
+session_destroy();
+
+# This  session_destroy() deletes all data associated with the current session. However, it does not unset data in the  $_SESSION array and cookie.
+
+# To completely destroy the session data, you need to unset the variable in  $_SESSION array and remove the PHPSESSID cookie like this:
+
+// remove cookie
+if(isset($_COOKIE[session_name()])){
+    setcookie(session_name(),&#39;&#39;,time() - 3600, &#39;/&#39;);
+}
+
+// unset data in $_SESSION
+$_SESSION[] = array();
+
+// destroy the session
+session_destroy();
+</code></pre>
 <br><h2 id="processing-forms">Processing Forms</h2><br>
 <ul>
-<li>users can input scripts like <code>&lt;script&gt;alert(&#39;Hello&#39;);&lt;/script&gt;</code> into input fields.</li>
+<li>Users can input scripts like <code>&lt;script&gt;alert(&#39;Hello&#39;);&lt;/script&gt;</code> into input fields.</li>
 <li>Hackers can input malicious code from another server to the user’s web browser, the risk is higher.</li>
 <li>This type of attack is called <code>cross-site scripting (XSS)</code> attack.</li>
 <li>Therefore, before displaying user input on a webpage, you should always escape the data. To do that, 
@@ -225,17 +314,17 @@ if (isset($_POST[&#39;name&#39;], $_POST[&#39;email&#39;])) {
 </code></pre>
 <br><h3 id="form-validation-flow">Form validation flow</h3><br>
 <p><code>Validate → Sanitize → Escape</code></p>
-<p>Validate</p>
+<p><strong>Validate</strong></p>
 <ul>
 <li>Ensure the input has the correct format, type, and value before using it.</li>
 <li>Use validation filters or regex — e.g. <code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></li>
 </ul>
-<p>Sanitize</p>
+<p><strong>Sanitize</strong></p>
 <ul>
 <li>Clean the input by removing or altering unwanted or dangerous characters before storing or processing.</li>
 <li>Use sanitization filters — e.g. <code>filter_var($name, FILTER_SANITIZE_STRING) or FILTER_SANITIZE_EMAIL</code></li>
 </ul>
-<p>Escape</p>
+<p><strong>Escape</strong></p>
 <ul>
 <li>Neutralize special characters before displaying or outputting (HTML, JS, SQL, etc.) to prevent injection attacks.</li>
 <li>Use <code>htmlspecialchars()</code> when displaying in HTML, and <code>PDO prepared statements</code> when inserting into a database.</li>
@@ -471,10 +560,218 @@ password_verify(string $password, string $hash): bool
 </code></pre>
 <!-- ## Login System -->
 
-<!-- ## Working with Files -->
+<br><h2 id="working-with-files">Working with Files</h2><br>
+<pre><code class="language-php">$f = fopen($filename, &#39;r&#39;); //open the readme.txt for reading.
+fclose($f); //close the file
 
-<!-- ## Working with Directories -->
+if(file_exists($filename)){...}
+# check if the file readme.txt exists in the current directory:
+# $filename can be also a path to a directory. In this case, the file_exists() function returns true if the directory exists.
 
+if (is_file($filename)) {...}
+# check if a path is a file (not a directory) and exists
+
+if (is_readable($filename)) {...}
+# check if a file exists and readable
+
+if (is_writable($filename)) {...}
+# check if a file exists and writable
+</code></pre>
+<ul>
+<li>Use the <code>fread(resource $stream , int $length)</code> function to read some or all contents from a file.</li>
+<li>Use the <code>fgets(resource $handle , int $length = ?)</code> function to read a line from a file.</li>
+<li>Use the <code>feof()</code> function to test the end-of-file has been reached.</li>
+<li>Use the <code>filesize()</code> function to get the size of the file.</li>
+<li>Use the PHP <code>file_get_contents()</code> function to read a file into a string.</li>
+<li><code>file_get_contents()</code> function is a shortcut for opening a file, reading the whole file’s contents into a <code>string</code>, and close it.</li>
+</ul>
+<pre><code class="language-php">$content = file_get_contents(
+	$filename = $filename,
+    $use_include_path = false , 
+    $context = null ,
+	$offset = 5,
+	$maxlen = 20
+);
+</code></pre>
+<ul>
+<li>Use the PHP <code>file()</code> to read the contents of a <code>local or remote</code> file into an <code>array</code>. Each line of the file will be an element of the array.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$lines = file(
+    &#39;https://www.php.net/robots.txt&#39;,
+    FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES
+);
+//FILE_USE_INCLUDE_PATH -&gt; Search for the file in the include path.
+//FILE_IGNORE_NEW_LINES -&gt; Skip the newline at the end of the array element.
+//FILE_SKIP_EMPTY_LINES -&gt; Skip empty lines in the file.
+
+# If your system or network uses a proxy server (for internet access control, filtering, or security), direct connections to external URLs (like php.net) may be blocked.
+# use stream_context_create() function in such cases
+</code></pre>
+<ul>
+<li>The <code>readfile()</code> function reads data from a file and writes it to the output buffer.</li>
+<li>We can use <code>readfile()</code> to download a file.</li>
+<li>Use the PHP <code>copy($source,$dest,$context=?)</code> file function to copy a file from a location to another.</li>
+<li>The <code>copy()</code> function overwrites the destination file if it exists.</li>
+<li>Use PHP <code>unlink($filename,  $context=?)</code> function to delete a file.</li>
+<li>Use the PHP <code>rename($oldname,$newname,$context = ?)</code> file function to rename a file.</li>
+</ul>
+<br><h3 id="csv-comma-separated-values">CSV (comma-separated values)</h3><br>
+<br><h4 id="writing-to-a-csv-file">Writing to a CSV file</h4><br>
+<ul>
+<li>Use the fputcsv() function to write a row to a CSV file.</li>
+</ul>
+<pre><code class="language-php">fputcsv ( resource $handle , array $fields , string $delimiter = &quot;,&quot; , string $enclosure = &#39;&quot;&#39; , string $escape_char = &quot;\\&quot; ) : int|false
+
+# ex
+&lt;?php
+
+$data = [
+	[&#39;Symbol&#39;, &#39;Company&#39;, &#39;Price&#39;],
+	[&#39;GOOG&#39;, &#39;Google Inc.&#39;, &#39;800&#39;],
+];
+
+$filename = &#39;stock.csv&#39;;
+$f = fopen($filename, &#39;w&#39;);// open csv file for writing
+
+if ($f === false) {
+	die(&#39;Error opening the file &#39; . $filename);
+}
+
+// write each row at a time to a file
+foreach ($data as $row) {
+	fputcsv($f, $row);
+}
+fclose($f);// close the file
+</code></pre>
+<br><h4 id="reading-from-a-csv-file">Reading from a CSV file</h4><br>
+<ul>
+<li>Use the fgetcsv() function to read a row from a CSV file.</li>
+</ul>
+<pre><code class="language-php">fgetcsv ( resource $stream , int $length = 0 , string $separator = &quot;,&quot; , string $enclosure = &#39;&quot;&#39; , string $escape = &quot;\\&quot; ) : array
+
+# ex
+&lt;?php
+
+$filename = &#39;./stock.csv&#39;;
+$data = [];
+
+// open the file
+$f = fopen($filename, &#39;r&#39;);
+
+if ($f === false) {
+	die(&#39;Cannot open the file &#39; . $filename);
+}
+
+// read each line in CSV file at a time
+while (($row = fgetcsv($f)) !== false) {
+	$data[] = $row;
+}
+
+// close the file
+fclose($f);
+</code></pre>
+<ul>
+<li>Use the PHP <code>filesize($filename)</code> function to get the size of a file in bytes.</li>
+<li>Use the <code>is_readable()</code>, <code>is_writable()</code>, <code>is_executable()</code> to check if a file exists and readable, writable, and executable.</li>
+<li>Use the <code>chmod()</code> function to set permissions for a file.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+#get the permissions set on a particular file
+$permissions = fileperms(&#39;readme.txt&#39;);
+
+# changing file permission
+$filename = &#39;./readme.txt&#39;;
+chmod($filename, 0644);
+</code></pre>
+<br><h2 id="working-with-directories">Working with Directories</h2><br>
+<pre><code class="language-php">&lt;?php
+# Use the opendir() function to open a directory and get the directory handle
+$dh = opendir(&#39;./public&#39;);
+
+# Use the readdir() function to read the entries in a directory specified by a directory handle.
+if ($dh) {
+	while ($e = readdir($dh)) {
+		if ($e !== &#39;.&#39; &amp;&amp; $e !== &#39;..&#39;) {
+			echo $e , PHP_EOL;
+		}
+	}
+}
+
+# Use getcwd() to get the current directory
+echo getcwd();
+
+# Use chdir() to change the current directory
+chdir(&#39;./dev&#39;);
+echo getcwd(); //dev
+
+# Use the mkdir() function to create a new directory.
+mkdir(&#39;./public/img&#39;)) //parent directory public must exist.
+mkdir($dir, 0644); //can pass permissions, default is 0777, or ou can use chmod() function to change it
+
+# Use the rmdir() function to remove a directory.
+rmdir(&#39;./public/assets&#39;); //need to have sufficient permissions &amp;&amp; the directory needs to be empty
+
+# Use the is_dir() function to check if a path is a directory and that directory exists in the file system.
+is_dir(&#39;./public&#39;)
+
+# Use the closedir() function once you are done with the directory.
+closedir($dh);
+</code></pre>
+<ul>
+<li>Use the PHP <code>glob()</code> function to get a list of files and directories that match a pattern.</li>
+</ul>
+<pre><code class="language-php">//Using the PHP glob() function to calculate the total size of PHP files
+echo array_sum(array_map(&#39;filesize&#39;, glob(&#39;./src/*.php&#39;)));
+</code></pre>
+<ul>
+<li>Use the PHP dirname() function to get the parent directory’s path of a file or directory path.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+echo &#39;1.&#39; , dirname(&quot;/htdocs/public&quot;) , PHP_EOL; 	#1./htdocs
+echo &#39;2.&#39; , dirname(&quot;/htdocs/&quot;) , PHP_EOL; 			# 2.\
+echo &#39;3.&#39; , dirname(&quot;.&quot;) , PHP_EOL; 				# 3..
+echo &#39;4.&#39; , dirname(&quot;C:\\&quot;) , PHP_EOL; 				# 4.C:\
+echo &#39;5.&#39; , dirname(&quot;/htdocs/public/css/dev&quot;, 2); 	# 5./htdocs/public
+</code></pre>
+<ul>
+<li>Use the PHP basename() fuction to get the trailing name component of a file or directory path.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+echo &quot;1) &quot;.basename(&quot;/htdocs/index.php&quot;, &quot;.php&quot;).PHP_EOL; 	# 1) index
+echo &quot;2) &quot;.basename(&quot;/htdocs/index.php&quot;).PHP_EOL; 			#2) index.php
+echo &quot;3) &quot;.basename(&quot;/htdocs/public&quot;).PHP_EOL; 				# 3) public
+echo &quot;4) &quot;.basename(&quot;/htdocs/&quot;).PHP_EOL; 					# 4) htdocs
+echo &quot;5) &quot;.basename(&quot;.&quot;).PHP_EOL; 							# 5) .
+echo &quot;6) &quot;.basename(&quot;/&quot;); 									# 6)
+</code></pre>
+<ul>
+<li>Use the PHP pathinfo() function to get the components of a file path including dirname, basename, filename, and extesion.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$path = &#39;htdocs/phptutorial/index.php&#39;;
+$parts = pathinfo($path);
+print_r($parts);
+#result
+Array
+(
+    [dirname] =&gt; htdocs/phptutorial
+    [basename] =&gt; index.php
+    [extension] =&gt; php
+    [filename] =&gt; index
+)
+
+pathinfo($path, PATHINFO_BASENAME); //index.php
+//PATHINFO_DIRNAME -&gt; Return the directory name
+//PATHINFO_BASENAME -&gt; Return the base name
+//PATHINFO_EXTENSION -&gt; Return the file extension
+//PATHINFO_FILENAME -&gt; Return the file name (without the extension)
+</code></pre>
 <!-- ## String operations -->
 
 <br><h2 id="regular-expressions">Regular Expressions</h2><br>
@@ -521,8 +818,10 @@ password_verify(string $password, string $hash): bool
 /\d+/g 			select one or more digits
 /\d{9}/g 		select 9 digits in a row
 /e+/g 			one or more than one e
-/a?/g 			a is optional
+/a?/g 			a is optional | match a zero or one time.
 /a*/g 			match 0 or more, and a is optional
+/\d{n,}/        match at least n times
+/\d{n,m}/       match Between n and m Times
 /./g 			match anything except new line
 /\. /g 			match . (dot)
 /.\./g 			match any character before .
@@ -534,6 +833,10 @@ password_verify(string $password, string $hash): bool
 /[q-z,A-Z]at/g	any character followed by “at”
 /(t|T)he/g 		match the words &quot;the&quot; or &quot;The&quot;
 /(t|e|r){2,3}/g match the word like &quot;street&quot; &quot;stttreet&quot; &quot;strrret&quot;
+/A(?=B)/        matches A only if followed by B
+/A(?!B)/        matches A only if not followed by B
+(?&lt;!B)A         matches A only if there’s B before it
+(?&lt;!B)A         matches A only if there’s no B before it
 /^I/g			select beginning with I for whole chunk
 /\.$/g 			select end of line with . for whole statements
 /\.$/gm 		select end of line with . for multiple line
@@ -542,8 +845,67 @@ password_verify(string $password, string $hash): bool
 /.(?=at)/g 		select any character followed by at
 /.(?!at)/g 		select everything that not followed by at
 </code></pre>
-<!-- ## PHP Date & Time -->
+<br><h3 id="capturing-groups-and-give-names-from-groups">capturing groups and give names from groups</h3><br>
+<pre><code class="language-php">&lt;?php
 
+$uri = &#39;posts/25&#39;;
+$pattern = &#39;{(\w+)/(\d+)}&#39;;
+
+if (preg_match($pattern, $uri, $matches)) {
+    print_r($matches);
+}
+
+# give names for groups using ?&lt;name&gt;
+$uri = &#39;posts/25&#39;;
+$pattern = &#39;{(?&lt;controller&gt;\w+)/(?&lt;id&gt;\d+)}&#39;;
+
+if (preg_match($pattern, $uri, $matches)) {
+    print_r($matches);
+}
+# capturing groups has a number -&gt; 1,2, they can access later by $1, $2
+</code></pre>
+<br><h2 id="php-date-amp-time">PHP Date &amp; Time</h2><br>
+<ul>
+<li>Computers store a date and time as a UNIX timestamp or a timestamp in short.</li>
+<li>A timestamp is an integer that refers to the number of seconds between 1970-01-01 00:00:00 UTC (Epoch) and the date and time to be stored.</li>
+<li>Use the time() function to return the current timestamp since Epoch in local timezone.</li>
+<li>Use the date_default_timezone_set() function to set a specific timezone.</li>
+<li>Use the date() function to format the timestamp.</li>
+<li>Use mktime() function to create a timestasmp based on the year, month, day, hour, minute, and second.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+$current_time = time();
+echo date(&#39;Y-m-d g:ia&#39;, $current_time) . &#39;&lt;br&gt;&#39;; #2021-07-13 5:47am
+
+# adding timestamp
+$one_week_later =  $current_time + 7 * 24 * 60 * 60; // 7 days later
+echo date(&#39;Y-m-d g:ia&#39;,$one_week_later);
+
+# subtracting timestamp
+$yesterday = $current_time -  24 * 60 * 60; //1 day ago
+echo date(&#39;Y-m-d g:ia&#39;,$yesterday);
+
+# mktime
+mktime(
+    int $hour,
+    int|null $minute = null,
+    int|null $second = null,
+    int|null $month = null,
+    int|null $day = null,
+    int|null $year = null
+): int|false
+</code></pre>
+<br><h3 id="date-function">date() function</h3><br>
+<ul>
+<li>Use the PHP date() function to format a timestamp in a specified format.</li>
+</ul>
+<pre><code class="language-php">&lt;?php
+
+echo date(&#39;Y&#39;); //2025
+$created_at = date(&quot;Y-m-d H:i:s&quot;);
+echo $created_at;//2021-07-14 13:03:08 -&gt; usefull for store in Mysql DB
+</code></pre>
 <br><h1 id="oop-with-php">OOP with PHP</h1><br>
 <br><h2 id="objects-amp-classes">Objects &amp; Classes</h2><br>
 <ul>
@@ -649,9 +1011,9 @@ $logger-&gt;log(&#39;this is a test message #1&#39;);
 $logger-&gt;logToDatabase(&#39;this is a test message #2&#39;);
 </code></pre>
 <br><h2 id="working-with-objects">Working with Objects</h2><br>
-<br><h1 id="serialization-in-php">Serialization in PHP</h1><br>
+<br><h3 id="serialization-in-php">Serialization in PHP</h3><br>
 <p>Serialization is the process of converting a PHP value (object, array, etc.) into a storable string representation that can be saved to a file, database, or transmitted over a network. Unserialization (or deserialization) is the reverse process—reconstructing the original PHP value from that string.</p>
-<br><h2 id="why-use-serialization">Why Use Serialization?</h2><br>
+<br><h3 id="why-use-serialization">Why Use Serialization?</h3><br>
 <ul>
 <li>Persistence: Store objects in sessions, databases, or files</li>
 <li>Caching: Save expensive-to-create objects for later reuse</li>
@@ -915,7 +1277,7 @@ use Acme\Auth\User as User;
 $user = new User(&#39;admin&#39;, &#39;$ecurePa$$w0rd1&#39;);
 </code></pre>
 
-		</section>
+        </section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>
 </html>
