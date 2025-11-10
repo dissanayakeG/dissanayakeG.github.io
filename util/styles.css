@@ -104,13 +104,14 @@ img {
 
 /* Inline code (e.g., from single backticks) */
 :not(pre) > code {
-	background-color: #a8aab9; /* f4f4f4 */
+	background-color: #f4f4f4; /*a8aab9*/
 	padding: 2px 4px;
 	border-radius: 4px;
 	font-family: "Courier New", Courier, monospace;
 	font-size: 0.95em;
 	color: #2d2d2d;
 }
+
 
 h1 {
 	color: #0f172a;
