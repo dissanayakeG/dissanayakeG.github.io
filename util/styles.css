@@ -112,7 +112,6 @@ img {
 	color: #2d2d2d;
 }
 
-
 h1 {
 	color: #0f172a;
 }
@@ -128,4 +127,11 @@ h3 {
 
 h4 {
 	color: #38bdf8;
+}
+
+/*style numbers in ordered list*/
+ol > li::marker {
+	font-weight: 600;
+	font-size: 1.1em;
+	color: #2563eb;
 }
