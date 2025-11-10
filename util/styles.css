@@ -101,3 +101,30 @@ img {
 .content {
 	margin-top: 50px;
 }
+
+/* Inline code (e.g., from single backticks) */
+:not(pre) > code {
+	background-color: #a8aab9; /* f4f4f4 */
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 0.95em;
+	color: #2d2d2d;
+}
+
+h1 {
+	color: #0f172a;
+}
+
+h2 {
+	color: #2563eb;
+	margin-bottom: 2px !important;
+}
+
+h3 {
+	color: #0ea5e9;
+}
+
+h4 {
+	color: #38bdf8;
+}
