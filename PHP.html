@@ -48,21 +48,21 @@ php -S localhost:8000 -t public
 <ol>
 <li>Browser requests a URL (e.g. <code>https://example.com/</code> → server receives <code>GET /</code>).</li>
 <li>Web server (Apache, Nginx, etc.) checks the document root for configured index files (e.g. <code>index.php</code>, <code>index.html</code>).</li>
-<li>If an index file is found and PHP is configured, the server hands the .php file to the PHP handler (via mod_php or PHP-FPM).</li>
-<li>PHP parses and compiles the script into opcodes (cached by OPcache for performance), executes it, and returns the output (HTML, JSON, etc.) to the web server → then to the browser.</li>
+<li>If an index file is found and PHP is configured, the server hands the .php file to the PHP handler (via <code>mod_php</code> or <code>PHP-FPM</code>).</li>
+<li>PHP parses and compiles the script into opcodes (cached by OPcache for performance), executes it, and returns the output <code>(HTML, JSON, etc.)</code> to the web server → then to the browser.</li>
 <li>If no index file exists and directory listing is enabled, the server returns a file listing (a security risk).</li>
 <li>Use server config (e.g. <code>Options -Indexes</code> in Apache or <code>autoindex off</code> in Nginx) to prevent directory listings.</li>
 </ol>
 <br><h2 id="php-fundamentals">PHP Fundamentals</h2><br>
 <br><h3 id="echo-print_r-vs-var_dump">echo, print_r vs var_dump</h3><br>
 <ul>
-<li>echo only print strings/numbers, return value is void</li>
-<li>print_r can print arrays and objects, return value is true or string, result is human-readable</li>
-<li>var_dump support all data types (strings, integers, floats, arrays, objects, booleans, NULL, etc), return value is void, result has more details (type, length...)</li>
+<li><code>echo</code> only print strings/numbers, return value is void</li>
+<li><code>print_r</code> can print arrays and objects, return value is true or string, result is human-readable</li>
+<li><code>var_dump</code> support all data types (strings, integers, floats, arrays, objects, booleans, NULL, etc), return value is void, result has more details (type, length...)</li>
 </ul>
 <br><h2 id="php-types">PHP Types</h2><br>
 <ul>
-<li>PHP keywords are case-insensitive -&gt; null,NULL,NuLL</li>
+<li>PHP keywords are <code>case-insensitive</code> -&gt; null,NULL,NuLL</li>
 </ul>
 <br><h3 id="type-juggling">Type juggling</h3><br>
 <ul>
@@ -87,12 +87,12 @@ echo $total; // 120 //PHP casts the string “20 pieces” as an integer 20 befo
 <br><h2 id="functions">Functions</h2><br>
 <ul>
 <li>PHP 8.0 introduced named parameters.</li>
-<li>Use named arguments to pass arguments to a function based on the parameter names.</li>
-<li>Put the named arguments after the positional arguments in function calls.</li>
+<li>Use <code>named arguments</code> to pass arguments to a function based on the parameter names.</li>
+<li>Put the named arguments <code>after the positional arguments</code> in function calls.</li>
 <li>You can ignore passing values for default parameters</li>
-<li>A variadic function accepts a variable number of arguments.</li>
-<li>Do use the ... operator to define a variadic function.</li>
-<li>Only the last parameter can be variadic.</li>
+<li>A <code>variadic function</code> accepts a variable number of arguments.</li>
+<li>Do use the <code>...</code> operator to define a <code>variadic function</code>.</li>
+<li>Only the <code>last parameter</code> can be variadic.</li>
 </ul>
 <pre><code class="language-php">&lt;?php
 
@@ -110,20 +110,20 @@ function sum($a, $b, int ...$numbers): int
 <ul>
 <li>An anonymous function is a function without a name.</li>
 <li>An anonymous function is a Closure object.</li>
-<li>To access the variables from the parent scope inside an anonymous function, place the variables in the use construct.</li>
+<li>To access the variables from the parent scope inside an anonymous function, place the variables in the <code>use</code> construct.</li>
 <li>An anonymous function can be assigned to a variable, passed to a function, or returned from a function.</li>
 </ul>
 <br><h3 id="arrow-functions-php-74">Arrow functions (php 7.4)</h3><br>
 <ul>
 <li>An arrow function provides a shorter syntax for writing a short anonymous function.</li>
-<li>An arrow function starts with the fn keyword and contains only one expression, the function’s return value.</li>
+<li>An arrow function starts with the <code>fn</code> keyword and contains <code>only one expression</code>, the function’s return value.</li>
 <li>An arrow function has access to the variables in its parent scope automatically.</li>
 </ul>
 <br><h3 id="variable-functions">Variable functions</h3><br>
 <ul>
-<li>Append parentheses () to a variable name to call the function whose name is the same as the variable’s value.</li>
+<li>Append parentheses <code>()</code> to a variable name to call the function whose name is the same as the variable’s value.</li>
 <li>Use the <code>$this-&gt;$variable()</code> to call a method of a class.</li>
-<li>Use the className::$variable() to call a static method of a class.</li>
+<li>Use the <code>className::$variable()</code> to call a static method of a class.</li>
 </ul>
 <pre><code class="language-php">&lt;?php
 
@@ -134,11 +134,10 @@ echo $f(&#39;Hello&#39;); # strlen(&#39;Hello) -&gt; 5
 <ul>
 <li>These are built-in language constructs, not regular functions.</li>
 <li>This means you cannot assign them to a variable, return them from a function, or call them dynamically<blockquote>
-<p>(e.g., $f = &#39;isset&#39;; $f($var) won’t work).</p>
+<p><code>(e.g., $f = &#39;isset&#39;; $f($var) won’t work)</code>.</p>
 </blockquote>
 </li>
 <li>There are 3 Variable constructs -&gt; <code>isset($a1,$$a2, $a3,...)</code> | <code>empty($val)</code> | <code>is_null($val)</code></li>
-<li><code>isset()</code> is a language construct, not a function.</li>
 <li><code>isset()</code> returns true if a variable is set and not null.</li>
 <li><code>isset()</code> returns true if an array element exists and is not null.</li>
 <li><code>isset()</code> returns true if a string index is valid or false otherwise.</li>
@@ -175,7 +174,7 @@ $odd_numbers = array_filter(
 print_r($odd_numbers);
 
 # Using callback as a method of a class
-array_filter($numbers,[**new Odd()**, &#39;isOdd&#39;]) //if isOdd is a public method of Odd class
+array_filter($numbers,[new Odd(), &#39;isOdd&#39;]) //if isOdd is a public method of Odd class
 array_filter($numbers,[&#39;Odd&#39;, &#39;isOdd&#39;]) //if isOdd is a static method of Odd class
 array_filter($numbers,new Odd()) //if you want to pass __invoke() as the callback function
 </code></pre>
@@ -203,26 +202,27 @@ echo $total; // 60
 <br><h2 id="state-management">State Management</h2><br>
 <br><h3 id="cookie">cookie</h3><br>
 <ul>
-<li>The web works based on the HTTP protocol. The HTTP protocol is stateless.</li>
-<li>Stateless means each request is independent and the server doesn’t automatically remember previous interactions.</li>
+<li>The web works based on the HTTP protocol. The HTTP protocol is <code>stateless</code>.</li>
+<li>Stateless means each request is <code>independent</code> and the server doesn’t automatically remember previous interactions.</li>
 <li>Cookies help solve this problem by allowing servers to store small pieces of data on the client (browser).</li>
 <li>A cookie is a small data record that the server sends to the browser, usually via the Set-Cookie response header.</li>
-<li>The browser stores this cookie and automatically includes it in subsequent requests to the same server using the Cookie request header.</li>
-<li>The browser will only send cookies to the same domain, path, and protocol (based on the cookie’s attributes like domain, path, secure, and samesite).</li>
+<li>The browser stores this cookie and automatically includes it in <code>subsequent requests</code> to the <code>same server</code> using the Cookie request header.</li>
+<li>The browser will only send cookies to the same domain, path, and protocol (based on the cookie’s attributes like <code>domain</code>, <code>path</code>, <code>secure</code>, and <code>samesite</code>).</li>
 <li>Usually cookie used for enhance the user experience<ul>
-<li>Session management: to remember users and their login information</li>
-<li>Personalization: store user’s preferences, themes, and other settings.</li>
-<li>Tracking: cookies store user behavior.</li>
+<li><code>Session management:</code> to remember users and their login information</li>
+<li><code>Personalization:</code> store user’s preferences, themes, and other settings.</li>
+<li><code>Tracking:</code> cookies store user behavior.</li>
 </ul>
 </li>
-<li>Use the PHP setcookie() function to set a cookie sent along with an HTTP header from the web server to the web browser.</li>
-<li>Use the superglobal variable $_COOKIE to access the cookies in PHP.</li>
+<li>Use the PHP <code>setcookie()</code> function to set a cookie sent along with an HTTP header from the web server to the web browser.</li>
+<li>Use the superglobal variable <code>$_COOKIE</code> to access the cookies in PHP.</li>
 </ul>
 <pre><code class="language-php"># Setting a cookie
 setcookie ( 
     string $name , 
     string $value = &quot;&quot; , 
-    array $options = [] ) : bool //expires, path, domain, secure, httponly and samesite
+    array $options = [] //expires, path, domain, secure, httponly and samesite
+    ) : bool
 
 setcookie(&#39;name&#39;,&#39;value&#39;,
           [	
@@ -234,8 +234,7 @@ setcookie(&#39;name&#39;,&#39;value&#39;,
           ]);
 
 # samesite can take a value of None, Lax, or Strict
-# if $secure is set to true , the cookie should be transmitted over a secured HTTP (HTTPS) 
-# connection from the web browser.
+# if $secure is set to true , the cookie should be transmitted over a secured HTTP (HTTPS) connection from the web browser.
 # if $httponly is true, the cookie can be accessed only via the HTTP protocol, not JavaScript.
 
 # Reading a cookie
@@ -246,10 +245,10 @@ setcookie(&#39;name&#39;,&#39;value&#39;,
 </code></pre>
 <br><h3 id="session">Session</h3><br>
 <ul>
-<li>HTTP is stateless, so to persist user-specific data across multiple requests, web applications use sessions.</li>
-<li>A session is managed by the application layer (e.g., PHP) — not by Apache or Nginx.</li>
+<li>HTTP is <code>stateless</code>, so to persist user-specific data across multiple requests, web applications use sessions.</li>
+<li>A session is managed by the application layer (e.g., <code>PHP</code>) , not by <code>Apache</code> or <code>Nginx</code>.</li>
 <li>Unlike cookies, you can store any data in the session.</li>
-<li>PHP allows you to work with multiple sessions with different names on the same script.</li>
+<li>PHP allows you to work with <code>multiple sessions</code> with different names on the same script.</li>
 <li>When the <code>ession_start()</code> runs at the first time, PHP generates a unique session id and passes it to the web browser in the form of a cookie named <code>PHPSESSID</code>(usually <code>Set-Cookie: PHPSESSID=xyz</code>).</li>
 <li>If a session already exists, PHP checks the <code>PHPSESSID</code> cookie sent by the browser, the <code>session_start()</code> function will resume the existing session instead of creating a new one.</li>
 <li>Since PHP sends the <code>PHPSESSID</code> cookie in the header of the HTTP response, you need to call the <code>session_start()</code> function before any statement that outputs the content to the web browser.</li>
@@ -259,7 +258,7 @@ setcookie(&#39;name&#39;,&#39;value&#39;,
 
 # get session data stored location
 # /tmp folder of the web server
-echo ini_get(&#39;session.save_path&#39;);
+echo ini_get(&#39;session.save_path&#39;); //OR
 echo session_save_path();
 
 # store values
@@ -294,7 +293,7 @@ session_destroy();
 <li>Therefore, before displaying user input on a webpage, you should always escape the data. To do that, 
   you use the <code>htmlspecialchars()</code> function:</li>
 <li>When you use get request <code>($_GET)</code>, it appends input as query data, so use <code>htmlspecialchars()</code> to prevent XSS.</li>
-<li>When submiting a form to same file, use htmlspecialchars() to prevent XSS.</li>
+<li>When submiting a form to same file, use <code>htmlspecialchars()</code> to prevent XSS.</li>
 </ul>
 <pre><code class="language-php"># ex 1
 &lt;?php
@@ -317,12 +316,12 @@ if (isset($_POST[&#39;name&#39;], $_POST[&#39;email&#39;])) {
 <p><strong>Validate</strong></p>
 <ul>
 <li>Ensure the input has the correct format, type, and value before using it.</li>
-<li>Use validation filters or regex — e.g. <code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></li>
+<li>Use validation filters or regex -- e.g. <code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></li>
 </ul>
 <p><strong>Sanitize</strong></p>
 <ul>
 <li>Clean the input by removing or altering unwanted or dangerous characters before storing or processing.</li>
-<li>Use sanitization filters — e.g. <code>filter_var($name, FILTER_SANITIZE_STRING) or FILTER_SANITIZE_EMAIL</code></li>
+<li>Use sanitization filters -- e.g. <code>filter_var($name, FILTER_SANITIZE_STRING) or FILTER_SANITIZE_EMAIL</code></li>
 </ul>
 <p><strong>Escape</strong></p>
 <ul>
@@ -330,105 +329,70 @@ if (isset($_POST[&#39;name&#39;], $_POST[&#39;email&#39;])) {
 <li>Use <code>htmlspecialchars()</code> when displaying in HTML, and <code>PDO prepared statements</code> when inserting into a database.</li>
 </ul>
 <br><h3 id="isset-vs-filter_has_var">isset() vs filter_has_var()</h3><br>
+<ul>
+<li>Use the <code>filter_has_var()</code> function to check if a variable exists in a specified type, including <code>INPUT_POST</code>, <code>INPUT_GET</code>, <code>INPUT_COOKIE</code>, <code>INPUT_SERVER</code>, or <code>INPUT_ENV</code>.</li>
+</ul>
 <pre><code class="language-php">&lt;?php
 	$_POST[&#39;email&#39;] = &#39;example@phptutorial.net&#39;;
 	if(isset($_POST[&#39;email&#39;])) // return true
 
-	$_POST[&#39;email&#39;] = &#39;example@phptutorial.net&#39;;
-	if(filter_has_var(INPUT_POST, &#39;email&#39;)) // return false //check request body
-
-
-   //Use the filter_has_var() function to check if a variable exists in a specified type,
-   //including INPUT_POST, INPUT_GET, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+	$_POST[&#39;email&#39;] = &#39;example@phptutorial.net&#39;; //manually set email
+	if(filter_has_var(INPUT_POST, &#39;email&#39;)) //return false as it checks only actual request body
 </code></pre>
 <ul>
 <li>Use <code>filter_input()</code> and <code>filter_var()</code> functions to validate and sanitize data.</li>
 </ul>
 <br><h3 id="filter_var-for-sanitize-and-validate-data">filter_var() for sanitize and validate data</h3><br>
+<ul>
+<li>Works on variables already in memory, not directly from the request. -&gt; (user defined variables, superglobals like $_GET(&#39;val&#39;))</li>
+</ul>
 <pre><code class="language-php">//filter_var ( mixed $value , int $filter = FILTER_DEFAULT , array|int $options = 0 ) : mixed
-
-&lt;?php
 
 if (filter_has_var(INPUT_GET, &#39;id&#39;)) {
 	// sanitize id
-	// FILTER_SANITIZE_NUMBER_INT will remove all characters except the digits, plus, and minus signs from the id variable.
+	// remove all characters except the digits, +,and - signs from the id variable.
 	$clean_id = filter_var($_GET[&#39;id&#39;], FILTER_SANITIZE_NUMBER_INT);
 
-	// validate id
-	$id = filter_var($clean_id, FILTER_VALIDATE_INT);
-
-	// validate id with options
+	// validate id with options, here options array is optional
     $id = filter_var($clean_id, FILTER_VALIDATE_INT, [&#39;options&#39; =&gt; [&#39;min_range&#39; =&gt; 10]]);
-
-	// show the id if it&#39;s valid
-	echo $id === false ? &#39;Invalid id&#39; : $id;
-} else {
-	echo &#39;id is required.&#39;;
-}
 </code></pre>
 <br><h3 id="filter_input-for-sanitize-and-validate-user-inputs-http">filter_input() for sanitize and validate user inputs (HTTP)</h3><br>
 <ul>
-<li><code>filter_input ( int $type , string $var_name , int $filter = FILTER_DEFAULT , array|int $options = 0 ) : mixed</code></li>
-<li>allows you to get an external variable by its name and filter it using one or more built-in filters.</li>
-<li>The following example uses the filter_input() function to sanitize data for a search form:</li>
+<li>Allows you to get an external variable by its name and filter it using one or more built-in filters.</li>
+<li>The following example uses the <code>filter_input()</code> function to sanitize data for a search form.</li>
 </ul>
 <pre><code class="language-php">&lt;?php
-
-$term_html = filter_input(INPUT_GET, &#39;term&#39;, FILTER_SANITIZE_SPECIAL_CHARS); //value for showing on the search field
-$term_url = filter_input(INPUT_GET, &#39;term&#39;, FILTER_SANITIZE_ENCODED); //value for displaying on the page
-
-?&gt;
-&lt;form action=&quot;search.php&quot; method=&quot;get&quot;&gt;
-    &lt;label for=&quot;term&quot;&gt; Search &lt;/label&gt;
-    &lt;input type=&quot;search&quot; name=&quot;term&quot; id=&quot;term&quot; value=&quot;&lt;?php echo $term_html ?&gt;&quot;&gt;
-    &lt;input type=&quot;submit&quot; value=&quot;Search&quot;&gt;
-&lt;/form&gt;
-
-&lt;?php
-
-if (null !== $term_html) {
-	echo &quot;The search result for &lt;mark&gt; $term_html &lt;/mark&gt;.&quot;;
-}
+// filter_input ( int $type , string $var_name , int $filter = FILTER_DEFAULT , array|int $options = 0 ) : mixed
+$term_html = filter_input(INPUT_GET, &#39;term&#39;, FILTER_SANITIZE_SPECIAL_CHARS); //value for showing on the 
 </code></pre>
 <br><h3 id="filter_input-vs-filter_var">filter_input vs. filter_var</h3><br>
 <ul>
-<li><code>filter_input</code> Validate and sanitize inputs like <code>POST request</code>. -&gt; <code>INPUT_GET</code> and <code>INPUT_POST</code></li>
-<li><code>filter_var</code> Validate and sanitize a variable you already have in memory. -&gt; <code>Any local variable</code></li>
-<li>you just can <code>$input = $_POST[&#39;email&#39;]</code>, if you want to use<code> filter_var</code>, instead of <code>filter_input</code></li>
+<li><code>filter_input</code> validate and sanitize inputs like <code>POST request</code>. -&gt; <code>INPUT_GET</code> and <code>INPUT_POST</code></li>
+<li><code>filter_var</code> validate and sanitize a variable you already have in memory. -&gt; <code>Any local variable including superglobals</code></li>
 </ul>
-<pre><code class="language-php">$input = $_POST[&#39;email&#39;] ?? &#39;&#39;;
-$validated = filter_var($input, FILTER_VALIDATE_EMAIL);
+<pre><code class="language-php">$validated = filter_var($_POST[&#39;email&#39;] ?? &#39;&#39;, FILTER_VALIDATE_EMAIL);
 
 //OR just
 $validated = filter_input(INPUT_POST, &#39;email&#39;, FILTER_VALIDATE_EMAIL);
 </code></pre>
 <ul>
-<li><code>filter_input</code> Filtered value on success, false on failure or not found</li>
-<li><code>filter_var</code> Filtered value on success, false on validation failure</li>
-<li><code>filter_input</code> fails when Variable is not set in the input type or validation fails</li>
-<li><code>filter_var</code> fails when Variable is invalid or fails validation</li>
-<li><code>filter_input</code> can be used for Validate / sanitize form input</li>
-<li><code>filter_var</code> can be used for validate/ sanitize variables</li>
 <li>If a variable doesn’t exist, the <code>filter_input()</code> function returns <code>null</code> while the <code>filter_var()</code> function returns an <code>empty string</code> and issues a <code>notice of an undefined index</code>.</li>
-<li>Also, the <code>filter_input()</code> function doesn’t get the current values of the <code>$_GET</code>, <code>$_POST</code>, … superglobal variables. Instead, it uses the <code>original values submitted in the HTTP request</code>. For example:</li>
 </ul>
 <br><h3 id="csrf">CSRF</h3><br>
 <ul>
-<li><p>CSRF (Cross-Site Request Forgery) is when another website tricks your browser into sending a legitimate request to a site where you’re already logged in.</p>
-</li>
-<li><p>The trick works because your browser automatically includes cookies/session data for any site you’re logged into — even if the request didn’t come directly from you.</p>
-</li>
+<li>CSRF (Cross-Site Request Forgery) is when another website tricks your browser into sending a legitimate request to a site where you’re already logged in.</li>
+<li>The trick works because your browser automatically includes <code>cookies/session</code> data for any site you’re logged into --even if the request didn’t come directly from you.</li>
 </ul>
 <br><h4 id="1-youre-logged-into-your-bank">1️⃣ You’re logged into your bank</h4><br>
 <ul>
 <li>You log in at <code>yourbank.com</code>.</li>
 <li>Your browser now has a session cookie (e.g. <code>sessionid=abc123</code>) that keeps you logged in.</li>
-<li>So, any request sent to <code>yourbank.com</code> will automatically include that cookie — even if you didn’t type or click anything.</li>
+<li>So, any request sent to <code>yourbank.com</code> will automatically include that cookie -- even if you didn’t type or click anything.</li>
 </ul>
 <br><h4 id="2-you-visit-a-malicious-website">2️⃣ You visit a malicious website</h4><br>
 <ul>
 <li>You go to <code>malicious-site.com</code>.</li>
-<li>That site secretly contains some HTML like this:</li>
+<li>That site secretly contains some HTML like this</li>
 </ul>
 <pre><code class="language-php">&lt;form action=&quot;https://yourbank.com/transfer-fund&quot; method=&quot;POST&quot; id=&quot;attackForm&quot;&gt;
 	&lt;input type=&quot;hidden&quot; name=&quot;amount&quot; value=&quot;10000&quot; /&gt;
@@ -444,7 +408,7 @@ $validated = filter_input(INPUT_POST, &#39;email&#39;, FILTER_VALIDATE_EMAIL);
 <li>As soon as the page loads:<ul>
 <li>That hidden form automatically submits a POST request to <code>https://yourbank.com/transfer-fund</code>.</li>
 <li>Your browser includes your bank’s login cookie (since you’re logged in there).</li>
-<li>To your bank’s server, it looks like you legitimately submitted the transfer form — even though you didn’t.</li>
+<li>To your bank’s server, it looks like you legitimately submitted the transfer form, even though you didn’t.</li>
 <li>So the bank would execute the transfer if it doesn’t have protection (CSRF defense).</li>
 </ul>
 </li>
@@ -481,14 +445,14 @@ $_SESSION[&#39;token&#39;] = bin2hex(random_bytes(35));
 <li>The server processes it (e.g., inserts into DB, sends an email).</li>
 <li>The server then displays a “Success” page.</li>
 <li>Now, if the user refreshes the page, the browser says: “Resubmit the form data?”</li>
-<li>If they click Yes, the same POST request runs again — meaning the same data might get inserted twice, or payment might process again.</li>
+<li>If they click Yes, the same POST request runs again -- meaning the same data might get inserted twice, or payment might process again.</li>
 <li>That’s the double-submit problem.</li>
 </ul>
 <p>The PRG Solution</p>
 <ul>
 <li><code>POST</code>:The user submits the form → server processes the data.</li>
 <li><code>REDIRECT</code>:Instead of showing a success message directly, the server sends a redirect response (HTTP 302 or 303) to a GET URL.</li>
-<li><code>GET</code>:The browser then automatically loads that new URL — a normal GET request — where you display the success message.</li>
+<li><code>GET</code>:The browser then automatically loads that new URL -- a normal GET request -- where you display the success message.</li>
 <li><code>Result</code>: Refreshing the page now only reloads the GET page, not the original POST submission.</li>
 </ul>
 <pre><code class="language-php">&lt;?php
@@ -529,9 +493,15 @@ if ($_SERVER[&#39;REQUEST_METHOD&#39;] === &#39;POST&#39;) {
 <li>Never trust the information on the <code>$_FILES</code> except the <code>tmp_name</code>.</li>
 <li>Always validate the information on the <code>$_FILES</code>.</li>
 <li>Use the <code>move_uploaded_file()</code> function to move the file from the temporary directory to another folder.</li>
-<li>File input element must have the multiple attribute and its name must have the square brackets <code>([])</code> like this</li>
+<li>File input element must have the multiple attribute and its name must have the square brackets <code>([])</code>.</li>
 </ul>
-<pre><code class="language-php">&lt;input type=&quot;file&quot; name=&quot;files[]&quot; id=&quot;files&quot; multiple /&gt;
+<pre><code class="language-php">&lt;form enctype=&quot;multipart/form-data&quot; action=&quot;upload.php&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;file&quot; accept=&quot;image/png, image/jpeg&quot; name=&quot;file&quot;&gt; //single file
+	&lt;input type=&quot;file&quot; name=&quot;files[]&quot; id=&quot;files&quot; multiple /&gt; //multiple file
+&lt;/form&gt;
+
+#from php
+$_FILES[&#39;file&#39;];
 </code></pre>
 <br><h3 id="password_hash-and-password_verify">password_hash and password_verify</h3><br>
 <ul>
