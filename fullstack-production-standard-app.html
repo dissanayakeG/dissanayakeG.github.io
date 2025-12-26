@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+		/>
+		<link rel="stylesheet" href="./util/styles.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	</head>
+
+	<body>
+		<div id="nav-icon" class="nav-icon">
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+			<div class="nav-icon-row"></div>
+		</div>
+
+		<div id="nav-container" class="nav-container"></div>
+
+		<section class="content">
+			<br><h1 id="setup-a-nodeexpress-api-like-a-pro">SETUP A NODE/EXPRESS API LIKE A PRO</h1><br>
+<br><h2 id="install-required-packages">INSTALL REQUIRED PACKAGES</h2><br>
+<pre><code class="language-bash">mkdir server
+cd server
+
+pnpm init
+
+pnpm add express @types/express @types/node eslint prettier helmet cors @types/cors bcrypt @types/bcrypt jsonwebtoken @types/jsonwebtoken dotenv zod sequelize sequelize-cli mysql2 http-status-codes googleapis express-session @types/express-session 
+cookie-parser @types/cookie-parser imapflow @types/imapflow
+
+#logging using pino
+pnpm add pino pino-pretty pino-http
+
+#rate limit
+pnpm add express-rate-limit
+
+#mail
+pnpm add mailparser @types/mailparser
+
+# auto load
+pnpm add -D tsx typescript
+</code></pre>
+<br><h3 id="packagejson">package.json</h3><br>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;tsx watch index.ts&quot;,
+    &quot;build&quot;: &quot;tsc&quot;,
+    &quot;start&quot;: &quot;node dist/index.js&quot;,
+    &quot;typecheck&quot;: &quot;tsc --noEmit&quot;
+  }
+}
+</code></pre>
+<br><h3 id="tsconfigjson">tsconfig.json</h3><br>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2022&quot;,
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;outDir&quot;: &quot;dist&quot;,
+    &quot;rootDir&quot;: &quot;src&quot;,
+    &quot;strict&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true
+  }
+}
+</code></pre>
+<br><h3 id="srcappts">src/app.ts</h3><br>
+<pre><code class="language-ts">import express from &quot;express&quot;;
+
+const app = express();
+
+export default app;
+</code></pre>
+<br><h3 id="srcindexts">src/index.ts</h3><br>
+<pre><code class="language-ts">import app from &#39;./app&#39;;
+
+app.listen(Environment.PORT, () =&gt; {
+    logger.info(&quot;Server started on port:&quot; + `http://localhost:${Environment.PORT}`);
+});
+</code></pre>
+<br><h2 id="setup-common-api-response">SETUP COMMON API RESPONSE</h2><br>
+<br><h3 id="serversrcutilsapiresponsets">server/src/utils/api.response.ts</h3><br>
+<pre><code class="language-ts">import { Response } from &#39;express&#39;;
+
+interface ResponseParams&lt;T&gt; {
+  res: Response;
+  data: T;
+  message?: string;
+  status?: number;
+}
+
+export const apiResponse = &lt;T&gt;({
+  res,
+  data,
+  message = &#39;Success&#39;,
+  status = 200,
+}: ResponseParams&lt;T&gt;) =&gt; {
+  return res.status(status).json({
+    success: true,
+    message,
+    data,
+  });
+};
+</code></pre>
+<br><h3 id="use-it">use it</h3><br>
+<pre><code class="language-ts">apiResponse({
+  res,
+  data: user,
+  message: &#39;User created successfully&#39;,
+  status: 201,
+});
+</code></pre>
+<br><h2 id="setup-global-error-handler-middleware">SETUP GLOBAL ERROR HANDLER MIDDLEWARE</h2><br>
+<br><h3 id="serversrcerrorsapperrorts">server/src/errors/AppError.ts</h3><br>
+<pre><code class="language-ts">export class AppError extends Error {
+    public statusCode: number;
+    public isOperational: boolean;
+
+    constructor(message: string, statusCode: number, isOperational = true) {
+        super(message);
+        this.statusCode = statusCode;
+        this.isOperational = isOperational;
+
+        Error.captureStackTrace(this, this.constructor);
+    }
+}
+</code></pre>
+<br><h3 id="serversrcerrorsvalidationerrorts">server/src/errors/ValidationError.ts</h3><br>
+<pre><code class="language-ts">import { AppError } from &#39;./AppError&#39;;
+
+export class ValidationError extends AppError {
+  public details: unknown;
+
+  constructor(message: string, details: unknown) {
+    super(message, 400);
+    this.details = details;
+  }
+}
+</code></pre>
+<br><h3 id="serversrcmiddlewareserrormiddlewarets">server/src/middlewares/error.middleware.ts</h3><br>
+<pre><code class="language-ts">export default function globalErrorHandler(
+  err: Error | AppError,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) {
+  logger.error(
+    {
+      err,
+      path: req.originalUrl,
+      method: req.method,
+    },
+    err.message
+  );
+
+  if (err instanceof AppError) {
+    return apiResponse({
+      res,
+      data: null,
+      message: err.message,
+      status: err.statusCode,
+    });
+  }
+
+  return apiResponse({
+    res,
+    data: null,
+    message: err.message,
+    status: 500,
+  });
+}
+</code></pre>
+<br><h3 id="use-it-in-the-serveappindex-after-all-the-routes">use it in the serve/app/index after all the routes</h3><br>
+<pre><code class="language-ts">import { globalErrorHandler } from &quot;./middlewares/globalErrorHandler&quot;;
+
+...
+// Runs only if no route matched
+app.use((req, res, next) =&gt; {
+  next(new AppError(`Route ${req.originalUrl} not found`, 404));
+});
+
+// Global error handler
+app.use(globalErrorHandler);
+</code></pre>
+<br><h3 id="usage-example">usage example</h3><br>
+<pre><code class="language-ts">throw new ValidationError(&#39;Invalid user data&#39;, []);
+</code></pre>
+<br><h2 id="setup-logger-middleware">SETUP LOGGER MIDDLEWARE</h2><br>
+<br><h3 id="serversrcutilsloggerts">server/src/utils/logger.ts</h3><br>
+<pre><code class="language-ts">import pino from &#39;pino&#39;;
+import path from &#39;path&#39;;
+import fs from &#39;fs&#39;;
+import Environment from &#39;@/config/env.config&#39;;
+
+const isProduction = Environment.NODE_ENV === &#39;production&#39;;
+
+const logsDir = path.join(process.cwd(), &#39;logs&#39;);
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+export const logger = pino({
+  level: isProduction ? &#39;info&#39; : &#39;debug&#39;,
+  transport: isProduction
+    ? undefined
+    : {
+        target: &#39;pino-pretty&#39;,
+        options: {
+          colorize: true,
+          translateTime: &#39;yyyy-mm-dd HH:MM:ss&#39;,
+          ignore: &#39;pid,hostname&#39;,
+        },
+      },
+});
+
+export const httpLogger = pino({
+  level: &#39;info&#39;,
+  transport: {
+    target: &#39;pino/file&#39;,
+    options: {
+      destination: path.join(logsDir, &#39;http.log&#39;),
+      mkdir: true,
+    },
+  },
+});
+</code></pre>
+<br><h3 id="serversrcmiddlewaresloggermiddlewarets">server/src/middlewares/logger.middleware.ts</h3><br>
+<pre><code class="language-ts">import pinoHttp from &#39;pino-http&#39;;
+import { logger } from &#39;../utils/logger&#39;;
+
+export const requestLogger = pinoHttp({
+
+    logger,
+
+    customLogLevel: (req, res, err) =&gt; {
+        if (res.statusCode &gt;= 500 || err) return &#39;error&#39;;
+        if (res.statusCode &gt;= 400) return &#39;warn&#39;;
+        return &#39;info&#39;;
+    },
+
+});
+</code></pre>
+<br><h3 id="use-it-in-the-serveappindex-before-routes">use it in the serve/app/index before routes</h3><br>
+<pre><code class="language-ts">import { requestLogger } from &quot;./middlewares/requestLogger&quot;;
+
+...
+app.use(cookieParser());
+
+// Logger middleware
+app.use(requestLogger);
+</code></pre>
+<br><h2 id="setup-environment-schema-and-type-using-zod">SETUP ENVIRONMENT SCHEMA AND TYPE USING ZOD</h2><br>
+<br><h3 id="serversrcconfigenvconfigts">server/src/config/env.config.ts</h3><br>
+<pre><code class="language-ts">import dotenv from &#39;dotenv&#39;;
+import { z } from &#39;zod&#39;;
+import { logger } from &#39;../utils/logger&#39;;
+
+dotenv.config();
+
+const envSchema = z.object({
+    PORT: z.string().min(1, &quot;PORT is required&quot;),
+    FRONTEND_URL: z.string().url(&quot;FRONTEND_URL must be a valid URL&quot;),
+    DB_HOST: z.string().min(1, &quot;DB_HOST is required&quot;),
+    DB_USER: z.string().min(1, &quot;DB_USER is required&quot;),
+    DB_PASSWORD: z.string().optional(),
+    DB_NAME: z.string().min(1, &quot;DB_NAME is required&quot;),
+    DB_PORT: z.string().min(1, &quot;DB_PORT is required&quot;),
+});
+
+const result = envSchema.safeParse(process.env);
+
+if (!result.success) {
+    result.error.issues.forEach(issue =&gt;
+        console.error(` - ${issue.path.join(&#39;.&#39;)}: ${issue.message}`)
+    );
+    console.error(&quot;Environment configuration issue&quot;);
+    process.exit(1);
+}
+
+const Environment = result.data;
+console.table(Environment)
+
+//Zod&#39;s type inference to automatically derive a TypeScript type from our schema
+export type EnvironmentType = z.infer&lt;typeof envSchema&gt;;
+
+export default Environment;
+</code></pre>
+<br><h2 id="setup-sequelize-migrations">SETUP SEQUELIZE MIGRATIONS</h2><br>
+<pre><code class="language-bash">pnpm add sequelize sequelize-cli mysql2
+</code></pre>
+<br><h3 id="create-sequelizerc-in-the-root-path">create .sequelizerc in the root path</h3><br>
+<pre><code class="language-js">const path = require(&#39;path&#39;);
+
+module.exports = {
+  config: path.resolve(&#39;src&#39;, &#39;config&#39;, &#39;config.json&#39;),
+  &#39;models-path&#39;: path.resolve(&#39;src&#39;, &#39;models&#39;),
+  &#39;seeders-path&#39;: path.resolve(&#39;src&#39;, &#39;seeders&#39;),
+  &#39;migrations-path&#39;: path.resolve(&#39;src&#39;, &#39;migrations&#39;),
+};
+</code></pre>
+<br><h3 id="create-configmodelsseedersmigrations-directories-in-the-src">create config,models,seeders,migrations directories in the src</h3><br>
+<ul>
+<li>or you can follow what mentioned in the doc <a href="https://sequelize.org/docs/v6/other-topics/migrations/">https://sequelize.org/docs/v6/other-topics/migrations/</a></li>
+</ul>
+<br><h3 id="add-configconfigjson">add config/config.json</h3><br>
+<pre><code class="language-json">{
+  &quot;development&quot;: {
+    &quot;username&quot;: &quot;root&quot;,
+    &quot;password&quot;: null,
+    &quot;database&quot;: &quot;database_development&quot;,
+    &quot;host&quot;: &quot;127.0.0.1&quot;,
+    &quot;dialect&quot;: &quot;mysql&quot;
+  },
+}
+</code></pre>
+<br><h3 id="commands">commands</h3><br>
+<pre><code class="language-bash"># Creating the first Model (and Migration)
+npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+
+# you need to keep the migraion as js file, dont add &quot;type&quot;:&quot;module&quot; in the package.json ts can compile
+</code></pre>
+<br><h3 id="example-migration">example migration</h3><br>
+<pre><code class="language-js">&#39;use strict&#39;;
+
+/** @type {import(&#39;sequelize-cli&#39;).Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+
+    await queryInterface.createTable(&#39;Users&#39;, {
+      id: { primaryKey: true, autoIncrement: false, type: Sequelize.STRING },
+      name: Sequelize.STRING,
+      email: Sequelize.STRING,
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
+    });
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable(&#39;Users&#39;);
+  }
+};
+</code></pre>
+<br><h3 id="example-model-you-can-keeprename-model-to-ts">example model (you can keep/rename model to .ts)</h3><br>
+<pre><code class="language-ts">import {
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+  DataTypes,
+  Sequelize,
+  NonAttribute,
+  Association,
+} from &#39;sequelize&#39;;
+import type { Post } from &#39;./post&#39;;
+
+export class User extends Model&lt;InferAttributes&lt;User&gt;, InferCreationAttributes&lt;User&gt;&gt; {
+  declare id: CreationOptional&lt;string&gt;;
+  declare name: string;
+  declare email: string;
+  declare readonly createdAt: CreationOptional&lt;Date&gt;;
+  declare readonly updatedAt: CreationOptional&lt;Date&gt;;
+
+  // Associations
+  declare posts?: NonAttribute&lt;Post[]&gt;;
+
+  declare static associations: {
+    posts: Association&lt;User, Post&gt;;
+  };
+
+  static associate(models: { Post: typeof Post }) {
+    User.hasMany(models.Post, { foreignKey: &#39;userId&#39;, as: &#39;posts&#39; });
+  }
+}
+
+export const initUserModel = (sequelize: Sequelize): typeof User =&gt; {
+  User.init(
+    {
+      id: { type: DataTypes.STRING, autoIncrement: false, primaryKey: true },
+      name: { type: DataTypes.STRING },
+      email: { type: DataTypes.STRING, allowNull: false, unique: true },
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+    },
+    },
+    {
+      sequelize,
+      modelName: &#39;User&#39;,
+      tableName: &#39;Users&#39;,
+      indexes: [
+        {
+          name: &#39;idx_user_email&#39;,
+          fields: [&#39;email&#39;],
+        }
+      ],
+    }
+  );
+
+  return User;
+};
+</code></pre>
+<br><h3 id="dbconfigts">db.config.ts</h3><br>
+<pre><code class="language-ts">const sequelize = new Sequelize(Environment.DB_NAME, Environment.DB_USER, Environment.DB_PASSWORD, {
+  host: Environment.DB_HOST,
+  port: Number(Environment.DB_PORT),
+  dialect: &#39;mysql&#39;,
+  logging: false,
+});
+
+export const connetDB = async () =&gt; {
+  try {
+    await sequelize.authenticate();
+    logger.info(&#39;Database connected&#39;);
+
+    await sequelize.sync({ force: false });
+    logger.info(&#39;Database synchronized&#39;);
+  } catch (error) {
+    logger.error(`Unable to connect to the database:&#39; ${error}`);
+  }
+};
+
+// Initialize models
+export const User = initUserModel(sequelize);
+export const Post = initPostModel(sequelize);
+
+// Set up associations
+Post.associate({ User});
+User.associate({ Post });
+
+export default sequelize;
+</code></pre>
+<br><h3 id="update-serverts">update server.ts</h3><br>
+<pre><code class="language-ts">await connetDB();
+app.listen(Environment.PORT, () =&gt; {
+  logger.info(&quot;Server started on port:&quot; + `http://localhost:${Environment.PORT}`);
+});
+</code></pre>
+<br><h3 id="update-packagejson-scripts">update package.json scripts</h3><br>
+<pre><code class="language-json">&quot;scripts&quot;: {
+    &quot;migrate&quot;: &quot;sequelize-cli db:migrate&quot;,
+    &quot;migrate:undo&quot;: &quot;sequelize-cli db:migrate:undo&quot;,
+    &quot;migrate:undo:all&quot;: &quot;sequelize-cli db:migrate:undo:all&quot;,
+    &quot;seed&quot;: &quot;sequelize-cli db:seed:all&quot;,
+    &quot;seed:undo&quot;: &quot;sequelize-cli db:seed:undo&quot;,
+    &quot;seed:undo:all&quot;: &quot;sequelize-cli db:seed:undo:all&quot;
+  },
+</code></pre>
+<br><h2 id="setup-zod-request-validator-middleware">SETUP ZOD REQUEST VALIDATOR MIDDLEWARE</h2><br>
+<br><h3 id="serversrcdtosuserdtots">server/src/dtos/user.dto.ts</h3><br>
+<pre><code class="language-ts">import { z } from &#39;zod&#39;;
+
+export const createUserSchema = z.object({
+    id: z.string().min(1, { message: &quot;ID is required&quot; }),
+    name: z.string().min(1, { message: &quot;Name is required&quot; }),
+    email: z.string().email({ message: &quot;Invalid email address&quot; }),
+    picture: z.string().url().optional(),
+    googleId: z.string().optional(),
+    refreshToken: z.string().nullable().optional()
+
+});
+
+export type CreateUserDTO = z.infer&lt;typeof createUserSchema&gt;;
+</code></pre>
+<br><h3 id="serversrcmiddlewaresvalidatemiddliwarets">server/src/middlewares/validate.middliware.ts</h3><br>
+<pre><code class="language-ts">import { ZodSchema } from &#39;zod&#39;;
+import { Request, Response, NextFunction } from &#39;express&#39;;
+import { BadRequestError } from &#39;@/errors/BadRequestError&#39;;
+
+export const validateBody = (schema: ZodSchema) =&gt; {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    const result = schema.safeParse(req.body);
+
+    if (!result.success) {
+      throw new BadRequestError(`${result.error.issues.map((e) =&gt; e.message).join(&#39;, &#39;)}`);
+    }
+
+    next();
+  };
+};
+
+export const validateParams = (schema: ZodSchema) =&gt; {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    const result = schema.safeParse(req.params);
+
+    if (!result.success) {
+      throw new BadRequestError(`${result.error.issues.map((e) =&gt; e.message).join(&#39;, &#39;)}`);
+    }
+
+    next();
+  };
+};
+
+export const validateQuery = (schema: ZodSchema) =&gt; {
+  return (req: Request, res: Response, next: NextFunction) =&gt; {
+    const result = schema.safeParse(req.query);
+
+    if (!result.success) {
+      throw new BadRequestError(`${result.error.issues.map((e) =&gt; e.message).join(&#39;, &#39;)}`);
+    }
+
+    next();
+  };
+};
+</code></pre>
+<br><h3 id="use-it">use it</h3><br>
+<pre><code class="language-ts">router.post(&#39;/test-route&#39;, validate(createUserSchema), testController.testMethod);
+</code></pre>
+<br><h2 id="setup-auth-middleware">SETUP AUTH MIDDLEWARE</h2><br>
+<br><h3 id="serversrcmiddlewaresauthmiddlewarets">server/src/middlewares/auth.middleware.ts</h3><br>
+<pre><code class="language-ts">export interface AuthenticatedRequest extends Request {
+  user: User;
+}
+
+export default function jwtAuth(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  const authHeader = req.header(&#39;Authorization&#39;);
+  const token = authHeader?.startsWith(&#39;Bearer &#39;) ? authHeader.slice(7) : undefined;
+
+  if (!token) {
+    throw new UnauthorizedError();
+  }
+
+  try {
+    const { userId, email } = jwt.verify(token, Environment.JWT_SECRET) as JwtPayload;
+    req.user = { userId, email };
+    next();
+  } catch {
+    throw new UnauthorizedError();
+  }
+}
+</code></pre>
+<br><h2 id="setup-eslint-and-prettier">SETUP eslint and PRETTIER</h2><br>
+<br><h3 id="servereslintconfigjs">server/eslint.config.js</h3><br>
+<pre><code class="language-js">export default tseslint.config(
+  {
+    ignores: [&#39;dist&#39;, &#39;node_modules&#39;, &#39;src/migrations&#39;],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+  eslintPluginPrettier,
+  {
+    files: [&#39;**/*.ts&#39;],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+    },
+    rules: {
+      &#39;prettier/prettier&#39;: &#39;warn&#39;,
+      &#39;@typescript-eslint/no-unused-vars&#39;: [&#39;warn&#39;, { argsIgnorePattern: &#39;^_&#39; }],
+      &#39;@typescript-eslint/no-explicit-any&#39;: &#39;warn&#39;,
+    },
+  }
+);
+</code></pre>
+<br><h3 id="serverprettierconfigmjs">server/prettier.config.mjs</h3><br>
+<pre><code class="language-js">/** @type {import(&quot;prettier&quot;).Config} */
+export default {
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: &#39;es5&#39;,
+  printWidth: 100,
+  bracketSpacing: true,
+  jsxSingleQuote: false,
+  arrowParens: &#39;always&#39;,
+  endOfLine: &#39;lf&#39;,
+};
+</code></pre>
+<br><h3 id="serverprettierignore">server/.prettierignore</h3><br>
+<pre><code class="language-js">dist
+node_modules
+pnpm-lock.yaml
+*.min.js
+</code></pre>
+<br><h2 id="setup-imports">SETUP @ IMPORTS</h2><br>
+<pre><code class="language-bash">pnpm add -D tsc-alias
+pnpm add -D tsc-alias
+</code></pre>
+<br><h3 id="servertsconfigjson">server/tsconfig.json</h3><br>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2022&quot;,
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;moduleResolution&quot;: &quot;Bundler&quot;,
+    &quot;outDir&quot;: &quot;dist&quot;,
+    &quot;rootDir&quot;: &quot;./src&quot;,
+    &quot;strict&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;baseUrl&quot;: &quot;.&quot;,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [&quot;src/*&quot;]
+    }
+  }
+}
+</code></pre>
+<br><h3 id="packagejson">package.json</h3><br>
+<pre><code class="language-json">&quot;scripts&quot;: {
+    &quot;lint&quot;: &quot;eslint .&quot;,
+    &quot;lint:fix&quot;: &quot;eslint . --fix&quot;,
+    &quot;format&quot;: &quot;prettier --check .&quot;,
+    &quot;format:fix&quot;: &quot;prettier --write .&quot;
+  },
+</code></pre>
+<br><h2 id="final-appts-and-serverts-setup">FINAL app.ts and server.ts SETUP</h2><br>
+<br><h3 id="srcappts">src/app.ts</h3><br>
+<pre><code class="language-ts">//import this top of all other imports, that guarantee the config is loaded first before anything else
+//so we can validate the scema and decide if we can load the appor not
+import Environment from &#39;./config/env.config&#39;;
+//other imports
+
+
+const app = express();
+
+app.use(express.json()); // to parse application/json, otherwise req.body will be undefined
+
+// Required for cross-origin browser requests
+app.use(
+  cors({
+    origin: Environment.FRONTEND_URL,
+    credentials: true,
+    methods: [&#39;GET&#39;, &#39;POST&#39;, &#39;PUT&#39;, &#39;DELETE&#39;, &#39;OPTIONS&#39;],
+    allowedHeaders: [
+      &#39;Content-Type&#39;,
+      &#39;Authorization&#39;,
+      &#39;Access-Control-Allow-Credentials&#39;,
+      &#39;X-CSRF-Token&#39;,
+    ],
+  })
+);
+
+app.use(
+  session({
+    secret: Environment.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: Environment.NODE_ENV === &#39;production&#39;,
+      httpOnly: true,
+      sameSite: &#39;lax&#39;,
+    },
+  })
+);
+
+app.use(cookieParser());
+
+// Logger middleware
+app.use(requestLogger);
+
+app.use(&#39;/api/v1&#39;, rateLimiter, routerV1);
+
+// Runs only if no route matched
+app.use((req) =&gt; {
+  throw new NotFoundError(`Route not found - ${req.originalUrl}`);
+});
+
+// Global error handler
+app.use(globalErrorHandler);
+
+export default app;
+</code></pre>
+<br><h3 id="serversrcindexts">server/src/index.ts</h3><br>
+<pre><code class="language-ts">async function bootstrap() {
+  try {
+    await connetDB();
+
+    app.listen(Environment.PORT, () =&gt; {
+      logger.info(&#39;Server started on port:&#39; + `http://localhost:${Environment.PORT}`);
+    });
+  } catch (error) {
+    logger.fatal({ error }, &#39;Failed to start server:&#39;);
+    process.exit(1);
+  }
+}
+
+bootstrap();
+</code></pre>
+<br><h3 id="packagejson">package.json</h3><br>
+<pre><code class="language-json">  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,
+    &quot;dev&quot;: &quot;tsx watch src/index.ts&quot;,
+    &quot;build&quot;: &quot;tsc &amp;&amp; tsc-alias&quot;,
+    &quot;start&quot;: &quot;node dist/index.js&quot;,
+    &quot;typecheck&quot;: &quot;tsc --noEmit&quot;,
+    &quot;migrate&quot;: &quot;sequelize-cli db:migrate&quot;,
+    &quot;migrate:undo&quot;: &quot;sequelize-cli db:migrate:undo&quot;,
+    &quot;migrate:undo:all&quot;: &quot;sequelize-cli db:migrate:undo:all&quot;,
+    &quot;lint&quot;: &quot;eslint .&quot;,
+    &quot;lint:fix&quot;: &quot;eslint . --fix .&quot;,
+    &quot;format&quot;: &quot;prettier --check .&quot;,
+    &quot;format:fix&quot;: &quot;prettier --write .&quot;
+  }
+</code></pre>
+<br><h1 id="setup-a-react-client-like-a-pro">SETUP A REACT CLIENT LIKE A PRO</h1><br>
+<br><h2 id="install-required-packages">INSTALL REQUIRED PACKAGES</h2><br>
+<pre><code class="language-bash">mkdir client
+cd client
+pnpm create vite react-fe --template react-ts
+pnpm add axios react-router-dom @tanstack/react-query lucide-react react-error-boundary
+sonar nuqs
+
+pnpm run dev
+</code></pre>
+<br><h3 id="install-tailwind">INSTALL TAILWIND</h3><br>
+<pre><code class="language-bash"># Reference : https://tailwindcss.com/docs/installation/using-vite
+pnpm add -D tailwindcss postcss autoprefixer
+pnpm add -D @types/node @types/react @types/react-dom
+</code></pre>
+<br><h3 id="configure-tailwind">CONFIGURE TAILWIND</h3><br>
+<pre><code class="language-bash">cd client
+then import &quot;./App.css&quot; in App.tsx
+</code></pre>
+<br><h2 id="setup-eslint-and-prettier">SETUP eslint AND PRETTIER</h2><br>
+<pre><code class="language-bash">pnpm add eslint prettier
+pnpm add -D @eslint/js globals typescript-eslint eslint-config-prettier eslint-plugin-prettier
+</code></pre>
+<br><h3 id="eslintconfigjs">eslint.config.js</h3><br>
+<pre><code class="language-jsx">export default tseslint.config(
+  {
+    ignores: [&#39;dist&#39;, &#39;node_modules&#39;],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+  eslintPluginPrettier,
+  {
+    files: [&#39;**/*.ts&#39;],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+    },
+    rules: {
+      &#39;prettier/prettier&#39;: &#39;warn&#39;,
+      &#39;@typescript-eslint/no-unused-vars&#39;: [&#39;warn&#39;, { argsIgnorePattern: &#39;^_&#39; }],
+      &#39;@typescript-eslint/no-explicit-any&#39;: &#39;warn&#39;,
+    },
+  },
+);
+</code></pre>
+<br><h3 id="prettierconfigmjs">prettier.config.mjs</h3><br>
+<pre><code class="language-js">/** @type {import(&quot;prettier&quot;).Config} */
+export default {
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: &#39;es5&#39;,
+  printWidth: 100,
+  bracketSpacing: true,
+  jsxSingleQuote: false,
+  arrowParens: &#39;always&#39;,
+  endOfLine: &#39;lf&#39;,
+};
+</code></pre>
+<br><h3 id="prettierignore">.prettierignore</h3><br>
+<pre><code class="language-bash">dist
+node_modules
+pnpm-lock.yaml
+*.min.js
+</code></pre>
+<br><h3 id="packagejson">package.json</h3><br>
+<pre><code class="language-json">  &quot;scripts&quot;: {
+    &quot;lint&quot;: &quot;eslint .&quot;,
+    &quot;lint:fix&quot;: &quot;eslint . --fix&quot;,
+    &quot;format&quot;: &quot;prettier --check .&quot;,
+    &quot;format:fix&quot;: &quot;prettier --write .&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+</code></pre>
+<br><h2 id="setup-imports">SETUP @ IMPORTS</h2><br>
+<br><h3 id="viteconfigts">vite.config.ts</h3><br>
+<pre><code class="language-js">export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      &#39;@&#39;: path.resolve(__dirname, &#39;./src&#39;),
+    },
+  },
+});
+</code></pre>
+<br><h3 id="tsconfigjson">tsconfig.json</h3><br>
+<pre><code class="language-json">{
+  &quot;files&quot;: [],
+  &quot;references&quot;: [{ &quot;path&quot;: &quot;./tsconfig.app.json&quot; }, { &quot;path&quot;: &quot;./tsconfig.node.json&quot; }],
+  &quot;compilerOptions&quot;: {
+    &quot;baseUrl&quot;: &quot;.&quot;,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [&quot;./src/*&quot;]
+    }
+  }
+}
+</code></pre>
+<br><h3 id="tsconfigappjson">tsconfig.app.json</h3><br>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;tsBuildInfoFile&quot;: &quot;./node_modules/.tmp/tsconfig.app.tsbuildinfo&quot;,
+    &quot;target&quot;: &quot;ES2022&quot;,
+    &quot;useDefineForClassFields&quot;: true,
+    &quot;lib&quot;: [&quot;ES2022&quot;, &quot;DOM&quot;, &quot;DOM.Iterable&quot;],
+    &quot;module&quot;: &quot;ESNext&quot;,
+    &quot;types&quot;: [&quot;vite/client&quot;],
+    &quot;skipLibCheck&quot;: true,
+
+    /* Path aliases */
+    &quot;baseUrl&quot;: &quot;.&quot;,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [&quot;./src/*&quot;]
+    },
+
+    /* Bundler mode */
+    &quot;moduleResolution&quot;: &quot;bundler&quot;,
+    &quot;allowImportingTsExtensions&quot;: true,
+    &quot;verbatimModuleSyntax&quot;: true,
+    &quot;moduleDetection&quot;: &quot;force&quot;,
+    &quot;noEmit&quot;: true,
+    &quot;jsx&quot;: &quot;react-jsx&quot;,
+
+    /* Linting */
+    &quot;strict&quot;: true,
+    &quot;noUnusedLocals&quot;: true,
+    &quot;noUnusedParameters&quot;: true,
+    &quot;erasableSyntaxOnly&quot;: true,
+    &quot;noFallthroughCasesInSwitch&quot;: true,
+    &quot;noUncheckedSideEffectImports&quot;: true
+  },
+  &quot;include&quot;: [&quot;src&quot;]
+}
+</code></pre>
+<br><h3 id="final-apptsx">FINAL app.tsx</h3><br>
+<pre><code class="language-tsx">function App() {
+  return (
+    // NuqsProvider enables type-safe URL query string state management across the app
+    &lt;NuqsProvider&gt;
+      &lt;QueryClientProvider client={queryClient}&gt;
+        &lt;AuthProvider&gt;
+          &lt;Toaster position=&quot;top-right&quot; richColors /&gt;
+          &lt;RouterProvider router={router} /&gt;
+        &lt;/AuthProvider&gt;
+      &lt;/QueryClientProvider&gt;
+    &lt;/NuqsProvider&gt;
+  );
+}
+</code></pre>
+<br><h2 id="setup-react-query">SETUP REACT-QUERY</h2><br>
+<br><h3 id="srclibreact-queryts">src/lib/react-query.ts</h3><br>
+<pre><code class="language-tsx">import { QueryClient, QueryCache, MutationCache } from &#39;@tanstack/react-query&#39;;
+import { toast } from &#39;sonner&#39;;
+
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) =&gt; {
+      toast.error(&#39;Error&#39;, { description: error.message });
+    },
+  }),
+
+  mutationCache: new MutationCache({
+    onError: (error) =&gt; {
+      toast.error(&#39;Error&#39;, { description: error.message || &#39;Failed to update data&#39; });
+    },
+  }),
+
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
+
+export default queryClient;
+
+//use it
+const { data, isLoading, refetch } = useEmails({...});
+
+//custome hook
+//src/features/emails/hooks/use-emails-hook.ts
+export const useEmails = (params: GetEmailsParams) =&gt; {
+  return useQuery({
+    queryKey: [QUERY_KEYS.EMAILS, params],
+    queryFn: () =&gt; getEmails(params),
+    refetchInterval: 30 * 1000, // fetch every 30 seconds, only for dev testing
+    refetchOnWindowFocus: true,
+  });
+};
+
+//src/features/emails/api/index.ts
+export const getEmails = async (params: GetEmailsParams): Promise&lt;EmailsResponse&gt; =&gt; {
+  const { data } = await api.get&lt;ApiResponse&lt;EmailsResponse&gt;&gt;(API_URLS.EMAILS, {
+    params,
+  });
+
+  return data.data;
+};
+</code></pre>
+<br><h2 id="setup-routes-with-layout">SETUP ROUTES WITH LAYOUT</h2><br>
+<br><h3 id="srclibroutestsx">src/lib/routes.tsx</h3><br>
+<pre><code class="language-tsx">export const router = createBrowserRouter([
+  {
+    element: &lt;AuthLayout /&gt;,
+    children: [
+      {
+        path: &#39;/emails&#39;,
+        element: &lt;EmailsPage /&gt;,
+      },
+      ...
+    ],
+  },
+  {
+    path: &#39;/&#39;,
+    element: &lt;Login /&gt;,
+  },
+  ...
+]);
+
+//src/components/layouts/auth-layout.tsx
+export default function AuthLayout() {
+  const { isLoading, error, refetch } = useMe();
+
+  if (isLoading) return &lt;LoadingSkeleton /&gt;;
+  if (error) return &lt;Error error={error as Error} onRetry={() =&gt; refetch()} /&gt;;
+
+  return (
+    &lt;main className=&quot;h-[100dvh] bg-white&quot;&gt;
+      &lt;Outlet /&gt;
+    &lt;/main&gt;
+  );
+}
+</code></pre>
+<br><h2 id="setup-axios-intercepter-for-refresh-token-support">SETUP AXIOS INTERCEPTER FOR REFRESH TOKEN SUPPORT</h2><br>
+<br><h3 id="srcapits">src/api.ts</h3><br>
+<pre><code class="language-tsx">import axios from &#39;axios&#39;;
+
+let isRefreshing = false;
+let failedQueue: { resolve: (token: string) =&gt; void; reject: (err: unknown) =&gt; void }[] = [];
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || &#39;http://localhost:5000/api/v1&#39;,
+  withCredentials: true,
+  headers: {
+    &#39;Content-Type&#39;: &#39;application/json&#39;,
+  },
+});
+
+export const setApiToken = (token: string | null) =&gt; {
+  if (token) {
+    api.defaults.headers.common[&#39;Authorization&#39;] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common[&#39;Authorization&#39;];
+  }
+};
+
+const processQueue = (error: unknown, token: string | null = null) =&gt; {
+  failedQueue.forEach((prom) =&gt; {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
+
+api.interceptors.response.use(
+  (response) =&gt; response,
+  async (error) =&gt; {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &amp;&amp;
+      !originalRequest._retry &amp;&amp;
+      !originalRequest.url?.includes(&#39;/auth/refresh&#39;)
+    ) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) =&gt; {
+          failedQueue.push({
+            resolve: (token: string) =&gt; {
+              originalRequest.headers[&#39;Authorization&#39;] = `Bearer ${token}`;
+              resolve(api(originalRequest));
+            },
+            reject: (err: unknown) =&gt; reject(err),
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_API_URL || &#39;http://localhost:5000/api/v1&#39;}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+
+        const accessToken = data.data.accessToken;
+        setApiToken(accessToken);
+        originalRequest.headers[&#39;Authorization&#39;] = `Bearer ${accessToken}`;
+        processQueue(null, accessToken);
+
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        setApiToken(null);
+        window.location.href = &#39;/login&#39;;
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;
+</code></pre>
+<br><h2 id="setup-auth-context">SETUP AUTH-CONTEXT</h2><br>
+<br><h3 id="srcprovidersauth-contexttsx">src/providers/auth-context.tsx</h3><br>
+<pre><code class="language-tsx">/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState } from &#39;react&#39;;
+import type { AuthContextType } from &#39;@/types/auth-context-type&#39;;
+import type { User } from &#39;@/types/user-type&#39;;
+import api, { setApiToken } from &#39;@/api&#39;;
+
+const AuthContext = createContext&lt;AuthContextType | null&gt;(null);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) =&gt; {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+  const [loading, setLoading] = useState&lt;boolean&gt;(true);
+
+  const logout = async () =&gt; {
+    try {
+      await api.post(&#39;/auth/logout&#39;);
+      setUser(null);
+      return true;
+    } catch (error) {
+      console.error(&#39;Logout failed:&#39;, error);
+      return false;
+    } finally {
+      setApiToken(null);
+      setUser(null);
+      window.location.href = &#39;/login&#39;;
+    }
+  };
+
+  const value: AuthContextType = {
+    user,
+    setUser,
+    loading,
+    setLoading,
+    logout,
+  };
+
+  return &lt;AuthContext.Provider value={value}&gt;{children}&lt;/AuthContext.Provider&gt;;
+};
+
+export const useAuth = (): AuthContextType =&gt; {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error(&#39;useAuth must be used within AuthProvider&#39;);
+  }
+  return context;
+};
+
+//use it
+const { user, logout } = useAuth();
+</code></pre>
+<br><h3 id="packagejson">package.json</h3><br>
+<pre><code class="language-json">  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;tsc -b &amp;&amp; vite build&quot;,
+    &quot;lint&quot;: &quot;eslint .&quot;,
+    &quot;lint:fix&quot;: &quot;eslint . --fix&quot;,
+    &quot;format&quot;: &quot;prettier --check .&quot;,
+    &quot;format:fix&quot;: &quot;prettier --write .&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+</code></pre>
+
+		</section>
+		<script src="./util/createMenuBar.js"></script>
+	</body>
+</html>

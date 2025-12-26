@@ -2,13 +2,14 @@
 let links = [];
 document.addEventListener("DOMContentLoaded", getAllHTags);
 function getAllHTags() {
-    const h1Elements = document.querySelectorAll("h1");
-    const h2Elements = document.querySelectorAll("h2");
-    const h1Array = Array.from(h1Elements);
-    const h2Array = Array.from(h2Elements);
-    let headings = [...h1Array, ...h2Array];
-    headings.forEach((h1, index) => {
-        links.push({ id: "#" + h1.id, innerText: h1.innerText });
+    // Query all h1, h2, h3 elements together to preserve document order
+    const headings = document.querySelectorAll("h1, h2");
+    headings.forEach((heading) => {
+        links.push({ 
+            id: "#" + heading.id, 
+            innerText: heading.innerText,
+            tag: heading.tagName.toLowerCase()
+        });
     });
     let wrapperDiv = createNavLinks(links);
     let nav = document.getElementById("nav-container");
@@ -21,7 +22,10 @@ function createNavLinks(links) {
 
     //create a link for home
     const homeLink = document.createElement("a");
-    const homeUrl = window.location.protocol + "//" + window.location.host
+    // Use relative path to support both local file system and hosted environments
+    const pathDepth = window.location.pathname.split('/').filter(p => p).length;
+    const isInSubfolder = window.location.pathname.includes('/util/') || window.location.pathname.includes('/node_scripts/');
+    const homeUrl = isInSubfolder ? '../index.html' : './index.html';
     homeLink.href = homeUrl;
     homeLink.textContent = "Home";
     navList.appendChild(homeLink);
