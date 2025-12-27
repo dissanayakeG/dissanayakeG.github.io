@@ -2,6 +2,9 @@
 let links = [];
 document.addEventListener("DOMContentLoaded", getAllHTags);
 function getAllHTags() {
+    // Create home button
+    createHomeButton();
+
     // Query all h1, h2, h3 elements together to preserve document order
     const headings = document.querySelectorAll("h1, h2");
     headings.forEach((heading) => {
@@ -20,21 +23,20 @@ function createNavLinks(links) {
     navList.id = "nav-list";
     navList.className = "nav-list";
 
-    //create a link for home
-    const homeLink = document.createElement("a");
-    // Use relative path to support both local file system and hosted environments
-    const pathDepth = window.location.pathname.split('/').filter(p => p).length;
-    const isInSubfolder = window.location.pathname.includes('/util/') || window.location.pathname.includes('/node_scripts/');
-    const homeUrl = isInSubfolder ? '../index.html' : './index.html';
-    homeLink.href = homeUrl;
-    homeLink.textContent = "Home";
-    navList.appendChild(homeLink);
+    // Add a header to the nav menu
+    const navHeader = document.createElement("div");
+    navHeader.className = "nav-header";
+    navHeader.textContent = "Contents";
+    navList.appendChild(navHeader);
 
-
-    links.forEach((h1, index) => {
+    links.forEach((heading, index) => {
         let navItem = document.createElement("a");
-        navItem.href = h1.id;
-        navItem.innerHTML = h1.innerText;
+        navItem.href = heading.id;
+        navItem.innerHTML = heading.innerText;
+        // Add indentation class for h2 elements
+        if (heading.tag === 'h2') {
+            navItem.classList.add('nav-item-h2');
+        }
         navList.appendChild(navItem);
     });
     return navList;
@@ -63,3 +65,31 @@ document.addEventListener("click", function (event) {
         navList.classList.remove("show-nav");
     }
 });
+
+// Create home button
+function createHomeButton() {
+    const homeLink = document.createElement("a");
+    
+    // Use relative path to support both local file system and hosted environments
+    const isInSubfolder = window.location.pathname.includes('/util/') || window.location.pathname.includes('/node_scripts/');
+    const homeUrl = isInSubfolder ? '../index.html' : './index.html';
+    
+    homeLink.href = homeUrl;
+    homeLink.className = "home-link";
+    homeLink.title = "Back to Home";
+    
+    // Create SVG icon
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("xmlns", svgNS);
+    svg.setAttribute("viewBox", "0 0 24 24");
+    
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z");
+    svg.appendChild(path);
+    
+    homeLink.appendChild(svg);
+    homeLink.appendChild(document.createTextNode("Home"));
+    
+    document.body.insertBefore(homeLink, document.body.firstChild);
+}
