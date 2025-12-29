@@ -31,7 +31,7 @@
 		<div id="nav-container" class="nav-container"></div>
 
 		<section class="content">
-			<br><h1 id="setup-a-nodeexpress-api-like-a-pro">SETUP A NODE/EXPRESS API LIKE A PRO</h1><br>
+      <br><h1 id="setup-a-nodeexpress-api-like-a-pro">SETUP A NODE/EXPRESS API LIKE A PRO</h1><br>
 <br><h2 id="install-required-packages">INSTALL REQUIRED PACKAGES</h2><br>
 <pre><code class="language-bash">mkdir server
 cd server
@@ -39,16 +39,13 @@ cd server
 pnpm init
 
 pnpm add express @types/express @types/node eslint prettier helmet cors @types/cors bcrypt @types/bcrypt jsonwebtoken @types/jsonwebtoken dotenv zod sequelize sequelize-cli mysql2 http-status-codes googleapis express-session @types/express-session 
-cookie-parser @types/cookie-parser imapflow @types/imapflow
+cookie-parser @types/cookie-parser
 
 #logging using pino
 pnpm add pino pino-pretty pino-http
 
 #rate limit
 pnpm add express-rate-limit
-
-#mail
-pnpm add mailparser @types/mailparser
 
 # auto load
 pnpm add -D tsx typescript
@@ -842,21 +839,6 @@ pnpm-lock.yaml
   &quot;include&quot;: [&quot;src&quot;]
 }
 </code></pre>
-<br><h3 id="final-apptsx">FINAL app.tsx</h3><br>
-<pre><code class="language-tsx">function App() {
-  return (
-    // NuqsProvider enables type-safe URL query string state management across the app
-    &lt;NuqsProvider&gt;
-      &lt;QueryClientProvider client={queryClient}&gt;
-        &lt;AuthProvider&gt;
-          &lt;Toaster position=&quot;top-right&quot; richColors /&gt;
-          &lt;RouterProvider router={router} /&gt;
-        &lt;/AuthProvider&gt;
-      &lt;/QueryClientProvider&gt;
-    &lt;/NuqsProvider&gt;
-  );
-}
-</code></pre>
 <br><h2 id="setup-react-query">SETUP REACT-QUERY</h2><br>
 <br><h3 id="srclibreact-queryts">src/lib/react-query.ts</h3><br>
 <pre><code class="language-tsx">import { QueryClient, QueryCache, MutationCache } from &#39;@tanstack/react-query&#39;;
@@ -1093,8 +1075,44 @@ const { user, logout } = useAuth();
     &quot;preview&quot;: &quot;vite preview&quot;
   },
 </code></pre>
+<br><h2 id="setup-nuqs-context">SETUP NUQS-CONTEXT</h2><br>
+<ul>
+<li>NuqsProvider enables type-safe URL query string state management across the app</li>
+</ul>
+<br><h3 id="clientsrcprovidersnuqs-providertsx">client/src/providers/nuqs-provider.tsx</h3><br>
+<pre><code class="language-tsx">interface NuqsProviderProps {
+  children: React.ReactNode;
+}
 
-		</section>
+export function NuqsProvider({ children }: NuqsProviderProps) {
+  return &lt;NuqsAdapter&gt;{children}&lt;/NuqsAdapter&gt;;
+}
+</code></pre>
+<br><h3 id="final-apptsx">FINAL app.tsx</h3><br>
+<pre><code class="language-tsx">import { RouterProvider } from &#39;react-router-dom&#39;;
+import { router } from &#39;@/lib/routes&#39;;
+import { AuthProvider } from &#39;@/providers/auth-context&#39;;
+import { QueryClientProvider } from &#39;@tanstack/react-query&#39;;
+import queryClient from &#39;@/lib/react-query&#39;;
+import { Toaster } from &#39;sonner&#39;;
+import { NuqsProvider } from &#39;@/providers/nuqs-provider&#39;;
+
+//Use Toaster from sonner for toas messages
+function App() {
+  return (
+    &lt;NuqsProvider&gt;
+      &lt;QueryClientProvider client={queryClient}&gt;
+        &lt;AuthProvider&gt;
+          &lt;Toaster position=&quot;top-right&quot; richColors /&gt;
+          &lt;RouterProvider router={router} /&gt;
+        &lt;/AuthProvider&gt;
+      &lt;/QueryClientProvider&gt;
+    &lt;/NuqsProvider&gt;
+  );
+}
+</code></pre>
+
+    </section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>
 </html>
