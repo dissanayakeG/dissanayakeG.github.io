@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+	<link rel="stylesheet" href="./util/styles.css" />
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js"></script>
+</head>
+
+<body>
+	<div id="nav-icon" class="nav-icon">
+		<div class="nav-icon-row"></div>
+		<div class="nav-icon-row"></div>
+		<div class="nav-icon-row"></div>
+		<div class="nav-icon-row"></div>
+	</div>
+
+	<div id="nav-container" class="nav-container"></div>
+
+	<section class="content">
+		<br>
+		<h1 id="flutter-local-database-with-drift-and-riverpod-project-setup-reference">Flutter Local Database with
+			Drift and Riverpod Project Setup Reference</h1><br>
+		<br>
+		<h2 id="1-create-flutter-project">1. Create Flutter Project</h2><br>
+		<pre><code class="language-bash">flutter create my_app
+cd my_app
+</code></pre>
+		<p>Run once to confirm the starter app works:</p>
+		<pre><code class="language-bash">flutter run
+</code></pre>
+		<br>
+		<h2 id="2-add-packages">2. Add Packages</h2><br>
+		<p>For local SQLite database with Drift:</p>
+		<pre><code class="language-bash">flutter pub add drift drift_flutter
+flutter pub add flutter_riverpod go_router
+flutter pub add --dev drift_dev build_runner sqlite3
+</code></pre>
+		<p>Then fetch packages:</p>
+		<pre><code class="language-bash">flutter pub get
+</code></pre>
+		<p>Package purposes:</p>
+		<ul>
+			<li><code>drift</code> - database ORM/query layer</li>
+			<li><code>drift_flutter</code> - Flutter SQLite setup helper</li>
+			<li><code>flutter_riverpod</code> - app state management/providers</li>
+			<li><code>go_router</code> - navigation/routing</li>
+			<li><code>drift_dev</code> - Drift code generator</li>
+			<li><code>build_runner</code> - runs code generation</li>
+			<li><code>sqlite3</code> - SQLite support for tests/tools</li>
+		</ul>
+		<br>
+		<h2 id="3-create-below-folder-structure">3. Create Below Folder Structure</h2><br>
+		<pre><code class="language-text">lib/
+  data/
+    local/
+      tables.dart
+      app_database.dart
+    repository/
+      app_repository.dart
+      repository_providers.dart
+  ui/
+    dashboard/
+      dashboard_page.dart
+    add_entry/
+      add_entry_page.dart
+
+test/
+  repository/
+    app_repository_test.dart
+</code></pre>
+		<br>
+		<h2 id="4-define-tables">4. Define Tables</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/data/local/tables.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:drift/drift.dart&#39;;
+
+class Items extends Table {
+  IntColumn get id =&gt; integer().autoIncrement()();
+  TextColumn get name =&gt; text()();
+  RealColumn get price =&gt; real()();
+}
+</code></pre>
+		<br>
+		<h2 id="5-create-app-database">5. Create App Database</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/data/local/app_database.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:drift/drift.dart&#39;;
+import &#39;package:drift_flutter/drift_flutter.dart&#39;;
+
+import &#39;tables.dart&#39;;
+
+part &#39;app_database.g.dart&#39;;
+
+@DriftDatabase(tables: [Categories, Entries])
+class AppDatabase extends _$AppDatabase {
+  
+  AppDatabase([QueryExecutor? executor]) : super(executor ?? driftDatabase(name: &#39;app_database&#39;));
+
+  @override
+  int get schemaVersion =&gt; 1;
+
+  @override
+  MigrationStrategy get migration =&gt; MigrationStrategy(
+        onCreate: (migrator) async =&gt; migrator.createAll(),
+      );
+}
+</code></pre>
+		<br>
+		<h2 id="6-generate-drift-code">6. Generate Drift Code</h2><br>
+		<p>Run after creating or changing database/table files:</p>
+		<pre><code class="language-bash">dart run build_runner build
+</code></pre>
+		<p>If generated file conflicts happen:</p>
+		<pre><code class="language-bash">dart run build_runner build --delete-conflicting-outputs
+</code></pre>
+		<p>This generates:</p>
+		<pre><code class="language-text">lib/data/local/app_database.g.dart
+</code></pre>
+		<p>Do not manually edit generated files.</p>
+		<br>
+		<h2 id="7-create-repository">7. Create Repository</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/data/repository/app_repository.dart
+</code></pre>
+		<p>The repository is the app-facing data API.</p>
+		<p>Purpose:</p>
+		<pre><code class="language-text">UI talks to Repository
+Repository talks to Drift database
+Drift talks to SQLite
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:drift/drift.dart&#39;;
+
+import &#39;../local/app_database.dart&#39;;
+
+abstract interface class AppRepository {
+  Stream&lt;List&lt;Item&gt;&gt; watchItems();
+
+  Future&lt;List&lt;Item&gt;&gt; getAllItems();
+
+  Future&lt;Item&gt; createItem({required String name, required double price});
+
+  // Future&lt;void&gt; updateItem({required Item item});
+
+  // Future&lt;void&gt; deleteItem({required Item item});
+
+  // Future&lt;Item&gt; getItemById({required int id});
+}
+
+class DriftAppRepository implements AppRepository {
+  DriftAppRepository({required this._database});
+
+  final AppDatabase _database;
+
+  @override
+  Stream&lt;List&lt;Item&gt;&gt; watchItems() {
+    final query = _database.select(_database.items)
+      ..orderBy([(t) =&gt; OrderingTerm.asc(t.name)]);
+    return query.watch();
+  }
+
+  @override
+  Future&lt;List&lt;Item&gt;&gt; getAllItems() {
+    final query = _database.select(_database.items)
+      ..orderBy([(t) =&gt; OrderingTerm.asc(t.name)]);
+    return query.get();
+  }
+
+  @override
+  Future&lt;Item&gt; createItem({
+    required String name,
+    required double price,
+  }) async {
+    final id = await _database
+        .into(_database.items)
+        .insert(
+          ItemsCompanion.insert(
+            name: name,
+            price: price,
+          ),
+        );
+
+    return (_database.select(
+      _database.items,
+    )..where((t) =&gt; t.id.equals(id))).getSingle();
+  }
+}
+</code></pre>
+		<br>
+		<h2 id="8-create-riverpod-providers">8. Create Riverpod Providers</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/data/repository/repository_providers.dart
+</code></pre>
+		<p>//this is not meant to duplicate every method from AppRepository</p>
+		<p>//repository_providers.dart should contain providers for things the app watches or shares, not copies of
+			every repository method.</p>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;../local/app_database.dart&#39;;
+import &#39;app_repository.dart&#39;;
+
+final appDatabaseProvider = Provider&lt;AppDatabase&gt;((ref) {
+  final database = AppDatabase();
+  ref.onDispose(() =&gt; database.close());
+  return database;
+});
+
+final appRepositoryProvider = Provider&lt;AppRepository&gt;((ref) {
+  return DriftAppRepository(database: ref.watch(appDatabaseProvider));
+});
+
+
+final itemStreamProvider = StreamProvider&lt;List&lt;Item&gt;&gt;((ref) {
+  return ref.watch(appRepositoryProvider).watchItems();
+});
+
+//For StreamProviders, It makes sense having their own provider because Riverpod can manage loading/data/error states and rebuild the UI when Drift emits new item lists.
+
+//For one-time actions like createItem() or getAllItems(), you usually call them through the repository provider:
+</code></pre>
+		<p>Once you expose appRepositoryProvider, the UI or controllers can already call any method from AppRepository:
+		</p>
+		<pre><code class="language-dart">await ref.read(appRepositoryProvider).createItem(
+  name: name,
+  price: price,
+);
+</code></pre>
+		<ul>
+			<li>We added itemStreamProvider because watchItems() is a stream that the UI will commonly watch:</li>
+		</ul>
+		<pre><code class="language-dart">final itemsAsync = ref.watch(itemStreamProvider);
+</code></pre>
+		<p>Provider behavior:</p>
+		<ul>
+			<li><code>Provider</code> creates shared objects like database/repository.</li>
+			<li><code>StreamProvider</code> exposes live database data to the UI.</li>
+			<li><code>ref.watch(...)</code> listens and rebuilds UI when data changes.</li>
+			<li><code>ref.read(...)</code> is used for actions like save/update/delete.</li>
+		</ul>
+		<br>
+		<h2 id="9-enable-riverpod-in-maindart">9. Enable Riverpod in main.dart</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/main.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;ui/dashboard/dashboard_page.dart&#39;;
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Database App&#39;,
+      home: const DashboardPage(),
+    );
+  }
+}
+</code></pre>
+		<p>Without <code>ProviderScope</code>, Riverpod providers will not work.</p>
+		<br>
+		<h2 id="10-read-data-in-ui">10. Read Data in UI</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/ui/dashboard/dashboard_page.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;../../data/repository/repository_providers.dart&#39;;
+
+class DashboardPage extends ConsumerWidget {
+  const DashboardPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemStream = ref.watch(itemStreamProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text(&#39;Entries&#39;)),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =&gt; context.push(&#39;/add-entry&#39;),
+        child: const Icon(Icons.add),
+      ),
+      
+      body: itemStream.when(
+        data: (items) {
+          if (items.isEmpty) {
+            return const Center(child: Text(&#39;No entries yet.&#39;));
+          }
+
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final entry = items[index];
+              return ListTile(title: Text(entry.name));
+            },
+          );
+        },
+        loading: () =&gt; const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) =&gt; Center(child: Text(&#39;Error: $error&#39;)),
+      ),
+    );
+  }
+}
+</code></pre>
+		<br>
+		<h2 id="11-save-data-from-ui">11. Save Data from UI</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/ui/add_entry/add_entry_page.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;../../data/repository/repository_providers.dart&#39;;
+
+class AddEntryPage extends ConsumerStatefulWidget {
+  const AddEntryPage({super.key});
+
+  @override
+  ConsumerState&lt;AddEntryPage&gt; createState() =&gt; _AddEntryPageState();
+}
+
+class _AddEntryPageState extends ConsumerState&lt;AddEntryPage&gt; {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  Future&lt;void&gt; _saveEntry() async {
+    final name = _nameController.text;
+    final price = double.tryParse(_priceController.text) ?? 0.0;
+    if (name.isNotEmpty) {
+      await ref
+          .read(appRepositoryProvider)
+          .createItem(name: name, price: price);
+      if (!mounted) return;
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text(&#39;Add Entry&#39;)),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: &#39;Name&#39;),
+            ),
+
+            const SizedBox(height: 20),
+
+            TextField(
+              controller: _priceController,
+              decoration: const InputDecoration(labelText: &#39;Price&#39;),
+              keyboardType: TextInputType.number,
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () async {
+                await _saveEntry();
+              },
+              child: const Text(&#39;Save&#39;),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+		<p>Save behavior:</p>
+		<pre><code class="language-text">User taps Save
+→ UI reads repository
+→ repository inserts data into Drift/SQLite
+→ Drift stream updates
+→ Riverpod provider receives new data
+→ UI rebuilds automatically
+</code></pre>
+		<br>
+		<h2 id="12-add-routing">12. Add Routing</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/main.dart
+</code></pre>
+		<p>Add <code>go_router</code> if your app has multiple pages and Use it in <code>MaterialApp</code>:</p>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:go_router/go_router.dart&#39;;
+
+final GoRouter _router = GoRouter(
+  routes: [
+    GoRoute(path: &#39;/&#39;, builder: (context, state) =&gt; const DashboardPage()),
+    GoRoute(
+      path: &#39;/add-entry&#39;,
+      builder: (context, state) =&gt; const AddEntryPage(),
+    ),
+  ],
+);
+
+void main() {
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: _router,
+      title: &#39;Flutter Demo&#39;,
+      theme: ThemeData(),
+    );
+  }
+}
+</code></pre>
+		<p>To Navigate:</p>
+		<pre><code class="language-dart">context.push(&#39;/add-entry&#39;);
+</code></pre>
+		<br>
+		<h2 id="13-add-a-migration">13. Add a Migration</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">lib/data/local/app_database.dart
+</code></pre>
+		<p>When changing the database schema, increase the version:</p>
+		<pre><code class="language-dart">@override
+int get schemaVersion =&gt; 2;
+</code></pre>
+		<p>Then add upgrade logic:</p>
+		<pre><code class="language-dart">@override
+MigrationStrategy get migration =&gt; MigrationStrategy(
+      onCreate: (migrator) async =&gt; migrator.createAll(),
+      onUpgrade: (migrator, from, to) async {
+        if (from &lt; 2) {
+          await migrator.addColumn(entries, entries.date);
+        }
+      },
+    );
+</code></pre>
+		<p>Example table change:</p>
+		<pre><code class="language-dart">class Items extends Table {
+  IntColumn get id =&gt; integer().autoIncrement()();
+  TextColumn get name =&gt; text()();
+  RealColumn get price =&gt; real()();
+
+  DateTimeColumn get date =&gt; dateTime().nullable()();
+}
+</code></pre>
+		<p>After changing schema files, regenerate code:</p>
+		<pre><code class="language-bash">dart run build_runner build
+</code></pre>
+		<br>
+		<h2 id="14-add-repository-tests">14. Add Repository Tests</h2><br>
+		<p>File:</p>
+		<pre><code class="language-text">test/repository/app_repository_test.dart
+</code></pre>
+		<p>Example:</p>
+		<pre><code class="language-dart">import &#39;package:drift/native.dart&#39;;
+import &#39;package:flutter_test/flutter_test.dart&#39;;
+
+import &#39;package:drift_riverpod/ data/local/app_database.dart&#39;;
+import &#39;package:drift_riverpod/ data/repository/app_repository.dart&#39;;
+
+void main() {
+  late AppDatabase database;
+  late AppRepository repository;
+
+  setUp(() {
+    database = AppDatabase(NativeDatabase.memory());
+    repository = DriftAppRepository(database: database);
+  });
+
+  tearDown(() async {
+    await database.close();
+  });
+
+  test(&#39;createItem inserts and returns the created item&#39;, () async {
+    final item = await repository.createItem(name: &#39;Milk&#39;, price: 4.25);
+
+    expect(item.id, isPositive);
+    expect(item.name, &#39;Milk&#39;);
+    expect(item.price, 4.25);
+
+    final items = await repository.getAllItems();
+    expect(items, hasLength(1));
+    expect(items.single, item);
+  });
+
+  test(&#39;getAllItems returns items ordered by name&#39;, () async {
+    await repository.createItem(name: &#39;Yogurt&#39;, price: 3.50);
+    await repository.createItem(name: &#39;Apples&#39;, price: 2.25);
+    await repository.createItem(name: &#39;Bread&#39;, price: 1.75);
+
+    final items = await repository.getAllItems();
+
+    expect(items.map((item) =&gt; item.name), [&#39;Apples&#39;, &#39;Bread&#39;, &#39;Yogurt&#39;]);
+  });
+
+  test(&#39;watchItems emits items ordered by name after changes&#39;, () async {
+    expect(await repository.watchItems().first, isEmpty);
+
+    final emissions = expectLater(
+      repository.watchItems().map((items) =&gt; items.map((item) =&gt; item.name)),
+      emitsInOrder([
+        isEmpty,
+        [&#39;Oranges&#39;],
+        [&#39;Bananas&#39;, &#39;Oranges&#39;],
+      ]),
+    );
+
+    await repository.createItem(name: &#39;Oranges&#39;, price: 5);
+    await repository.createItem(name: &#39;Bananas&#39;, price: 2);
+
+    await emissions;
+  });
+}
+</code></pre>
+		<p>Run tests:</p>
+		<pre><code class="language-bash">flutter test
+</code></pre>
+		<br>
+		<h2 id="15-useful-commands">15. Useful Commands</h2><br>
+		<p>Get packages:</p>
+		<pre><code class="language-bash">flutter pub get
+</code></pre>
+		<p>Add package:</p>
+		<pre><code class="language-bash">flutter pub add package_name
+</code></pre>
+		<p>Add dev package:</p>
+		<pre><code class="language-bash">flutter pub add --dev package_name
+</code></pre>
+		<p>Generate Drift files:</p>
+		<pre><code class="language-bash">dart run build_runner build
+</code></pre>
+		<p>Clean generated conflicts:</p>
+		<pre><code class="language-bash">dart run build_runner build --delete-conflicting-outputs
+</code></pre>
+		<p>Analyze code:</p>
+		<pre><code class="language-bash">flutter analyze
+</code></pre>
+		<p>Run tests:</p>
+		<pre><code class="language-bash">flutter test
+</code></pre>
+		<p>Run app:</p>
+		<pre><code class="language-bash">flutter run
+</code></pre>
+		<p>List devices:</p>
+		<pre><code class="language-bash">flutter devices
+</code></pre>
+		<p>Clean build files:</p>
+		<pre><code class="language-bash">flutter clean
+</code></pre>
+		<p>After <code>flutter clean</code>, run:</p>
+		<pre><code class="language-bash">flutter pub get
+</code></pre>
+		<p>Then run the app again:</p>
+		<pre><code class="language-bash">flutter run
+</code></pre>
+		<br>
+		<h2 id="16-typical-development-flow">16. Typical Development Flow</h2><br>
+		<pre><code class="language-text">Create/update table
+→ update schemaVersion if needed
+→ add migration if existing users need upgrade
+→ run build_runner
+→ update repository methods
+→ expose data through providers
+→ use providers in UI
+→ run analyze/tests
+→ run app
+</code></pre>
+		<br>
+		<h2 id="17-important-notes">17. Important Notes</h2><br>
+		<ul>
+			<li>Do not edit generated files like <code>app_database.g.dart</code> manually.</li>
+			<li>Run <code>build_runner</code> whenever Drift tables or database definitions change.</li>
+			<li>Use <code>ref.watch(...)</code> for live UI data.</li>
+			<li>Use <code>ref.read(...)</code> for save/update/delete actions.</li>
+			<li>Keep database queries out of UI files when possible.</li>
+			<li>Put database operations inside a repository.</li>
+			<li>Use migrations when changing tables after the app already has stored user data.</li>
+		</ul>
+		<pre><code>
+<h2 id="builds-run-for-specific-devices">Build / Run for Specific Devices</h2>
+List connected devices:
+
+```bash
+flutter devices
+</code></pre>
+		<p>Example targets:</p>
+		<pre><code class="language-text">emulator-5554   Android emulator
+linux           Linux desktop
+chrome          Web / Chrome
+</code></pre>
+		<p>List installed Android emulators:</p>
+		<pre><code class="language-bash">flutter emulators
+</code></pre>
+		<p>Start an Android emulator:</p>
+		<pre><code class="language-bash">flutter emulators --launch emulator_name
+</code></pre>
+		<p>Run on exact Android emulator/device:</p>
+		<pre><code class="language-bash">flutter run -d emulator-5554
+</code></pre>
+		<p>Run on Linux desktop:</p>
+		<pre><code class="language-bash">flutter run -d linux
+</code></pre>
+		<p>Run on Chrome/web:</p>
+		<pre><code class="language-bash">flutter run -d chrome
+</code></pre>
+		<br>
+		<h3 id="builds">Builds</h3><br>
+		<p>Build Android APK:</p>
+		<pre><code class="language-bash">flutter build apk
+</code></pre>
+		<p>Build Android App Bundle for Play Store:</p>
+		<pre><code class="language-bash">flutter build appbundle
+</code></pre>
+		<p>Build web app:</p>
+		<pre><code class="language-bash">flutter build web
+</code></pre>
+		<p>Build Linux desktop app:</p>
+		<pre><code class="language-bash">flutter build linux
+</code></pre>
+		<p>Build Windows desktop app:</p>
+		<pre><code class="language-bash">flutter build windows
+</code></pre>
+		<p>Build macOS desktop app:</p>
+		<pre><code class="language-bash">flutter build macos
+</code></pre>
+		<p>Build iOS app:</p>
+		<pre><code class="language-bash">flutter build ios
+</code></pre>
+		<br>
+		<h2 id="platform-notes">Platform Notes</h2><br>
+		<p>Android can be built from Linux, macOS, or Windows.</p>
+		<p>Web can be built from Linux, macOS, or Windows.</p>
+		<p>Linux desktop must be built on Linux.</p>
+		<p>Windows desktop must be built on Windows.</p>
+		<p>macOS desktop must be built on macOS.</p>
+		<p>iOS must be built on macOS with Xcode installed.</p>
+		<br>
+		<h2 id="enable-desktopweb-targets">Enable Desktop/Web Targets</h2><br>
+		<p>If a platform folder is missing, enable the platform and recreate it:</p>
+		<pre><code class="language-bash">flutter config --enable-web
+flutter config --enable-linux-desktop
+flutter config --enable-windows-desktop
+flutter config --enable-macos-desktop
+</code></pre>
+		<p>Then from the project root:</p>
+		<pre><code class="language-bash">flutter create .
+</code></pre>
+		<p>This adds any missing platform folders without replacing your <code>lib/</code> code.</p>
+		<br>
+		<h2 id="common-clean-build-flow">Common Clean Build Flow</h2><br>
+		<pre><code class="language-bash">flutter clean
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter analyze
+flutter test
+flutter run -d emulator-5554
+</code></pre>
+		<br>
+		<h1 id="build-linux-image-and-add-desktop-entry-create-terminal-command">Build linux image and add desktop entry
+			+ Create terminal command</h1><br>
+		<pre><code class="language-bash">cd /my_app
+flutter clean
+flutter pub get
+flutter build linux
+
+# Install Fresh
+# Copy the new bundle:
+
+mkdir -p ~/.local/share/my_app
+cp -r build/linux/x64/release/bundle/* ~/.local/share/my_app/
+
+# Create terminal command:
+
+mkdir -p ~/.local/bin
+ln -sf ~/.local/share/my_app/my_app ~/.local/bin/my_app
+
+# Test it:
+my_app
+
+# Create Desktop Entry
+# Create this file:
+
+nano ~/.local/share/applications/my_app.desktop
+
+# Paste:
+[Desktop Entry]
+Type=Application
+Name=My App
+Exec=/home/&lt;user-name&gt;/.local/share/my_app/my_app
+Icon=/home/&lt;user-name&gt;/&lt;path-to-project&gt;/assets/icons/my_app.svg
+Terminal=false
+Categories=Utility;
+
+# Refresh app menu:
+update-desktop-database ~/.local/share/applications
+
+# Then search My App in the Linux Mint menu.
+</code></pre>
+		<br>
+		<h1 id="build-android-apk-and-install-on-physical-device">Build Android APK and Install on Physical Device</h1>
+		<br>
+		<p>Use this when you want to create an APK file, send it to your Android phone, and install it manually.</p>
+		<pre><code class="language-bash">cd my_app
+flutter clean
+flutter pub get
+flutter build apk --debug
+</code></pre>
+		<p>Debug APK output:</p>
+		<pre><code class="language-text">build/app/outputs/flutter-apk/app-debug.apk
+</code></pre>
+		<p>Full file path example:</p>
+		<pre><code class="language-text">/home/&lt;user-name&gt;/&lt;path-to-project&gt;/build/app/outputs/flutter-apk/app-debug.apk
+</code></pre>
+		<p>Share this APK to your phone using USB, Bluetooth, Telegram, WhatsApp, Google Drive, etc.</p>
+		<p>On the phone:</p>
+		<pre><code class="language-text">Open APK file
+Allow &quot;Install unknown apps&quot; if Android asks
+Tap Install
+Open List Tracker
+</code></pre>
+		<p>For a smaller release APK:</p>
+		<pre><code class="language-bash">flutter build apk --release
+</code></pre>
+		<p>Release APK output:</p>
+		<pre><code class="language-text">build/app/outputs/flutter-apk/app-release.apk
+</code></pre>
+		<p>For direct USB install, enable Developer Options and USB Debugging on the phone, then run:</p>
+		<pre><code class="language-bash">flutter devices
+flutter install -d &lt;device-id&gt;
+</code></pre>
+		<p>Or install the APK with ADB:</p>
+		<pre><code class="language-bash">adb install build/app/outputs/flutter-apk/app-debug.apk
+</code></pre>
+		<p>Notes:</p>
+		<ul>
+			<li>Use <code>--debug</code> for personal testing.</li>
+			<li>Use <code>--release</code> for a smaller/faster APK.</li>
+			<li>A release APK should be properly signed before serious sharing or publishing.</li>
+		</ul>
+
+	</section>
+	<script src="./util/createMenuBar.js"></script>
+</body>
+
+</html>
