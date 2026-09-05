@@ -55,6 +55,12 @@
 		<p><code>ProviderScope</code> makes Riverpod providers available throughout the widget tree.</p>
 		<br>
 		<h3 id="2-define-the-service-contract">2. Define the service contract</h3><br>
+		<p>The result type communicates what happened during the export:</p>
+		<pre><code class="language-dart">enum CsvExportResult {
+  saved,
+  cancelled,
+}
+</code></pre>
 		<pre><code class="language-dart">abstract interface class CsvExportService {
   Future&lt;CsvExportResult&gt; export();
 }
