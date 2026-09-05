@@ -60,32 +60,22 @@
 }
 </code></pre>
 		<p>The interface describes the operation without exposing its implementation. This keeps widgets independent of
-			CSV encoding and platform-specific file APIs.</p>
+			how the export is performed.</p>
 		<br>
 		<h3 id="3-implement-the-service">3. Implement the service</h3><br>
 		<pre><code class="language-dart">class RepositoryCsvExportService implements CsvExportService {
   RepositoryCsvExportService({
     required this.repository,
-    required this.fileSaveGateway,
   });
 
   final AppRepository repository;
-  final CsvFileSaveGateway fileSaveGateway;
 
   @override
   Future&lt;CsvExportResult&gt; export() async {
     // Read data from the repository.
     // Encode it as CSV.
-    // Save it through the gateway.
+    // Save or return the result.
   }
-}
-</code></pre>
-		<p>Keep platform details behind an interface so tests can provide a fake implementation:</p>
-		<pre><code class="language-dart">abstract interface class CsvFileSaveGateway {
-  Future&lt;bool&gt; saveCsv({
-    required String fileName,
-    required Uint8List bytes,
-  });
 }
 </code></pre>
 		<br>
@@ -93,7 +83,6 @@
 		<pre><code class="language-dart">final csvExportServiceProvider = Provider&lt;CsvExportService&gt;((ref) {
   return RepositoryCsvExportService(
     repository: ref.watch(appRepositoryProvider),
-    fileSaveGateway: ref.watch(csvFileSaveGatewayProvider),
   );
 });
 </code></pre>
