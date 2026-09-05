@@ -192,13 +192,153 @@ await (_database.delete(_database.categories)
 });
 </code></pre>
 		<br>
+		<h2 id="routing-with-codego_routercode">Routing with <code>go_router</code></h2><br>
+		<p><code>go_router</code> provides declarative, URL-based navigation for Flutter. Keeping routes in one router
+			configuration makes navigation easier to understand, test, and extend.</p>
+		<br>
+		<h3 id="1-install-codego_routercode">1. Install <code>go_router</code></h3><br>
+		<p>From the Flutter project root:</p>
+		<pre><code class="language-bash">flutter pub add go_router
+</code></pre>
+		<p>Import it where the router or navigation methods are used:</p>
+		<pre><code class="language-dart">import &#39;package:go_router/go_router.dart&#39;;
+</code></pre>
+		<br>
+		<h3 id="2-define-routes">2. Define routes</h3><br>
+		<p>Create a dedicated router file, such as <code>lib/app_router.dart</code>:</p>
+		<pre><code class="language-dart">import &#39;package:go_router/go_router.dart&#39;;
+
+final appRouter = GoRouter(
+  routes: [
+    GoRoute(
+      path: &#39;/&#39;,
+      builder: (context, state) =&gt; const DashboardPage(),
+    ),
+    GoRoute(
+      path: &#39;/settings&#39;,
+      builder: (context, state) =&gt; const SettingsPage(),
+    ),
+    GoRoute(
+      path: &#39;/items/:itemId&#39;,
+      builder: (context, state) {
+        final itemId = int.parse(state.pathParameters[&#39;itemId&#39;]!);
+        return ItemDetailPage(itemId: itemId);
+      },
+    ),
+  ],
+);
+</code></pre>
+		<p>The <code>path</code> is the URL pattern and <code>builder</code> creates the page for that location. A path
+			parameter starts with <code>:</code>; its value is read from <code>state.pathParameters</code>.</p>
+		<p>Keep route configuration separate from page widgets. For a larger application, group related routes in the
+			same feature area or compose them into the central router.</p>
+		<br>
+		<h3 id="3-connect-the-router-to-the-app">3. Connect the router to the app</h3><br>
+		<p>Use <code>MaterialApp.router</code> instead of the classic <code>MaterialApp</code> constructor:</p>
+		<pre><code class="language-dart">class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: &#39;My App&#39;,
+      routerConfig: appRouter,
+    );
+  }
+}
+</code></pre>
+		<p>When using Riverpod, <code>ProviderScope</code> still wraps the application:</p>
+		<pre><code class="language-dart">void main() {
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
+}
+</code></pre>
+		<br>
+		<h3 id="4-navigate-between-routes">4. Navigate between routes</h3><br>
+		<p>Import <code>go_router</code> in the widget and use the <code>BuildContext</code> extensions:</p>
+		<pre><code class="language-dart">// Replace the current location.
+context.go(&#39;/settings&#39;);
+
+// Push a new page onto the navigation stack.
+context.push(&#39;/items/42&#39;);
+
+// Return to the previous page.
+context.pop();
+</code></pre>
+		<p>Use <code>go</code> when changing app location, such as moving from a dashboard to a section. Use
+			<code>push</code> when opening a page that the user should be able to close with Back.</p>
+		<br>
+		<h3 id="5-use-path-and-query-parameters">5. Use path and query parameters</h3><br>
+		<p>Pass a path parameter as part of the URL:</p>
+		<pre><code class="language-dart">context.push(&#39;/items/${item.id}&#39;);
+</code></pre>
+		<p>Read it in the route builder:</p>
+		<pre><code class="language-dart">final itemId = int.parse(state.pathParameters[&#39;itemId&#39;]!);
+</code></pre>
+		<p>For optional filtering or sorting values, use query parameters:</p>
+		<pre><code class="language-dart">context.go(&#39;/items?category=food&#39;);
+</code></pre>
+		<p>Read them with:</p>
+		<pre><code class="language-dart">final category = state.uri.queryParameters[&#39;category&#39;];
+</code></pre>
+		<p>Validate and handle invalid parameters before passing them to a page or repository.</p>
+		<br>
+		<h3 id="6-define-nested-routes">6. Define nested routes</h3><br>
+		<p>A child route can share a parent URL:</p>
+		<pre><code class="language-dart">GoRoute(
+  path: &#39;/items/:itemId&#39;,
+  builder: (context, state) =&gt; ItemDetailPage(
+    itemId: int.parse(state.pathParameters[&#39;itemId&#39;]!),
+  ),
+  routes: [
+    GoRoute(
+      path: &#39;edit&#39;,
+      builder: (context, state) =&gt; EditItemPage(
+        itemId: int.parse(state.pathParameters[&#39;itemId&#39;]!),
+      ),
+    ),
+  ],
+),
+</code></pre>
+		<p>The child path is relative, so the full URL is <code>/items/:itemId/edit</code>.</p>
+		<br>
+		<h3 id="7-redirect-based-on-application-state">7. Redirect based on application state</h3><br>
+		<p>Use <code>redirect</code> for guards such as authentication or onboarding:</p>
+		<pre><code class="language-dart">final appRouter = GoRouter(
+  redirect: (context, state) {
+    final signedIn = false; // Read this from app state in a real app.
+    final goingToLogin = state.matchedLocation == &#39;/login&#39;;
+
+    if (!signedIn &amp;&amp; !goingToLogin) return &#39;/login&#39;;
+    if (signedIn &amp;&amp; goingToLogin) return &#39;/&#39;;
+    return null;
+  },
+  routes: [
+    GoRoute(
+      path: &#39;/&#39;,
+      builder: (context, state) =&gt; const DashboardPage(),
+    ),
+    GoRoute(
+      path: &#39;/login&#39;,
+      builder: (context, state) =&gt; const LoginPage(),
+    ),
+  ],
+);
+</code></pre>
+		<p>Return <code>null</code> to allow navigation. In a Riverpod application, connect the router to the relevant
+			authentication provider and refresh the router when that state changes.</p>
+		<br>
 		<h2 id="1-project-setup">1. Project setup</h2><br>
 		<p>Create a Flutter project:</p>
 		<pre><code class="language-bash">flutter create my_app
 cd my_app
 </code></pre>
 		<p>Add the packages:</p>
-		<pre><code class="language-bash">flutter pub add drift drift_flutter flutter_riverpod
+		<pre><code class="language-bash">flutter pub add drift drift_flutter flutter_riverpod go_router
+
 flutter pub add --dev drift_dev build_runner sqlite3
 </code></pre>
 		<p>A useful structure is:</p>
