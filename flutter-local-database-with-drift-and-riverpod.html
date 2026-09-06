@@ -40,9 +40,11 @@
 		<br>
 		<h2 id="how-to-use-this-guide">How to use this guide</h2><br>
 		<ul>
-			<li>New to Drift, Riverpod or <code>go_router</code>? Read Part 1 first, then build the example application
-				in Part 2.</li>
-			<li>Already familiar with those tools? Skip directly to Part 2.</li>
+			<li>Part 1 explains the Drift, Riverpod, and <code>go_router</code> patterns used throughout the guide.</li>
+			<li>Part 2 builds a complete example application in twelve incremental steps. Start here after Part 1, or
+				use it as a practical reference if you already know the concepts.</li>
+			<li>Part 3 covers the everyday development loop, app and launcher icons, Android signing and release builds,
+				Linux installation, web builds, and common clean-build commands.</li>
 		</ul>
 		<br>
 		<h1 id="part-1-core-concepts">Part 1: Core concepts</h1><br>
@@ -893,20 +895,23 @@ void main() {
 </code></pre>
 		<p>Repository tests verify database behavior without starting the whole application.</p>
 		<br>
-		<h2 id="13-development-and-deployment-commands">13. Development and deployment commands</h2><br>
+		<h1 id="part-3-development-and-deployment-commands">Part 3: Development and deployment commands</h1><br>
+		<p>Unless stated otherwise, run commands in this section from the Flutter project root.</p>
 		<br>
-		<h3 id="useful-commands">Useful Commands</h3><br>
-		<p>Run these from the Flutter project root:</p>
+		<h2 id="daily-development-loop">Daily development loop</h2><br>
 		<pre><code class="language-bash">flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter analyze
 flutter test
 flutter run
 </code></pre>
-		<p>Use <code>build_runner</code> after changing Drift tables or database code. Use <code>flutter analyze</code>
-			and <code>flutter test</code> before creating a release build.</p>
+		<p>Use <code>build_runner</code> after changing Drift tables, generated database code, or generated models. Use
+			<code>flutter analyze</code> and <code>flutter test</code> before building an APK or app bundle.</p>
+		<p><code>flutter run</code> starts a debug build by default. Debug builds are for everyday development, hot
+			reload, logs, breakpoints, and fast iteration. They are larger and slower to start than release builds
+			because they include debugging and runtime support.</p>
 		<br>
-		<h3 id="build-run-for-specific-devices">Build / Run for Specific Devices</h3><br>
+		<h2 id="choose-a-target-device">Choose a target device</h2><br>
 		<p>List available targets, then pass a device ID with <code>-d</code>:</p>
 		<pre><code class="language-bash">flutter devices
 flutter run -d &lt;device-id&gt;
@@ -916,18 +921,476 @@ flutter run -d &lt;device-id&gt;
 flutter run -d chrome
 flutter run -d emulator-5554
 </code></pre>
+		<p>For Android devices, enable USB debugging, connect the device, unlock it, and accept the debugging prompt.
+			You can also confirm the device with ADB:</p>
+		<pre><code class="language-bash">adb devices
+</code></pre>
 		<br>
-		<h3 id="builds">Builds</h3><br>
+		<h2 id="add-app-and-launcher-icons-for-android-and-linux">Add app and launcher icons for Android and Linux</h2>
+		<br>
+		<p>Keep a high-resolution PNG source image in the project, for example
+			<code>assets/icons/app_icon.png</code>. A PNG is the most portable source for generated
+			Android launcher icons. An SVG can also be kept as a Flutter asset for a Linux
+			desktop-entry icon.
+		</p>
+		<p>In <code>pubspec.yaml</code>, add every asset that the running Flutter application or
+			Linux desktop launcher must access to the <code>flutter</code> asset list. The
+			<code>flutter_launcher_icons</code> setting below does <strong>not</strong> bundle its
+			<code>image_path</code>
+			automatically:
+		</p>
+		<pre><code class="language-yaml">flutter:
+  assets:
+    - assets/icons/app_icon.png
+    - assets/icons/app_icon.svg
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.0
+
+flutter_launcher_icons:
+  android: true
+  image_path: assets/icons/app_icon.png
+</code></pre>
+		<p>Run the generator whenever the PNG source changes:</p>
+		<pre><code class="language-bash">flutter pub get
+dart run flutter_launcher_icons
+</code></pre>
+		<p>This writes Android&#39;s launcher-icon resources under <code>android/app/src/main/res/</code>.
+			Build the Android app normally afterwards:</p>
+		<pre><code class="language-bash">flutter build apk --release
+</code></pre>
+		<p>For Linux, Flutter does not generate a native launcher icon from this package.
+			After <code>flutter build linux --release</code>, assets declared under <code>flutter.assets</code>
+			are copied into the bundle at:</p>
+		<pre><code class="language-text">build/linux/x64/release/bundle/data/flutter_assets/&lt;asset-path&gt;
+</code></pre>
+		<p>For example, <code>assets/icons/app_icon.png</code> becomes
+			<code>build/linux/x64/release/bundle/data/flutter_assets/assets/icons/app_icon.png</code>.
+			If you copy the complete bundle to <code>/opt/my_app</code>, the desktop entry can use:
+		</p>
+		<pre><code class="language-ini">Icon=/opt/my_app/data/flutter_assets/assets/icons/app_icon.png
+</code></pre>
+		<p>Use the actual file extension and path that exists in the installed bundle.
+			Neither shell commands nor <code>.desktop</code> entries require escaping underscores, so
+			write <code>my_app</code>, not <code>my\_app</code>.</p>
+		<br>
+		<h2 id="understand-android-build-modes">Understand Android build modes</h2><br>
+		<p>Flutter has three common Android build modes:</p>
+		<pre><code class="language-bash">flutter run --debug
+flutter run --profile
+flutter run --release
+</code></pre>
+		<p>Debug mode is the default for <code>flutter run</code>. Use it while coding.</p>
+		<p>Profile mode is for near-production performance testing on a real device:</p>
+		<pre><code class="language-bash">flutter run --profile -d &lt;device-id&gt;
+</code></pre>
+		<p>Profile mode is not a debug build. It is much closer to release behavior but still keeps performance tooling
+			available. It does not require production signing credentials.</p>
+		<p>Release mode is optimized for distribution or final device testing:</p>
 		<pre><code class="language-bash">flutter build apk --release
 flutter build appbundle --release
-flutter build linux --release
-flutter build web --release
 </code></pre>
-		<p>The Android APK is written under <code>build/app/outputs/flutter-apk/</code>. Linux output is written under
-			<code>build/linux/x64/release/bundle/</code>, and the web output is written under <code>build/web/</code>.
+		<p>Release output is smaller and faster than debug output because Dart code is compiled ahead of time and
+			debug-only tooling is removed. The APK is written under:</p>
+		<pre><code class="language-text">build/app/outputs/flutter-apk/
+</code></pre>
+		<p><code>flutter run --release</code> builds, installs, and starts a release-mode app on a
+			connected device. <code>flutter build apk --release</code> creates an APK file without
+			starting it. For Google Play, build an Android App Bundle instead:</p>
+		<pre><code class="language-bash">flutter build appbundle --release
+</code></pre>
+		<p>The resulting <code>.aab</code> is written under <code>build/app/outputs/bundle/release/</code>.</p>
+		<br>
+		<h3 id="a-practical-development-to-production-path">A practical development-to-production path</h3><br>
+		<table>
+			<thead>
+				<tr>
+					<th>Stage</th>
+					<th>Use it for</th>
+					<th>Normal command</th>
+					<th>Signing expectation</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Everyday coding</td>
+					<td>Hot reload, logs, breakpoints</td>
+					<td><code>flutter run</code></td>
+					<td>Debug key</td>
+				</tr>
+				<tr>
+					<td>Measure performance</td>
+					<td>Profiling on a real device</td>
+					<td><code>flutter run --profile</code></td>
+					<td>Debug key</td>
+				</tr>
+				<tr>
+					<td>Test the optimized app locally</td>
+					<td>Startup and release-only behavior</td>
+					<td><code>flutter build apk --release</code></td>
+					<td>Debug key is acceptable only for local testing</td>
+				</tr>
+				<tr>
+					<td>Distribute a signed APK directly</td>
+					<td>Testers or private distribution</td>
+					<td><code>flutter build apk --release</code></td>
+					<td>Your release key</td>
+				</tr>
+				<tr>
+					<td>Publish through Google Play</td>
+					<td>Play Console upload</td>
+					<td><code>flutter build appbundle --release</code></td>
+					<td>Your upload key</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>The third stage is useful, but it must not be confused with a publishable
+			artifact. <strong>Release mode</strong> describes how Flutter compiles the app; <strong>release
+				signing</strong> describes whose identity signs the Android package. They are related,
+			but they are not the same setting.</p>
+		<br>
+		<h2 id="build-sign-and-distribute-an-android-release">Build, sign, and distribute an Android release</h2><br>
+		<br>
+		<h3 id="why-codeflutter-build-apk---releasecode-may-work-at-first">Why <code>flutter build apk --release</code>
+			may work at first</h3><br>
+		<p>A new Flutter Android project often allows this command immediately:</p>
+		<pre><code class="language-bash">flutter build apk --release
+</code></pre>
+		<p>That does not necessarily mean the APK is production-signed. Many starter projects sign the
+			<code>release</code> build type with Android&#39;s debug keystore so developers can build and install a
+			release-mode APK locally before creating a real upload key.</p>
+		<p>In a Kotlin DSL project, check <code>android/app/build.gradle.kts</code>. The equivalent
+			release build type looks like:</p>
+		<pre><code class="language-kotlin">android {
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName(&quot;debug&quot;)
+        }
+    }
+}
+</code></pre>
+		<p>In a Groovy Gradle project, check <code>android/app/build.gradle</code>. The same idea
+			looks like:</p>
+		<pre><code class="language-groovy">android {
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+</code></pre>
+		<p>This APK can be useful for local testing, but it is not a proper production artifact for app-store
+			distribution.</p>
+		<br>
+		<h3 id="when-release-builds-stop-working">When release builds stop working</h3><br>
+		<p><code>flutter build apk --release</code> stops working when the project changes from debug-signing release
+			builds to requiring a real release/upload key.</p>
+		<p>This usually happens after editing one of these files:</p>
+		<pre><code class="language-text">android/app/build.gradle.kts
+android/app/build.gradle
+</code></pre>
+		<p>Use <code>.kts</code> examples when the project has <code>build.gradle.kts</code>. Use Groovy examples when
+			the project has <code>build.gradle</code>.</p>
+		<p>A stricter Kotlin Gradle setup may load signing values from:</p>
+		<pre><code class="language-text">android/key.properties
+</code></pre>
+		<p>and fail release builds when required values are missing. That is intentional for production projects because
+			it prevents accidentally publishing an APK signed with the wrong key.</p>
+		<br>
+		<h3 id="what-android-signing-keys-are">What Android signing keys are</h3><br>
+		<p>Android apps must be signed before Android will install or distribute them. The signature proves that future
+			updates come from the same app owner.</p>
+		<p>There are three common signing situations:</p>
+		<ul>
+			<li>The <strong>debug keystore</strong> is generated for local development, normally by the
+				Android tools. It is fine for testing on your own device and must never be
+				used to publish an app.</li>
+			<li>A <strong>release keystore</strong> is a private key you control. It can sign apps that
+				you distribute yourself.</li>
+			<li>With Google Play App Signing, an <strong>upload key</strong> signs the bundle you upload
+				to Play. Google then signs the installed app with the separate app-signing
+				key it manages. In this common setup, protect and back up the upload key.</li>
+		</ul>
+		<p>For a self-distributed app, future updates must be signed with the same release
+			key. For Play App Signing, future uploads must use the registered upload key
+			(or a replacement approved by Google Play). Treat every non-debug keystore and
+			its passwords as production credentials: store them securely and keep an
+			off-machine backup.</p>
+		<br>
+		<h3 id="create-an-upload-or-release-key">Create an upload or release key</h3><br>
+		<p>Create the key once, before configuring production signing. Choose a secure
+			location outside the repository and record the alias and passwords in your
+			password manager:</p>
+		<pre><code class="language-bash">keytool -genkey -v \
+  -keystore /absolute/path/to/upload-keystore.jks \
+  -alias upload \
+  -keyalg RSA \
+  -keysize 2048 \
+  -storetype JKS \
+  -validity 10000
+</code></pre>
+		<p><code>keytool</code> comes with the JDK. It prompts for the keystore password, key
+			password, and certificate details. The command does not upload anything; it
+			only creates the local credential file. Do not commit the resulting <code>.jks</code>
+			file, and do not paste its passwords into source code.</p>
+		<br>
+		<h3 id="configure-production-signing">Configure production signing</h3><br>
+		<p>Keep signing credentials out of Git. A common setup uses these files:</p>
+		<pre><code class="language-text">android/key.properties
+android/key.properties.example
+&lt;your-upload-keystore&gt;.jks
+</code></pre>
+		<p><code>android/key.properties.example</code> is safe to commit because it contains placeholders.
+			<code>android/key.properties</code> and real <code>.jks</code> or <code>.keystore</code> files should be
+			ignored by Git.</p>
+		<p>Example <code>android/key.properties</code>:</p>
+		<pre><code class="language-properties">storePassword=&lt;keystore-password&gt;
+keyPassword=&lt;key-password&gt;
+keyAlias=&lt;key-alias&gt;
+storeFile=&lt;path-to-upload-keystore.jks&gt;
+</code></pre>
+		<p>The <code>storeFile</code> path is resolved relative to the Android Gradle project unless your Gradle file
+			handles it differently. The referenced keystore must exist, and the alias/password values must match it.</p>
+		<p>Then configure the release signing block. Edit exactly one file, based on what
+			your project already contains:</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Project file</th>
+					<th>Gradle language</th>
+					<th>Use the matching example below</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>android/app/build.gradle.kts</code></td>
+					<td>Kotlin DSL</td>
+					<td>Kotlin</td>
+				</tr>
+				<tr>
+					<td><code>android/app/build.gradle</code></td>
+					<td>Groovy DSL</td>
+					<td>Groovy</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Do not add a second Gradle file just to use a different example.</p>
+		<p>Kotlin Gradle example for <code>android/app/build.gradle.kts</code>:</p>
+		<pre><code class="language-kotlin">import java.util.Properties
+
+val signingPropertiesFile = rootProject.file(&quot;key.properties&quot;)
+val signingProperties = Properties()
+if (signingPropertiesFile.exists()) {
+    signingPropertiesFile.inputStream().use(signingProperties::load)
+}
+
+val requiredSigningProperties = listOf(
+    &quot;storeFile&quot;,
+    &quot;storePassword&quot;,
+    &quot;keyAlias&quot;,
+    &quot;keyPassword&quot;,
+)
+val missingSigningProperties = requiredSigningProperties.filter {
+    signingProperties.getProperty(it).isNullOrBlank()
+}
+if (missingSigningProperties.isNotEmpty()) {
+    throw GradleException(
+        &quot;Missing Android release-signing values in android/key.properties: &quot; +
+            missingSigningProperties.joinToString(),
+    )
+}
+
+android {
+    signingConfigs {
+        create(&quot;release&quot;) {
+            keyAlias = signingProperties.getProperty(&quot;keyAlias&quot;)
+            keyPassword = signingProperties.getProperty(&quot;keyPassword&quot;)
+            storeFile = signingProperties.getProperty(&quot;storeFile&quot;)?.let(rootProject::file)
+            storePassword = signingProperties.getProperty(&quot;storePassword&quot;)
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName(&quot;release&quot;)
+        }
+    }
+}
+</code></pre>
+		<p>Groovy Gradle example for <code>android/app/build.gradle</code>:</p>
+		<pre><code class="language-groovy">def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file(&#39;key.properties&#39;)
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def requiredSigningProperties = [&#39;storeFile&#39;, &#39;storePassword&#39;, &#39;keyAlias&#39;, &#39;keyPassword&#39;]
+def missingSigningProperties = requiredSigningProperties.findAll {
+    !keystoreProperties[it]
+}
+if (!missingSigningProperties.isEmpty()) {
+    throw new GradleException(
+        &quot;Missing Android release-signing values in android/key.properties: ${missingSigningProperties.join(&#39;, &#39;)}&quot;
+    )
+}
+
+android {
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties[&#39;keyAlias&#39;]
+            keyPassword keystoreProperties[&#39;keyPassword&#39;]
+            storeFile keystoreProperties[&#39;storeFile&#39;] ? rootProject.file(keystoreProperties[&#39;storeFile&#39;]) : null
+            storePassword keystoreProperties[&#39;storePassword&#39;]
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}
+</code></pre>
+		<p>After production signing is configured:</p>
+		<pre><code class="language-bash">flutter build apk --release
+flutter build appbundle --release
+</code></pre>
+		<br>
+		<h2 id="test-a-local-android-release">Test a local Android release</h2><br>
+		<br>
+		<h3 id="local-release-testing-without-production-keys">Local release testing without production keys</h3><br>
+		<p>Sometimes you want release performance locally before a production keystore exists. There are two clear ways
+			to do that.</p>
+		<p>Option 1: keep the starter-project behavior and sign every release build with the debug key:</p>
+		<pre><code class="language-kotlin">buildTypes {
+    release {
+        signingConfig = signingConfigs.getByName(&quot;debug&quot;)
+    }
+}
+</code></pre>
+		<p>This is simple, but it makes it too easy to create a debug-signed release APK
+			by accident. Use it only while the app is private and in early development.</p>
+		<p>Option 2: keep production signing enforced by default, but add an explicit
+			opt-in Gradle property for local builds. This is the better long-term pattern.
+			The property must control both the missing-property check and the selected
+			signing configuration. Add the following around the Kotlin example above:</p>
+		<pre><code class="language-kotlin">val allowDebugReleaseSigning = providers.gradleProperty(&quot;allowDebugReleaseSigning&quot;)
+    .map(String::toBoolean)
+    .getOrElse(false)
+
+if (missingSigningProperties.isNotEmpty() &amp;&amp; !allowDebugReleaseSigning) {
+    throw GradleException(
+        &quot;Missing Android release-signing values in android/key.properties: &quot; +
+            missingSigningProperties.joinToString(),
+    )
+}
+
+buildTypes {
+    release {
+        signingConfig = if (allowDebugReleaseSigning) {
+            signingConfigs.getByName(&quot;debug&quot;)
+        } else {
+            signingConfigs.getByName(&quot;release&quot;)
+        }
+    }
+}
+</code></pre>
+		<p>When using this option, replace the unconditional
+			<code>if (missingSigningProperties.isNotEmpty())</code> failure in the preceding Kotlin
+			example with the conditional one above. Otherwise Gradle fails before it can
+			select the debug key.
+		</p>
+		<p>Then build a local release APK with debug signing:</p>
+		<pre><code class="language-bash">ORG_GRADLE_PROJECT_allowDebugReleaseSigning=true flutter build apk --release
+</code></pre>
+		<p>This produces a release-mode APK, but it is signed with the debug key. Use it for local testing only.</p>
+		<br>
+		<h3 id="keep-debug-symbols-for-release-builds">Keep debug symbols for release builds</h3><br>
+		<p>Use <code>--split-debug-info</code> when you want separate symbol files for release builds:</p>
+		<pre><code class="language-bash">flutter build apk --release --split-debug-info=build/app/symbols
+</code></pre>
+		<p>With the explicit local debug-signing property:</p>
+		<pre><code class="language-bash">ORG_GRADLE_PROJECT_allowDebugReleaseSigning=true flutter build apk --release --split-debug-info=build/app/symbols
+</code></pre>
+		<p>The APK is still release mode. The debug information is written separately under:</p>
+		<pre><code class="language-text">build/app/symbols/
+</code></pre>
+		<p>Keep these symbol files for crash decoding. They are not the same thing as a debug APK.</p>
+		<br>
+		<h2 id="install-an-android-release-on-a-physical-device">Install an Android release on a physical device</h2>
+		<br>
+		<p>Verify that Flutter and ADB can see the device:</p>
+		<pre><code class="language-bash">flutter devices
+adb devices
+</code></pre>
+		<p>Install the most recent built APK through Flutter:</p>
+		<pre><code class="language-bash">flutter install -d &lt;device-id&gt;
+</code></pre>
+		<p>Or install a specific APK with ADB:</p>
+		<pre><code class="language-bash">adb -s &lt;device-id&gt; install -r build/app/outputs/flutter-apk/app-release.apk
+</code></pre>
+		<p>For ordinary development, prefer:</p>
+		<pre><code class="language-bash">flutter run -d &lt;device-id&gt;
+</code></pre>
+		<p>It builds, installs, starts the app, and keeps logs attached.</p>
+		<br>
+		<h2 id="build-install-and-launch-a-linux-release">Build, install, and launch a Linux release</h2><br>
+		<br>
+		<h3 id="build-and-run-the-release-bundle">Build and run the release bundle</h3><br>
+		<pre><code class="language-bash">flutter build linux --release
+./build/linux/x64/release/bundle/&lt;app-name&gt;
+</code></pre>
+		<p>Flutter creates a runnable bundle rather than a <code>.deb</code>. The bundle is written to
+			<code>build/linux/x64/release/bundle/</code>; replace <code>&lt;app-name&gt;</code> with the executable name
+			produced by the build. Run the executable from that directory, or use the full path above. Keep the complete
+			bundle together: the executable requires its adjacent <code>lib/</code> and <code>data/</code> directories.
 		</p>
 		<br>
-		<h3 id="enable-desktopweb-targets">Enable Desktop/Web Targets</h3><br>
+		<h3 id="install-for-all-users-and-add-a-terminal-command">Install for all users and add a terminal command</h3>
+		<br>
+		<p>To install the bundle locally for all users, replace <code>&lt;app-name&gt;</code> consistently with the
+			executable name:</p>
+		<pre><code class="language-bash">sudo install -d /opt/&lt;app-name&gt;
+sudo cp -a build/linux/x64/release/bundle/. /opt/&lt;app-name&gt;/
+sudo ln -sf /opt/&lt;app-name&gt;/&lt;app-name&gt; /usr/local/bin/&lt;app-name&gt;
+&lt;app-name&gt;
+</code></pre>
+		<p>This installs the bundle in <code>/opt/&lt;app-name&gt;</code> and makes it available as the
+			<code>&lt;app-name&gt;</code> terminal command.</p>
+		<br>
+		<h3 id="add-a-desktop-menu-launcher">Add a desktop-menu launcher</h3><br>
+		<p>Create <code>~/.local/share/applications/&lt;app-name&gt;.desktop</code>, replacing the placeholders with the
+			application name, display name, installed executable path, and the path to an icon asset declared in
+			<code>pubspec.yaml</code>. The file extension must match a file that exists in the installed bundle:</p>
+		<pre><code class="language-ini">[Desktop Entry]
+Name=My app
+Comment=My app
+Exec=/opt/&lt;app-name&gt;/&lt;app-name&gt;
+Icon=/opt/&lt;app-name&gt;/data/flutter_assets/assets/icons/&lt;app-icon&gt;.png
+Terminal=false
+Type=Application
+Categories=Utility;
+</code></pre>
+		<p>The application should then appear in the desktop environment&#39;s app menu. If it does not appear
+			immediately, log out and back in, or refresh the desktop-entry cache when
+			<code>update-desktop-database</code> is available:</p>
+		<pre><code class="language-bash">update-desktop-database ~/.local/share/applications
+</code></pre>
+		<p>For a launcher without a system-wide installation, use the absolute path to the built executable in
+			<code>Exec=</code> instead. That launcher will stop working if the project or build directory is moved or
+			cleaned.</p>
+		<br>
+		<h3 id="package-for-distribution">Package for distribution</h3><br>
+		<p>Flutter does not produce a Debian package from <code>flutter build linux</code>. Use a Linux packaging tool,
+			such as Fastforge, when you need a distributable <code>.deb</code> (or AppImage/RPM) for Debian or Ubuntu
+			users.</p>
+		<br>
+		<h2 id="build-a-web-release">Build a web release</h2><br>
+		<pre><code class="language-bash">flutter build web --release
+</code></pre>
+		<p>Web output is written under <code>build/web/</code>.</p>
+		<br>
+		<h2 id="enable-desktop-and-web-targets">Enable desktop and web targets</h2><br>
 		<p>Enable only the platforms required by the project:</p>
 		<pre><code class="language-bash">flutter config --enable-linux-desktop
 flutter config --enable-web
@@ -939,7 +1402,7 @@ flutter create --platforms=linux,web .
 		<p><code>flutter create --platforms=... .</code> adds platform files to an existing project. Review the
 			generated files before committing them.</p>
 		<br>
-		<h3 id="common-clean-build-flow">Common Clean Build Flow</h3><br>
+		<h2 id="clean-builds-and-common-workflows">Clean builds and common workflows</h2><br>
 		<p>Use this sequence when stale generated files or build artifacts cause confusing errors:</p>
 		<pre><code class="language-bash">flutter clean
 flutter pub get
@@ -950,52 +1413,7 @@ flutter test
 		<p>If the problem is limited to generated Drift files, try the build-runner command first; a full clean is
 			slower and is not normally needed after every code change.</p>
 		<br>
-		<h3 id="build-linux-image-and-add-desktop-entry-create-terminal-command">Build linux image and add desktop entry
-			+ Create terminal command</h3><br>
-		<p>Build the release bundle:</p>
-		<pre><code class="language-bash">flutter build linux --release
-</code></pre>
-		<p>Create a desktop entry at <code>~/.local/share/applications/my_app.desktop</code>, adjusting the paths and
-			executable name to match the project:</p>
-		<pre><code class="language-ini">[Desktop Entry]
-Name=My App
-Comment=My Flutter application
-Exec=/absolute/path/to/project/build/linux/x64/release/bundle/my_app
-Icon=/absolute/path/to/project/assets/icons/my_app.png
-Terminal=false
-Type=Application
-Categories=Utility;
-</code></pre>
-		<p>Make the launcher executable and refresh the desktop-entry cache when available:</p>
-		<pre><code class="language-bash">chmod +x ~/.local/share/applications/my_app.desktop
-update-desktop-database ~/.local/share/applications
-</code></pre>
-		<p>To create a terminal command without installing system-wide, add a symlink in <code>~/.local/bin</code>:</p>
-		<pre><code class="language-bash">mkdir -p ~/.local/bin
-ln -sfn /absolute/path/to/project/build/linux/x64/release/bundle/my_app ~/.local/bin/my-app
-</code></pre>
-		<p>Ensure <code>~/.local/bin</code> is on <code>PATH</code>, then launch the app with:</p>
-		<pre><code class="language-bash">my-app
-</code></pre>
-		<br>
-		<h3 id="build-android-apk-and-install-on-physical-device">Build Android APK and Install on Physical Device</h3>
-		<br>
-		<p>Enable USB debugging on the Android device, connect it by USB, unlock it, and accept the debugging prompt.
-			Verify that Flutter can see it:</p>
-		<pre><code class="language-bash">flutter devices
-adb devices
-</code></pre>
-		<p>Build and install a release APK directly:</p>
-		<pre><code class="language-bash">flutter build apk --release
-flutter install -d &lt;device-id&gt;
-</code></pre>
-		<p>Alternatively, install the generated APK with ADB:</p>
-		<pre><code class="language-bash">adb -s &lt;device-id&gt; install -r build/app/outputs/flutter-apk/app-release.apk
-</code></pre>
-		<p>For development, use <code>flutter run -d &lt;device-id&gt;</code> instead; it builds, installs, and starts
-			the app in one command.</p>
-		<br>
-		<h3 id="typical-development-flow">Typical Development Flow</h3><br>
+		<h3 id="typical-development-flow">Typical development flow</h3><br>
 		<pre><code class="language-text">define or change a table
 → update schemaVersion and migration if necessary
 → generate Drift code
