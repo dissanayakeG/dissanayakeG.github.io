@@ -377,7 +377,7 @@ flutter pub add --dev drift_dev build_runner sqlite3
       add_item_page.dart
 test/
   repository/
-    app_repository_test.dart
+    items_repository_test.dart
 </code></pre>
 		<br>
 		<h2 id="2-define-drift-tables">2. Define Drift tables</h2><br>
@@ -601,7 +601,7 @@ rollback if an error occurs
 		<pre><code class="language-dart">import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
 
 import &#39;../local/app_database.dart&#39;;
-import &#39;app_repository.dart&#39;;
+import &#39;items_repository.dart&#39;;
 
 final appDatabaseProvider = Provider&lt;AppDatabase&gt;((ref) {
   final database = AppDatabase();
@@ -733,7 +733,7 @@ MigrationStrategy get migration =&gt; MigrationStrategy(
 import &#39;package:flutter_test/flutter_test.dart&#39;;
 
 import &#39;package:my_app/data/local/app_database.dart&#39;;
-import &#39;package:my_app/data/repository/app_repository.dart&#39;;
+import &#39;package:my_app/data/repository/items_repository.dart&#39;;
 
 void main() {
   late AppDatabase database;
