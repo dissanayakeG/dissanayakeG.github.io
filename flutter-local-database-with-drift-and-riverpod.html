@@ -222,8 +222,10 @@ ref.watch(provider);  // listen and rebuild when it changes
 </code></pre>
 		<br>
 		<h3 id="2-define-routes">2. Define routes</h3><br>
-		<p>Create a dedicated router file, such as <code>lib/app_router.dart</code>:</p>
-		<pre><code class="language-dart">import &#39;package:go_router/go_router.dart&#39;;
+		<p>Create <code>lib/app_router.dart</code>:</p>
+		<pre><code class="language-dart">import &#39;package:my_app/ui/items/add_item_page.dart&#39;;
+import &#39;package:my_app/ui/dashboard/dashboard_page.dart&#39;;
+import &#39;package:go_router/go_router.dart&#39;;
 
 final appRouter = GoRouter(
   routes: [
@@ -232,21 +234,15 @@ final appRouter = GoRouter(
       builder: (context, state) =&gt; const DashboardPage(),
     ),
     GoRoute(
-      path: &#39;/settings&#39;,
-      builder: (context, state) =&gt; const SettingsPage(),
-    ),
-    GoRoute(
-      path: &#39;/items/:itemId&#39;,
-      builder: (context, state) {
-        final itemId = int.parse(state.pathParameters[&#39;itemId&#39;]!);
-        return ItemDetailPage(itemId: itemId);
-      },
+      path: &#39;/items/add&#39;,
+      builder: (context, state) =&gt; const AddItemsPage(),
     ),
   ],
 );
 </code></pre>
-		<p>The <code>path</code> is the URL pattern and <code>builder</code> creates the page for that location. A path
-			parameter starts with <code>:</code>; its value is read from <code>state.pathParameters</code>.</p>
+		<p>The root route renders <code>DashboardPage</code>. The <code>/items/add</code> route renders
+			<code>AddItemsPage</code>.
+			The <code>path</code> is the URL pattern and <code>builder</code> creates the page for that location.</p>
 		<p>Keep route configuration separate from page widgets. For a larger application, group related routes in the
 			same feature area or compose them into the central router.</p>
 		<br>
@@ -363,6 +359,7 @@ flutter pub add --dev drift_dev build_runner sqlite3
 </code></pre>
 		<p>A useful structure is:</p>
 		<pre><code class="language-text">lib/
+  app_router.dart
   data/
     local/
       tables.dart
@@ -373,7 +370,7 @@ flutter pub add --dev drift_dev build_runner sqlite3
   ui/
     dashboard/
       dashboard_page.dart
-    add_item/
+    items/
       add_item_page.dart
 test/
   repository/
@@ -629,10 +626,29 @@ final itemsStreamProvider = StreamProvider&lt;List&lt;Item&gt;&gt;((ref) {
 </code></pre>
 		<br>
 		<h2 id="8-enable-riverpod-in-the-app">8. Enable Riverpod in the app</h2><br>
+		<p>First, define the application routes in <code>lib/app_router.dart</code>:</p>
+		<pre><code class="language-dart">import &#39;package:my_app/ui/items/add_item_page.dart&#39;;
+import &#39;package:my_app/ui/dashboard/dashboard_page.dart&#39;;
+import &#39;package:go_router/go_router.dart&#39;;
+
+final appRouter = GoRouter(
+  routes: [
+    GoRoute(
+      path: &#39;/&#39;,
+      builder: (context, state) =&gt; const DashboardPage(),
+    ),
+    GoRoute(
+      path: &#39;/items/add&#39;,
+      builder: (context, state) =&gt; const AddItemsPage(),
+    ),
+  ],
+);
+</code></pre>
+		<p>Then connect that router to <code>main.dart</code>:</p>
 		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
 import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
 
-import &#39;ui/dashboard/dashboard_page.dart&#39;;
+import &#39;app_router.dart&#39;;
 
 void main() {
   runApp(
@@ -650,8 +666,9 @@ void main() {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: DashboardPage(),
+    return MaterialApp.router(
+      title: &#39;Items&#39;,
+      routerConfig: appRouter,
     );
   }
 }
@@ -659,13 +676,15 @@ void main() {
 		<p>The resulting widget tree is:</p>
 		<pre><code class="language-text">ProviderScope
   └── MyApp
-        └── MaterialApp
-              └── DashboardPage
+        └── MaterialApp.router
+              └── appRouter
+                    └── DashboardPage
 </code></pre>
 		<br>
 		<h2 id="9-read-live-data-in-a-widget">9. Read live data in a widget</h2><br>
 		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
 import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+import &#39;package:go_router/go_router.dart&#39;;
 
 import &#39;../../data/repository/repository_providers.dart&#39;;
 
@@ -676,26 +695,36 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final itemsAsync = ref.watch(itemsStreamProvider);
 
-    return itemsAsync.when(
-      data: (items) {
-        if (items.isEmpty) {
-          return const Center(child: Text(&#39;No items yet.&#39;));
-        }
-
-        return ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(items[index].name),
-            );
-          },
-        );
-      },
-      loading: () =&gt; const Center(
-        child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(&#39;Items&#39;),
+        actions: [
+          IconButton(
+            onPressed: () =&gt; context.push(&#39;/items/add&#39;),
+            icon: const Icon(Icons.add),
+            tooltip: &#39;Add item&#39;,
+          ),
+        ],
       ),
-      error: (error, stackTrace) =&gt; Center(
-        child: Text(&#39;Error: $error&#39;),
+      body: itemsAsync.when(
+        data: (items) {
+          if (items.isEmpty) {
+            return const Center(child: Text(&#39;No items yet.&#39;));
+          }
+
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return ListTile(
+                title: Text(item.name),
+                trailing: Text(item.price.toStringAsFixed(2)),
+              );
+            },
+          );
+        },
+        loading: () =&gt; const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) =&gt; Center(child: Text(&#39;Error: $error&#39;)),
       ),
     );
   }
@@ -723,6 +752,84 @@ error   → error message
 		<p>Use <code>watch</code> when the widget should rebuild as the provider changes.</p>
 		<pre><code class="language-dart">ref.read(provider);   // get the current object
 ref.watch(provider);  // listen and rebuild when it changes
+</code></pre>
+		<br>
+		<h3 id="add-an-item-page">Add an item page</h3><br>
+		<p>Create <code>lib/ui/items/add_item_page.dart</code>. The page uses the repository provider
+			to save the form, invalidates the list provider, and returns to the dashboard with
+			<code>context.pop()</code> after a successful save.
+		</p>
+		<pre><code class="language-dart">class AddItemsPage extends ConsumerStatefulWidget {
+  const AddItemsPage({super.key});
+
+  @override
+  ConsumerState&lt;AddItemsPage&gt; createState() =&gt; _AddItemsPageState();
+}
+
+class _AddItemsPageState extends ConsumerState&lt;AddItemsPage&gt; {
+  final _formKey = GlobalKey&lt;FormState&gt;();
+  final _nameController = TextEditingController();
+  final _priceController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  Future&lt;void&gt; _save() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    await ref.read(itemsRepositoryProvider).createItem(
+          name: _nameController.text.trim(),
+          price: double.parse(_priceController.text.trim()),
+        );
+    ref.invalidate(itemsStreamProvider);
+    if (mounted) context.pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(&#39;Add item&#39;),
+        leading: IconButton(
+          onPressed: () =&gt; context.pop(),
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: &#39;Name&#39;),
+              validator: (value) =&gt; value == null || value.trim().isEmpty
+                  ? &#39;Enter a name&#39;
+                  : null,
+            ),
+            TextFormField(
+              controller: _priceController,
+              decoration: const InputDecoration(labelText: &#39;Price&#39;),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) =&gt; double.tryParse(value?.trim() ?? &#39;&#39;) == null
+                  ? &#39;Enter a valid price&#39;
+                  : null,
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: _save,
+              child: const Text(&#39;Save item&#39;),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 </code></pre>
 		<br>
 		<h2 id="11-database-migrations">11. Database migrations</h2><br>
