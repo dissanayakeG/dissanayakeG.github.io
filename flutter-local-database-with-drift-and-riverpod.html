@@ -38,6 +38,110 @@
 		<p>The UI should not contain database queries. The repository owns database access, while Riverpod creates and
 			supplies shared objects.</p>
 		<br>
+		<h2 id="how-to-use-this-guide">How to use this guide</h2><br>
+		<ul>
+			<li>New to Drift, Riverpod or <code>go_router</code>? Read Part 1 first, then build the example application
+				in Part 2.</li>
+			<li>Already familiar with those tools? Skip directly to Part 2.</li>
+		</ul>
+		<br>
+		<h1 id="part-1-core-concepts">Part 1: Core concepts</h1><br>
+		<br>
+		<h2 id="using-drift-for-a-local-database-in-dart">Using Drift for a Local Database in Dart</h2><br>
+		<p>Drift is a type-safe SQLite library for Dart and Flutter. Tables are defined in Dart, queries are checked and
+			generated as Dart code, and the database can be replaced with an in-memory executor in tests.</p>
+		<br>
+		<h3 id="1-define-database-tables">1. Define database tables</h3><br>
+		<pre><code class="language-dart">class Items extends Table {
+  IntColumn get id =&gt; integer().autoIncrement()();
+  TextColumn get name =&gt; text().unique()();
+}
+</code></pre>
+		<p>Drift generates a row class named <code>Item</code> from this definition. <code>autoIncrement()</code>
+			creates a generated primary key, while <code>unique()</code> prevents duplicate item names.</p>
+		<p>Common column definitions include:</p>
+		<pre><code class="language-dart">integer()                         // required integer
+text()                            // required text
+text().nullable()                 // nullable text
+integer().autoIncrement()         // generated primary key
+dateTime().withDefault(...)       // database default value
+</code></pre>
+		<br>
+		<h3 id="2-create-the-database-class">2. Create the database class</h3><br>
+		<pre><code class="language-dart">part &#39;app_database.g.dart&#39;;
+
+@DriftDatabase(tables: [Items])
+class AppDatabase extends _$AppDatabase {
+  AppDatabase([QueryExecutor? executor])
+      : super(executor ?? driftDatabase(name: &#39;my_app&#39;));
+
+  @override
+  int get schemaVersion =&gt; 1;
+}
+</code></pre>
+		<p><code>@DriftDatabase</code> registers the tables, while <code>_$AppDatabase</code> is the generated base
+			class. The optional <code>QueryExecutor</code> makes the database easy to replace in tests.</p>
+		<p>Generate the supporting code after changing tables or the database class:</p>
+		<pre><code class="language-bash">dart run build_runner build --delete-conflicting-outputs
+</code></pre>
+		<p>Never edit <code>app_database.g.dart</code> manually.</p>
+		<br>
+		<h3 id="3-keep-queries-in-a-repository">3. Keep queries in a repository</h3><br>
+		<pre><code class="language-dart">class DriftItemsRepository implements ItemsRepository {
+  DriftItemsRepository({required AppDatabase database})
+      : _database = database;
+
+  final AppDatabase _database;
+}
+</code></pre>
+		<p>The repository is the application-facing data API. It owns Drift queries so widgets do not depend on tables,
+			SQL, or database lifecycle details.</p>
+		<br>
+		<h3 id="4-read-and-watch-data">4. Read and watch data</h3><br>
+		<pre><code class="language-dart">final query = _database.select(_database.items)
+  ..orderBy([
+    (table) =&gt; OrderingTerm.asc(table.name),
+  ]);
+
+final items = await query.get(); // one-time read
+final itemsStream = query.watch(); // continuously updated stream
+</code></pre>
+		<p>Use <code>where</code> to filter a query:</p>
+		<pre><code class="language-dart">final query = _database.select(_database.items)
+  ..where((table) =&gt; table.id.equals(itemId));
+</code></pre>
+		<p><code>get()</code> returns a <code>Future</code>; <code>watch()</code> returns a <code>Stream</code> that
+			emits when the relevant data changes.</p>
+		<br>
+		<h3 id="5-write-data-and-use-transactions">5. Write data and use transactions</h3><br>
+		<pre><code class="language-dart">// ItemsCompanion comes from the generated app_database.g.dart file.
+final id = await _database.into(_database.items).insert(
+      ItemsCompanion.insert(name: normalizedName),
+    );
+
+await (_database.update(_database.items)
+      ..where((table) =&gt; table.id.equals(id)))
+    .write(ItemsCompanion(name: Value(newName)));
+
+await (_database.delete(_database.items)
+      ..where((table) =&gt; table.id.equals(id)))
+    .go();
+</code></pre>
+		<p>Use <code>Value(...)</code> when constructing a companion for an update or nullable field. Use a transaction
+			when related writes must all succeed or all roll back. For example, add a group of starter items as one
+			operation:</p>
+		<pre><code class="language-dart">await _database.transaction(() async {
+  await _database.into(_database.items).insert(
+        ItemsCompanion.insert(name: &#39;Milk&#39;),
+      );
+  await _database.into(_database.items).insert(
+        ItemsCompanion.insert(name: &#39;Bread&#39;),
+      );
+});
+</code></pre>
+		<p>If either insert fails, Drift rolls back both inserts so the database is not left with a partial starter set.
+		</p>
+		<br>
 		<h2 id="riverpod-service-pattern-in-dart">Riverpod service pattern in Dart</h2><br>
 		<p>Riverpod is useful for wiring dependencies and exposing application operations to the UI. A service is a good
 			fit when one user action coordinates a repository with another dependency, such as a file picker, API
@@ -74,7 +178,7 @@
     required this.repository,
   });
 
-  final AppRepository repository;
+  final ItemsRepository repository;
 
   @override
   Future&lt;CsvExportResult&gt; export() async {
@@ -88,7 +192,7 @@
 		<h3 id="4-register-the-service-with-riverpod">4. Register the service with Riverpod</h3><br>
 		<pre><code class="language-dart">final csvExportServiceProvider = Provider&lt;CsvExportService&gt;((ref) {
   return RepositoryCsvExportService(
-    repository: ref.watch(appRepositoryProvider),
+    repository: ref.watch(itemsRepositoryProvider),
   );
 });
 </code></pre>
@@ -103,93 +207,6 @@
 			<code>watch</code> when the widget should rebuild when provider state changes.</p>
 		<pre><code class="language-dart">ref.read(provider);   // obtain the current value for an action
 ref.watch(provider);  // listen and rebuild when it changes
-</code></pre>
-		<br>
-		<h2 id="using-drift-for-a-local-database-in-dart">Using Drift for a Local Database in Dart</h2><br>
-		<p>Drift is a type-safe SQLite library for Dart and Flutter. Tables are defined in Dart, queries are checked and
-			generated as Dart code, and the database can be replaced with an in-memory executor in tests.</p>
-		<br>
-		<h3 id="1-define-database-tables">1. Define database tables</h3><br>
-		<pre><code class="language-dart">class Categories extends Table {
-  IntColumn get id =&gt; integer().autoIncrement()();
-  TextColumn get name =&gt; text().unique()();
-}
-</code></pre>
-		<p>Drift generates a row class named <code>Category</code> from this definition. <code>autoIncrement()</code>
-			creates a generated primary key, while <code>unique()</code> prevents duplicate category names.</p>
-		<p>Common column definitions include:</p>
-		<pre><code class="language-dart">integer()                         // required integer
-text()                            // required text
-text().nullable()                 // nullable text
-integer().autoIncrement()         // generated primary key
-dateTime().withDefault(...)       // database default value
-</code></pre>
-		<br>
-		<h3 id="2-create-the-database-class">2. Create the database class</h3><br>
-		<pre><code class="language-dart">part &#39;app_database.g.dart&#39;;
-
-@DriftDatabase(tables: [Categories, Items])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase([QueryExecutor? executor])
-      : super(executor ?? driftDatabase(name: &#39;my_app&#39;));
-
-  @override
-  int get schemaVersion =&gt; 1;
-}
-</code></pre>
-		<p><code>@DriftDatabase</code> registers the tables, while <code>_$AppDatabase</code> is the generated base
-			class. The optional <code>QueryExecutor</code> makes the database easy to replace in tests.</p>
-		<p>Generate the supporting code after changing tables or the database class:</p>
-		<pre><code class="language-bash">dart run build_runner build --delete-conflicting-outputs
-</code></pre>
-		<p>Never edit <code>app_database.g.dart</code> manually.</p>
-		<br>
-		<h3 id="3-keep-queries-in-a-repository">3. Keep queries in a repository</h3><br>
-		<pre><code class="language-dart">class DriftAppRepository implements AppRepository {
-  DriftAppRepository({required AppDatabase database})
-      : _database = database;
-
-  final AppDatabase _database;
-}
-</code></pre>
-		<p>The repository is the application-facing data API. It owns Drift queries so widgets do not depend on tables,
-			SQL, or database lifecycle details.</p>
-		<br>
-		<h3 id="4-read-and-watch-data">4. Read and watch data</h3><br>
-		<pre><code class="language-dart">final query = _database.select(_database.categories)
-  ..orderBy([
-    (table) =&gt; OrderingTerm.asc(table.name),
-  ]);
-
-final categories = await query.get(); // one-time read
-final categoryStream = query.watch(); // continuously updated stream
-</code></pre>
-		<p>Use <code>where</code> to filter a query:</p>
-		<pre><code class="language-dart">final query = _database.select(_database.items)
-  ..where((table) =&gt; table.categoryId.equals(categoryId));
-</code></pre>
-		<p><code>get()</code> returns a <code>Future</code>; <code>watch()</code> returns a <code>Stream</code> that
-			emits when the relevant data changes.</p>
-		<br>
-		<h3 id="5-write-data-and-use-transactions">5. Write data and use transactions</h3><br>
-		<pre><code class="language-dart">final id = await _database.into(_database.categories).insert(
-      CategoriesCompanion.insert(name: normalizedName),
-    );
-
-await (_database.update(_database.categories)
-      ..where((table) =&gt; table.id.equals(id)))
-    .write(CategoriesCompanion(name: Value(newName)));
-
-await (_database.delete(_database.categories)
-      ..where((table) =&gt; table.id.equals(id)))
-    .go();
-</code></pre>
-		<p>Use <code>Value(...)</code> when constructing a companion for an update or nullable field. Use a transaction
-			when related writes must all succeed or all roll back:</p>
-		<pre><code class="language-dart">await _database.transaction(() async {
-  final category = await createOrGetCategory(name: categoryName);
-  await createList(categoryId: category.id, name: listName);
-});
 </code></pre>
 		<br>
 		<h2 id="routing-with-codego_routercode">Routing with <code>go_router</code></h2><br>
@@ -279,10 +296,10 @@ context.pop();
 		<pre><code class="language-dart">final itemId = int.parse(state.pathParameters[&#39;itemId&#39;]!);
 </code></pre>
 		<p>For optional filtering or sorting values, use query parameters:</p>
-		<pre><code class="language-dart">context.go(&#39;/items?category=food&#39;);
+		<pre><code class="language-dart">context.go(&#39;/items?sort=name&#39;);
 </code></pre>
 		<p>Read them with:</p>
-		<pre><code class="language-dart">final category = state.uri.queryParameters[&#39;category&#39;];
+		<pre><code class="language-dart">final sort = state.uri.queryParameters[&#39;sort&#39;];
 </code></pre>
 		<p>Validate and handle invalid parameters before passing them to a page or repository.</p>
 		<br>
@@ -331,6 +348,9 @@ context.pop();
 		<p>Return <code>null</code> to allow navigation. In a Riverpod application, connect the router to the relevant
 			authentication provider and refresh the router when that state changes.</p>
 		<br>
+		<h1 id="part-2-build-the-example-application">Part 2: Build the example application</h1><br>
+		<p>The following steps apply the Part 1 concepts in one small Flutter application.</p>
+		<br>
 		<h2 id="1-project-setup">1. Project setup</h2><br>
 		<p>Create a Flutter project:</p>
 		<pre><code class="language-bash">flutter create my_app
@@ -348,7 +368,7 @@ flutter pub add --dev drift_dev build_runner sqlite3
       tables.dart
       app_database.dart
     repository/
-      app_repository.dart
+      items_repository.dart
       repository_providers.dart
   ui/
     dashboard/
@@ -425,12 +445,13 @@ class AppDatabase extends _$AppDatabase {
 </code></pre>
 		<br>
 		<h2 id="4-create-the-repository-interface">4. Create the repository interface</h2><br>
-		<p>File: <code>lib/data/repository/app_repository.dart</code></p>
+		<p>File: <code>lib/data/repository/items_repository.dart</code></p>
 		<p>The repository is the app-facing data API. The UI calls repository methods instead of writing Drift queries
 			directly.</p>
 		<pre><code class="language-dart">import &#39;../local/app_database.dart&#39;;
 
-abstract interface class AppRepository {
+abstract interface class ItemsRepository {
+  ///Item comes from the generated lib/data/local/app_database.g.dart
   Stream&lt;List&lt;Item&gt;&gt; watchItems();
   Future&lt;List&lt;Item&gt;&gt; getItems();
   Future&lt;Item&gt; createItem({
@@ -442,14 +463,14 @@ abstract interface class AppRepository {
 		<p>The interface is a contract. It says what the application can do, without saying how the data is stored.</p>
 		<br>
 		<h2 id="5-implement-the-repository-with-drift">5. Implement the repository with Drift</h2><br>
-		<p>File: <code>lib/data/repository/app_repository.dart</code></p>
+		<p>File: <code>lib/data/repository/items_repository.dart</code></p>
 		<pre><code class="language-dart">import &#39;package:drift/drift.dart&#39;;
 
 import &#39;../local/app_database.dart&#39;;
-import &#39;app_repository.dart&#39;;
+import &#39;items_repository.dart&#39;;
 
-class DriftAppRepository implements AppRepository {
-  DriftAppRepository({required AppDatabase database})
+class DriftItemsRepository implements ItemsRepository {
+  DriftItemsRepository({required AppDatabase database})
       : _database = database;
 
   final AppDatabase _database;
@@ -477,6 +498,7 @@ class DriftAppRepository implements AppRepository {
     required String name,
     required double price,
   }) async {
+    ///ItemsCompanion comes from the generated lib/data/local/app_database.g.dart
     final id = await _database.into(_database.items).insert(
           ItemsCompanion.insert(
             name: name,
@@ -587,21 +609,21 @@ final appDatabaseProvider = Provider&lt;AppDatabase&gt;((ref) {
   return database;
 });
 
-final appRepositoryProvider = Provider&lt;AppRepository&gt;((ref) {
-  return DriftAppRepository(
+final itemsRepositoryProvider = Provider&lt;ItemsRepository&gt;((ref) {
+  return DriftItemsRepository(
     database: ref.watch(appDatabaseProvider),
   );
 });
 
-final itemStreamProvider = StreamProvider&lt;List&lt;Item&gt;&gt;((ref) {
-  return ref.watch(appRepositoryProvider).watchItems();
+final itemsStreamProvider = StreamProvider&lt;List&lt;Item&gt;&gt;((ref) {
+  return ref.watch(itemsRepositoryProvider).watchItems();
 });
 </code></pre>
 		<p><code>Provider&lt;T&gt;</code> supplies a shared object of type <code>T</code>.</p>
 		<p><code>StreamProvider&lt;T&gt;</code> exposes a stream and gives the UI loading, data, and error states.</p>
 		<p>The dependency chain is:</p>
-		<pre><code class="language-text">itemStreamProvider
-  → appRepositoryProvider
+		<pre><code class="language-text">itemsStreamProvider
+  → itemsRepositoryProvider
     → appDatabaseProvider
       → AppDatabase
 </code></pre>
@@ -626,7 +648,7 @@ void main() {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final itemsAsync = ref.watch(itemStreamProvider);
+    final itemsAsync = ref.watch(itemsStreamProvider);
 
     return itemsAsync.when(
       data: (items) {
@@ -653,7 +675,7 @@ void main() {
   }
 }
 </code></pre>
-		<p><code>ref.watch(itemStreamProvider)</code> listens for changes. When Drift emits a new list, Riverpod
+		<p><code>ref.watch(itemsStreamProvider)</code> listens for changes. When Drift emits a new list, Riverpod
 			rebuilds the widget.</p>
 		<p><code>.when</code> chooses the correct UI for the asynchronous state:</p>
 		<pre><code class="language-text">loading → progress indicator
@@ -664,7 +686,7 @@ error   → error message
 		<h2 id="10-save-data-from-a-widget">10. Save data from a widget</h2><br>
 		<p>Use <code>ConsumerWidget</code> or <code>ConsumerState</code> when a widget needs <code>ref</code>:</p>
 		<pre><code class="language-dart">Future&lt;void&gt; saveItem(WidgetRef ref) async {
-  await ref.read(appRepositoryProvider).createItem(
+  await ref.read(itemsRepositoryProvider).createItem(
         name: &#39;Milk&#39;,
         price: 4.25,
       );
@@ -715,11 +737,11 @@ import &#39;package:my_app/data/repository/app_repository.dart&#39;;
 
 void main() {
   late AppDatabase database;
-  late AppRepository repository;
+  late ItemsRepository repository;
 
   setUp(() {
     database = AppDatabase(NativeDatabase.memory());
-    repository = DriftAppRepository(database: database);
+    repository = DriftItemsRepository(database: database);
   });
 
   tearDown(() async {
