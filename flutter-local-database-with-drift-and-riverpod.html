@@ -629,7 +629,10 @@ final itemsStreamProvider = StreamProvider&lt;List&lt;Item&gt;&gt;((ref) {
 </code></pre>
 		<br>
 		<h2 id="8-enable-riverpod-in-the-app">8. Enable Riverpod in the app</h2><br>
-		<pre><code class="language-dart">import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;ui/dashboard/dashboard_page.dart&#39;;
 
 void main() {
   runApp(
@@ -641,9 +644,32 @@ void main() {
 </code></pre>
 		<p><code>ProviderScope</code> makes Riverpod providers available to the widget tree.</p>
 		<p>Without it, widgets cannot read or watch providers.</p>
+		<p>The root widget renders the dashboard as the app&#39;s home page:</p>
+		<pre><code class="language-dart">class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: DashboardPage(),
+    );
+  }
+}
+</code></pre>
+		<p>The resulting widget tree is:</p>
+		<pre><code class="language-text">ProviderScope
+  └── MyApp
+        └── MaterialApp
+              └── DashboardPage
+</code></pre>
 		<br>
 		<h2 id="9-read-live-data-in-a-widget">9. Read live data in a widget</h2><br>
-		<pre><code class="language-dart">class DashboardPage extends ConsumerWidget {
+		<pre><code class="language-dart">import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter_riverpod/flutter_riverpod.dart&#39;;
+
+import &#39;../../data/repository/repository_providers.dart&#39;;
+
+class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
   @override
