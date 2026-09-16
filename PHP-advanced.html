@@ -4,20 +4,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>PHP Advance</title>
 		<link
 			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
+			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
 		/>
 		<link rel="stylesheet" href="./util/styles.css" />
-		
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-bash.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php-extras.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-php.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -27,8 +27,10 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br><h1 id="php-advance">PHP Advance</h1><br>
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="php-advance">PHP Advance</h1><br>
 <br><h2 id="laravel-apache-nginx-and-php-built-in-server">Laravel, Apache, Nginx, and PHP Built-in Server</h2><br>
 <ul>
 <li><code>php -S</code> and <code>php artisan serve</code> both use PHP’s built-in dev server — not Apache or Nginx.</li>
@@ -52,8 +54,8 @@ sudo systemctl reload apache2 # Reload Apache
 </code></pre>
 <br><h3 id="apache-log-directories">Apache Log Directories</h3><br>
 <ul>
-<li>Access logs	-&gt; <code>/var/log/apache2/access.log</code> -&gt;	<code>Request logs</code></li>
-<li>Error logs	-&gt; <code>/var/log/apache2/error.log</code> -&gt;	<code>PHP/Apache errors per site</code></li>
+<li>Access logs -&gt; <code>/var/log/apache2/access.log</code> -&gt; <code>Request logs</code></li>
+<li>Error logs -&gt; <code>/var/log/apache2/error.log</code> -&gt; <code>PHP/Apache errors per site</code></li>
 </ul>
 <br><h3 id="create-a-new-nginx-server-block">Create a new Nginx server block</h3><br>
 <pre><code class="language-bash">sudo nano /etc/nginx/sites-available/laravel.test # Create a new server block
@@ -64,39 +66,39 @@ sudo systemctl reload nginx
 </code></pre>
 <br><h3 id="nginx-log-directories">Nginx Log Directories</h3><br>
 <ul>
-<li>Access logs	-&gt; <code>/var/log/nginx/access.log</code> -&gt;	<code>All incoming requests</code></li>
-<li>Error logs	-&gt; <code>/var/log/nginx/error.log</code>	-&gt; <code>Errors &amp; PHP-FPM issues</code></li>
+<li>Access logs -&gt; <code>/var/log/nginx/access.log</code> -&gt; <code>All incoming requests</code></li>
+<li>Error logs -&gt; <code>/var/log/nginx/error.log</code> -&gt; <code>Errors &amp; PHP-FPM issues</code></li>
 </ul>
 <br><h2 id="how-php-works">How PHP works</h2><br>
 <ol>
 <li>Browser requests a URL (e.g. <code>https://example.com/</code> → server receives <code>GET /</code>).</li>
 <li>Web server (Apache, Nginx, etc.) receives the request and determines which file or resource to serve based on its configuration and routing rules.</li>
-<li>The server checks for a default index file (e.g. index.php, index.html), as defined by:
- Apache → DirectoryIndex
- Nginx → index</li>
+<li>The server checks for a default index file (e.g. index.php, index.html), as defined by:<ul>
+<li>Apache → DirectoryIndex</li>
+<li>Nginx → index</li>
+</ul>
+</li>
 <li>If the target file is not a PHP file (e.g., .html, .css, .jpg), the web server serves it directly to the client.</li>
-<li>If the target file is a PHP script, the web server forwards it to the PHP interpreter using:
- Apache: mod_php (built-in module) or php-fpm via FastCGI
- Nginx: always uses php-fpm via FastCGI (Nginx cannot execute PHP directly)</li>
-<li>PHP Engine Execution Process:<ol>
+<li>If the target file is a PHP script, the web server forwards it to the PHP interpreter using:<ul>
+<li>Apache: mod_php (built-in module) or php-fpm via FastCGI</li>
+<li>Nginx: always uses php-fpm via FastCGI (Nginx cannot execute PHP directly)</li>
+</ul>
+</li>
+<li>PHP Engine Execution Process:</li>
 <li>PHP reads the <code>.php</code> source file.</li>
 <li>Parses and compiles it into <code>Zend opcodes</code> (intermediate bytecode).</li>
 <li>Executes those opcodes using the <code>Zend Engine</code>.</li>
-<li>If <code>OPcache</code> is enabled:<ul>
-<li>PHP stores compiled opcodes in memory for faster reuse.</li>
-<li>When a file changes, OPcache <code>detects the change and recompiles that specific script</code> (it doesn’t “update” the existing cache, it replaces it).</li>
-<li>it doesn’t slow down the entire app. Only that one updated file gets recompiled once.</li>
-</ul>
-</li>
-</ol>
-</li>
+<li>If <code>OPcache</code> is enabled:
+- PHP stores compiled opcodes in memory for faster reuse.
+- When a file changes, OPcache <code>detects the change and recompiles that specific script</code> (it doesn’t “update” the existing cache, it replaces it).
+- it doesn’t slow down the entire app. Only that one updated file gets recompiled once.</li>
 <li>PHP generates output (HTML, JSON, etc.) → returns it to the web server.</li>
 <li>Web server sends the response back to the browser.</li>
 </ol>
 <br><h3 id="what-happens-when-there-is-no-index-file">What happens when there is no index file</h3><br>
 <ul>
 <li>If there is no index file and the request targets a directory, the server’s behavior depends on configuration:<ul>
-<li>If <code>directory listing (autoindex)</code> is enabled, the server will generate and return an HTML listing of files -  this <code>can</code> be a security issue (exposes filenames, potentially sensitive files).</li>
+<li>If <code>directory listing (autoindex)</code> is enabled, the server will generate and return an HTML listing of files - this <code>can</code> be a security issue (exposes filenames, potentially sensitive files).</li>
 <li>If directory listing is disabled, the server will typically return <code>403 Forbidden</code> or fall back to another configured action (like <code>index.php</code> rewrite rules).</li>
 </ul>
 </li>
@@ -126,7 +128,7 @@ location / {
 </ul>
 <br><h3 id="extra-security-notes-dont-ignore">Extra security notes (don’t ignore)</h3><br>
 <ul>
-<li>Disable directory listing (<code>Options -Indexes</code> / <code>autoindex off</code>).</li>
+<li>Disable directory listing (<code>Options -Indexes</code>/<code>autoindex off</code>).</li>
 <li>Ensure <code>php</code> is executed (not served as text) — misconfig can leak source.</li>
 <li>Restrict access to config files (<code>.env</code>, <code>.git</code>, etc.) — deny or move outside web root.</li>
 <li>Use least-privilege file permissions and keep backups out of webroot.</li>
@@ -173,17 +175,21 @@ Browser
 <ul>
 <li>PHP runs as an Apache module (mod_php).</li>
 <li>Apache itself executes PHP directly within the same process.</li>
-<li>The file never leaves Apache — it just calls the PHP interpreter internally.
-✅ Pros: Simple, fast for small setups.
-❌ Cons: Not efficient for high traffic or multi-user environments (tightly coupled to Apache process).</li>
+<li>The file never leaves Apache — it just calls the PHP interpreter internally.<ul>
+<li>✅ Pros: Simple, fast for small setups.</li>
+<li>❌ Cons: Not efficient for high traffic or multi-user environments (tightly coupled to Apache process).</li>
+</ul>
+</li>
 </ul>
 <p>⚙️ 2. PHP-FPM (FastCGI Process Manager)</p>
 <ul>
 <li>Modern, high-performance setup used with Nginx (and sometimes Apache).</li>
 <li>PHP runs as a separate background process (the “PHP-FPM” service).</li>
-<li>The web server and PHP communicate using the FastCGI protocol — basically, the server says “Hey PHP, run this file and give me the result.”
-✅ Pros: Scalable, fast, and secure.
-❌ Cons: Slightly more complex setup.</li>
+<li>The web server and PHP communicate using the FastCGI protocol — basically, the server says “Hey PHP, run this file and give me the result.”<ul>
+<li>✅ Pros: Scalable, fast, and secure.</li>
+<li>❌ Cons: Slightly more complex setup.</li>
+</ul>
+</li>
 </ul>
 <p>⚙️ 3. CGI / FastCGI (legacy)</p>
 <ul>
@@ -195,21 +201,14 @@ Browser
 <ul>
 <li>is a configuration file used by Apache web servers to control the behavior of your website without editing the main Apache configuration. It’s particularly useful for PHP developers because you can tweak site rules—security, redirects, caching, URL rewriting, etc.—on a per-directory basis.</li>
 </ul>
-<br><h2 id="what-codehtaccesscode-does">What <code>.htaccess</code> Does</h2><br>
+<br><h2 id="what-htaccess-does">What <code>.htaccess</code> Does</h2><br>
 <ul>
-<li>When placed in your site’s root or a subdirectory, <code>.htaccess</code> lets you<blockquote>
-<p>Override default Apache settings
-Define custom error pages
-Rewrite URLs (e.g., for “pretty” URLs)
-Control access (authentication, IP restrictions)
-Redirect requests
-Set PHP configurations (if <code>AllowOverride</code> is enabled in Apache)
-Caching and Compression
-Password Protection</p>
+<li>When placed in your site’s root or a subdirectory, <code>.htaccess</code> lets you:<blockquote>
+<p>Override default Apache settings<br>Define custom error pages<br>Rewrite URLs (e.g., for “pretty” URLs)<br>Control access (authentication, IP restrictions)<br>Redirect requests<br>Set PHP configurations (if <code>AllowOverride</code> is enabled in Apache)<br>Caching and Compression<br>Password Protection</p>
 </blockquote>
 </li>
 </ul>
-<br><h2 id="example-codehtaccesscode-file">Example <code>.htaccess</code> file</h2><br>
+<br><h2 id="example-htaccess-file">Example <code>.htaccess</code> file</h2><br>
 <pre><code class="language-bash"># ============================================================
 # Enable URL rewriting
 # ============================================================
@@ -286,7 +285,7 @@ php_value upload_max_filesize 20M
 php_value post_max_size 25M
 php_flag display_errors Off
 </code></pre>
-<br><h2 id="test-and-debug-codehtaccesscode-rules-properly">test and debug <code>.htaccess</code> rules properly</h2><br>
+<br><h2 id="test-and-debug-htaccess-rules-properly">test and debug <code>.htaccess</code> rules properly</h2><br>
 <ol>
 <li>Make Sure <code>.htaccess</code> Is Even Working</li>
 </ol>
@@ -425,18 +424,13 @@ print_r($_SERVER);
 <li>If you don’t see <code>rewrite_module (shared)</code>, that’s your problem.</li>
 </ul>
 <br><h1 id="file-importing-in-php">File Importing in PHP</h1><br>
-<br><h2 id="include-include_once-require-require_once">include, include_once, require, require_once</h2><br>
-<p> <code>include</code>  Loads and executes a file.
-  If the file doesn’t exist → shows a warning but continues executing the rest of the script.</p>
-<p> <code>require</code>  Loads and executes a file.
-  If the file doesn’t exist → throws a fatal error and stops execution.</p>
-<p> <code>include_once</code>  Works like <code>include</code>, but prevents re-including the same file.
-  Useful to avoid “cannot redeclare function/variable/class” warnings.</p>
-<p> <code>require_once</code>  Works like <code>require</code>, but ensures the file is included only once.
-  Commonly used in large projects to safely load config or class files.</p>
+<br><h2 id="include-includeonce-require-requireonce">include, include_once, require, require_once</h2><br>
+<p><code>include</code> Loads and executes a file. If the file doesn’t exist → shows a warning but continues executing the rest of the script.</p>
+<p><code>require</code> Loads and executes a file. If the file doesn’t exist → throws a fatal error and stops execution.</p>
+<p><code>include_once</code> Works like <code>include</code>, but prevents re-including the same file. Useful to avoid “cannot redeclare function/variable/class” warnings.</p>
+<p><code>require_once</code> Works like <code>require</code>, but ensures the file is included only once. Commonly used in large projects to safely load config or class files.</p>
 <blockquote>
-<p>When your project grows, using <code>require_once</code> everywhere can make the code messy.
-Instead, you can use <code>spl_autoload_register()</code> to automatically load classes on demand.</p>
+<p>When your project grows, using <code>require_once</code> everywhere can make the code messy. Instead, you can use <code>spl_autoload_register()</code> to automatically load classes on demand.</p>
 </blockquote>
 <br><h1 id="php-streams">PHP Streams</h1><br>
 <p>PHP Streams are a unified way of working with file and network resources in PHP. They provide a common interface for reading from and writing to various data sources, abstracting away the differences between files, network sockets, compressed files, and other I/O operations.</p>
@@ -531,7 +525,7 @@ fclose($handle);
 <li>Leverage <code>stream_copy_to_stream()</code> for efficient file copying</li>
 </ol>
 <p>Streams are essential for building scalable PHP applications that handle large datasets, file uploads, or API responses without exhausting server memory.</p>
-
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>

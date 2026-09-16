@@ -4,18 +4,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>MERN Authentication</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
 		/>
 		<link rel="stylesheet" href="./util/styles.css" />
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -25,75 +27,35 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br />
-			<h1 id="mern-authentication">MERN Authentication</h1>
-			<br />
-			<br />
-			<h1 id="what-should-be-covered-for-secure-auth-implementation">
-				What should be covered for secure auth implementation
-			</h1>
-			<br />
-			<ul>
-				<li>Use Access + Refresh Token</li>
-				<li>
-					Use Refresh token in HTTP-only cookies (HTTP-only cookies
-					helps to prevents XSS attacks on refresh tokens)
-				</li>
-				<li>handle Access token in memory (React state)</li>
-				<li>Consider Refresh token rotation</li>
-			</ul>
-			<br />
-			<h1 id="accessrefresh-token">Access/Refresh token</h1>
-			<br />
-			<ul>
-				<li>
-					AccessTokens should be short lived, and once expired should
-					be refretch a new one from <code>/refresh</code> endpoint.
-				</li>
-			</ul>
-			<br />
-			<h2 id="how-to-handle-access-token-in-express">
-				How to handle access token in Express
-			</h2>
-			<br />
-			<pre><code class="language-javascript">//Generate a JWT token
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="mern-authentication">MERN Authentication</h1><br>
+<br><h1 id="what-should-be-covered-for-secure-auth-implementation">What should be covered for secure auth implementation</h1><br>
+<ul>
+<li>Use Access + Refresh Token</li>
+<li>Use Refresh token in HTTP-only cookies (HTTP-only cookies helps to prevents XSS attacks on refresh tokens)</li>
+<li>handle Access token in memory (React state)</li>
+<li>Consider Refresh token rotation</li>
+</ul>
+<br><h1 id="accessrefresh-token">Access/Refresh token</h1><br>
+<ul>
+<li>AccessTokens should be short lived, and once expired should be refretch a new one from <code>/refresh</code> endpoint.</li>
+</ul>
+<br><h2 id="how-to-handle-access-token-in-express">How to handle access token in Express</h2><br>
+<pre><code class="language-javascript">//Generate a JWT token
 const token = jwt.sign({ userId: user.id }, &#39;secretKey&#39;, { expiresIn: &#39;1h&#39; });
 </code></pre>
-			<br />
-			<h2 id="why-and-when-to-use-a-refresh-token">
-				Why and when to use a refresh token
-			</h2>
-			<br />
-			<ul>
-				<li>
-					Store refreshToken in HttpOnly cookies, and these cannot be
-					accessed by JS.
-				</li>
-				<li>
-					Once the accessToken is expired, we can call the
-					<code>/refresh</code> endpoint and generate new accessToken
-				</li>
-				<li>
-					It involves rotate refresh token, and generate new
-					accessToken
-				</li>
-				<li>
-					Normally, server should return refreshToken in
-					<strong>HTTP-only cookies</strong> from
-					<code>/login</code> and <code>/refresh</code> APIs.
-				</li>
-				<li>
-					<strong>HTTP-only cookies</strong> prevent access through
-					JavaScript, reducing the danger of
-					<strong>XSS attacks</strong>.
-				</li>
-				<li>
-					The browser sends the cookies automatically when you call
-					your server API with <code>withCredentials: true</code>
-				</li>
-			</ul>
-			<pre><code class="language-javascript">axios.post(&quot;http://localhost:5000/api/auth/refresh&quot;, {}, {
+<br><h2 id="why-and-when-to-use-a-refresh-token">Why and when to use a refresh token</h2><br>
+<ul>
+<li>Store refreshToken in HttpOnly cookies, and these cannot be accessed by JS.</li>
+<li>Once the accessToken is expired, we can call the <code>/refresh</code> endpoint and generate new accessToken</li>
+<li>It involves rotate refresh token, and generate new accessToken</li>
+<li>Normally, server should return refreshToken in <strong>HTTP-only cookies</strong> from <code>/login</code> and <code>/refresh</code> APIs.</li>
+<li><strong>HTTP-only cookies</strong> prevent access through JavaScript, reducing the danger of <strong>XSS attacks</strong>. </li>
+<li>The browser sends the cookies automatically when you call your server API with <code>withCredentials: true</code></li>
+</ul>
+<pre><code class="language-javascript">axios.post(&quot;http://localhost:5000/api/auth/refresh&quot;, {}, {
   withCredentials: true,
 });
 //and in the server, you need to allo sending cookies
@@ -102,12 +64,8 @@ app.use(cors({
   credentials: true,                // allow cookies
 }));
 </code></pre>
-			<br />
-			<h2 id="how-to-handle-refresh-token-in-express">
-				How to handle refresh token in Express
-			</h2>
-			<br />
-			<pre><code class="language-javascript">refreshToken = async (req: Request, res: Response): Promise&lt;void&gt; =&gt; {
+<br><h2 id="how-to-handle-refresh-token-in-express">How to handle refresh token in Express</h2><br>
+<pre><code class="language-javascript">refreshToken = async (req: Request, res: Response): Promise&lt;void&gt; =&gt; {
     try {
       const token = req.cookies.refreshToken;
       if (!token) {
@@ -150,23 +108,13 @@ app.use(cors({
     }
   };
 </code></pre>
-			<br />
-			<h2 id="how-to-handle-accessrefresh-tokens-in-react">
-				How to handle access/refresh tokens in React
-			</h2>
-			<br />
-			<ul>
-				<li>
-					Do Not store accessTokens in localStorage or cookies (not
-					HttpOnly), they are vulnerable to XSS attacks.
-				</li>
-				<li>
-					Instead store them in memory (useState, redux, react
-					context)
-				</li>
-			</ul>
-			<p><strong>BaseAPI.ts</strong></p>
-			<pre><code class="language-javascript">const baseApi = axios.create({
+<br><h2 id="how-to-handle-accessrefresh-tokens-in-react">How to handle access/refresh tokens in React</h2><br>
+<ul>
+<li>Do Not store accessTokens in localStorage or cookies (not HttpOnly), they are vulnerable to XSS attacks.</li>
+<li>Instead store them in memory (useState, redux, react context)</li>
+</ul>
+<p><strong>BaseAPI.ts</strong></p>
+<pre><code class="language-javascript">const baseApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL || &quot;http://localhost:5000/api&quot;,
     withCredentials: true, //this is required to fetch the refresh token that set in cookies of http headers
     headers: {
@@ -176,8 +124,8 @@ app.use(cors({
 
 export default baseApi;
 </code></pre>
-			<p><strong>ProtectedAPI.ts</strong></p>
-			<pre><code class="language-javascript">import axios, { type InternalAxiosRequestConfig } from &quot;axios&quot;;
+<p><strong>ProtectedAPI.ts</strong></p>
+<pre><code class="language-javascript">import axios, { type InternalAxiosRequestConfig } from &quot;axios&quot;;
 import baseApi from &quot;./baseApi&quot;;
 import fetchCsrfToken from &quot;./csrf&quot;;
 
@@ -263,8 +211,8 @@ protectedApi.interceptors.response.use(
 
 export default protectedApi;
 </code></pre>
-			<p><strong>csrf.ts</strong></p>
-			<pre><code class="language-javascript">const fetchCsrfToken = async () =&gt; {
+<p><strong>csrf.ts</strong></p>
+<pre><code class="language-javascript">const fetchCsrfToken = async () =&gt; {
     const res = await baseApi.get(&quot;/auth/csrf-token&quot;, {
         withCredentials: true,
     });
@@ -273,8 +221,8 @@ export default protectedApi;
 
 export default fetchCsrfToken;
 </code></pre>
-			<p><strong>AuthContext.tsx</strong></p>
-			<pre><code class="language-javascript">import React, { createContext, useContext, useEffect, useState } from &quot;react&quot;;
+<p><strong>AuthContext.tsx</strong></p>
+<pre><code class="language-javascript">import React, { createContext, useContext, useEffect, useState } from &quot;react&quot;;
 import baseApi from &quot;./baseApi&quot;;
 import fetchCsrfToken from &quot;./csrf&quot;;
 
@@ -320,8 +268,8 @@ export const useAuth = () =&gt; {
 	return context;
 };
 </code></pre>
-			<p><strong>App.tsx</strong></p>
-			<pre><code class="language-javascript">//Wrap the app by the context
+<p><strong>App.tsx</strong></p>
+<pre><code class="language-javascript">//Wrap the app by the context
 &lt;AuthProvider&gt;
     &lt;Routes&gt;
     	&lt;Route path=&quot;/&quot; element={&lt;Home /&gt;} /&gt;
@@ -332,8 +280,8 @@ export const useAuth = () =&gt; {
     &lt;/Routes&gt;
 &lt;/AuthProvider&gt;
 </code></pre>
-			<p><strong>Auth functions</strong></p>
-			<pre><code class="language-javascript">//Login
+<p><strong>Auth functions</strong></p>
+<pre><code class="language-javascript">//Login
 const handleSubmit: FormSubmitType = async (event) =&gt; {
 		event.preventDefault();
 		await fetchCsrfToken();
@@ -376,12 +324,8 @@ const logout = async () =&gt; {
 		window.location.href = &quot;/login&quot;;
 };
 </code></pre>
-			<br />
-			<h1 id="how-to-handle-cors-in-the-server">
-				How to Handle CORS in the Server
-			</h1>
-			<br />
-			<pre><code class="language-javascript">app.use(cors({
+<br><h1 id="how-to-handle-cors-in-the-server">How to Handle CORS in the Server</h1><br>
+<pre><code class="language-javascript">app.use(cors({
   origin: process.env.NODE_ENV === &#39;production&#39; 
     ? process.env.FRONTEND_URL 
     : &#39;http://localhost:5173&#39;,
@@ -396,39 +340,15 @@ const logout = async () =&gt; {
   optionsSuccessStatus: 200
 }));
 </code></pre>
-			<br />
-			<h1 id="how-to-handle-csrf-token">How to Handle CSRF token</h1>
-			<br />
-			<ul>
-				<li>
-					CSRF Protection Is Only Needed for Cookie-Based Auth
-					(/login, /refresh)
-				</li>
-				<li>
-					No need to send with requests that use
-					<strong>Authorization: Bearer accessToken</strong> in
-					headers, which are
-					<strong>not automatically sent by the browser</strong>, They
-					are <strong>not vulnerable to CSRF</strong>
-				</li>
-				<li>
-					Access tokens in <code>Authorization</code> header are
-					<strong>not</strong> susceptible to CSRF
-				</li>
-				<li>
-					If any of <code>POST,PUT,PATCH,DELET</code> endpoint rely on
-					cookies for authentication then CSRF protection should be
-					added because HTTP methods change server state. (no need for
-					<code>GET</code> since they are read only and don&#39;t
-					change server state)
-				</li>
-			</ul>
-			<br />
-			<h2 id="how-to-handle-csrf-in-express">
-				How to handle CSRF in Express
-			</h2>
-			<br />
-			<pre><code class="language-javascript">import csrf from &quot;csurf&quot;;
+<br><h1 id="how-to-handle-csrf-token">How to Handle CSRF token</h1><br>
+<ul>
+<li>CSRF Protection Is Only Needed for Cookie-Based Auth (/login, /refresh)</li>
+<li>No need to send with requests that use <strong>Authorization: Bearer accessToken</strong> in headers, which are <strong>not automatically sent by the browser</strong>, They are <strong>not vulnerable to CSRF</strong></li>
+<li>Access tokens in <code>Authorization</code> header are <strong>not</strong> susceptible to CSRF</li>
+<li>If any of <code>POST,PUT,PATCH,DELET</code> endpoint rely on cookies for authentication then CSRF protection should be added because HTTP methods change server state. (no need for <code>GET</code> since they are read only and don&#39;t change server state)</li>
+</ul>
+<br><h2 id="how-to-handle-csrf-in-express">How to handle CSRF in Express</h2><br>
+<pre><code class="language-javascript">import csrf from &quot;csurf&quot;;
 
 // CSRF protection
 const csrfProtection = csrf({ 
@@ -446,40 +366,18 @@ app.get(&quot;/api/auth/csrf-token&quot;, (req: Request, res: Response) =&gt; {
   res.json({ csrfToken: req.csrfToken() });
 });
 </code></pre>
-			<br />
-			<h2 id="how-to-handle-csrf-in-react">
-				How to handle CSRF in React
-			</h2>
-			<br />
-			<ul>
-				<li>covered above</li>
-			</ul>
-			<br />
-			<h2 id="what-is-codewithcredintials-truecode-in-requests">
-				What is <code>withCredintials : true</code> in requests
-			</h2>
-			<br />
-			<ul>
-				<li>
-					This can be used with axios or fetch api headers from the
-					front-end.
-				</li>
-				<li>
-					by default, browsers block sending cookies in cross-origin
-					requests for security.
-				</li>
-				<li>
-					This allows the browser to send cookies (like refresh
-					tokens) and other credentials from the client to the server
-					during a request.
-				</li>
-			</ul>
-			<br />
-			<h2 id="create-and-implement-authentication-middleware-in-express">
-				Create and Implement Authentication middleware in Express
-			</h2>
-			<br />
-			<pre><code class="language-javascript">import { Request, Response, NextFunction } from &#39;express&#39;;
+<br><h2 id="how-to-handle-csrf-in-react">How to handle CSRF in React</h2><br>
+<ul>
+<li>covered above</li>
+</ul>
+<br><h2 id="what-is-withcredintials-true-in-requests">What is <code>withCredintials : true</code> in requests</h2><br>
+<ul>
+<li>This can be used with axios or fetch api headers from the front-end.</li>
+<li>by default, browsers block sending cookies in cross-origin requests for security.</li>
+<li>This allows the browser to send cookies (like refresh tokens) and other credentials from the client to the server during a request.</li>
+</ul>
+<br><h2 id="create-and-implement-authentication-middleware-in-express">Create and Implement Authentication middleware in Express</h2><br>
+<pre><code class="language-javascript">import { Request, Response, NextFunction } from &#39;express&#39;;
 import jwt from &#39;jsonwebtoken&#39;;
 
 export default function jwtAuth(req: Request, res: Response, next: NextFunction): void {
@@ -503,12 +401,8 @@ router.get(&quot;/protected&quot;, authenticateToken, (req, res) =&gt; {
 	res.json({ message: &quot;Protected route accessed&quot; });
 });
 </code></pre>
-			<br />
-			<h1 id="input-sanitisazion-and-validation-is-must">
-				Input sanitisazion and validation is must
-			</h1>
-			<br />
-			<pre><code class="language-javascript">// Input validation
+<br><h1 id="input-sanitisazion-and-validation-is-must">Input sanitisazion and validation is must</h1><br>
+<pre><code class="language-javascript">// Input validation
  if (!email || !password || !name) {
    res.status(400).json({ message: &#39;All fields are required&#39; });
    return;
@@ -535,38 +429,23 @@ router.get(&quot;/protected&quot;, authenticateToken, (req, res) =&gt; {
    return;
  }
 </code></pre>
-			<br />
-			<h1 id="what-more-to-think-of">What more to think of</h1>
-			<br />
-			<ul>
-				<li>
-					password hasing is the best practice when save them on DB
-				</li>
-			</ul>
-			<pre><code class="language-javascript">//hash when registering
+<br><h1 id="what-more-to-think-of">What more to think of</h1><br>
+<ul>
+<li>password hasing is the best practice when save them on DB</li>
+</ul>
+<pre><code class="language-javascript">//hash when registering
 const hashedPassword = await bcrypt.hash(password, 10);
 
 //Check if the password is correct when login
 const passwordMatch = await bcrypt.compare(password, user.password);
 </code></pre>
-			<ul>
-				<li>
-					need to detect Refresh Token reuse, need to block it before
-					an attacker could rotate it. and try to detect if the token
-					is used befre
-				</li>
-				<li>access token should be short lived (10-15min)</li>
-				<li>
-					Add token blacklisting for JWT (Set in local, redis in
-					production)
-				</li>
-				<li>
-					From the BE, implement a rate limiting for
-					<code>/auth/login</code>, <code>/auth/refresh</code>, and
-					other sensitive endpoints.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">npm install express-rate-limit //install type as well
+<ul>
+<li>need to detect Refresh Token reuse, need to block it before an attacker could rotate it. and try to detect if the token is used befre</li>
+<li>access token should be short lived (10-15min)</li>
+<li>Add token blacklisting for JWT (Set in local, redis in production)</li>
+<li>From the BE, implement a rate limiting for <code>/auth/login</code>, <code>/auth/refresh</code>, and other sensitive endpoints.</li>
+</ul>
+<pre><code class="language-javascript">npm install express-rate-limit //install type as well
 import rateLimit from &#39;express-rate-limit&#39;;
 
 const loginLimiter = rateLimit({
@@ -579,28 +458,12 @@ const loginLimiter = rateLimit({
 
 app.use(&#39;/api/auth/login&#39;, loginLimiter);
 </code></pre>
-			<ul>
-				<li>
-					using <code>sameSite:&quot;strict&quot;</code> helps to
-					<strong
-						>block sending cookies on cross-site navigation</strong
-					>
-					which is great in terms of CSRF protection.
-				</li>
-				<li>
-					But,
-					<strong
-						>FE should be on the same domain or subdomain as the
-						server/API</strong
-					>
-				</li>
-			</ul>
-			<br />
-			<h3 id="use-these-features-for-better-security">
-				Use these features for better security
-			</h3>
-			<br />
-			<pre><code class="language-javascript">import helmet from &#39;helmet&#39;;
+<ul>
+<li>using <code>sameSite:&quot;strict&quot;</code> helps to <strong>block sending cookies on cross-site navigation</strong> which is great in terms of CSRF protection.</li>
+<li>But, <strong>FE should be on the same domain or subdomain as the server/API</strong></li>
+</ul>
+<br><h3 id="use-these-features-for-better-security">Use these features for better security</h3><br>
+<pre><code class="language-javascript">import helmet from &#39;helmet&#39;;
 //this helps to protect against XSS, clickjacking, insecure headers
 //and it Adds secure HTTP headers
 
@@ -652,12 +515,8 @@ app.use(cookieParser());// Cookie parsing
 app.use(mongoSanitize());// Sanitize user input
 app.use(&#39;/api/auth&#39;, authLimiter, authRoutes);// Routes with specific rate limiting
 </code></pre>
-			<br />
-			<h3 id="extra-features-to-add-in-server">
-				Extra Features to add in server
-			</h3>
-			<br />
-			<pre><code class="language-javascript">// Health check endpoint
+<br><h3 id="extra-features-to-add-in-server">Extra Features to add in server</h3><br>
+<pre><code class="language-javascript">// Health check endpoint
 app.get(&#39;/api/health&#39;, (req: Request, res: Response) =&gt; {
   res.status(200).json({ 
     status: &#39;OK&#39;, 
@@ -686,34 +545,12 @@ app.use(&#39;*&#39;, (req: Request, res: Response) =&gt; {
   res.status(404).json({ message: &#39;Route not found&#39; });
 });
 </code></pre>
-			<br />
-			<h3 id="refer-these">refer these</h3>
-			<br />
-			<pre><code class="language-javascript">X-Content-Type-Options: nosniff	//Disable MIME type sniffing and it prevents content spoofing / XSS
+<br><h3 id="refer-these">refer these</h3><br>
+<pre><code class="language-javascript">X-Content-Type-Options: nosniff	//Disable MIME type sniffing and it prevents content spoofing / XSS
 X-Frame-Options: DENY // Protect the site from being embedded in an &lt;iframe&gt; and it Prevents clickjacking
 Referrer-Policy: strict-origin-when-cross-origin //Restrict referrer data and it Prevents sensitive info leakage
 </code></pre>
-			<br />
-			<h1
-				id="can-an-attacker-use-the-access-refresh-token-together-in-a-codecurlcode"
-			>
-				Can an attacker use the access + refresh token together in a
-				<code>curl</code>?
-			</h1>
-			<br />
-			<pre><code class="language-bash">curl -H &quot;Authorization: Bearer ACCESS_TOKEN&quot; --cookie &quot;refreshToken=XYZ&quot; https://yourapi.com/protected
-</code></pre>
-			<ul>
-				<li>
-					This is possible if an attacker can steal both token, which
-					is hard to do since refresh token is in Http-Only cookies
-					and accessToken is in memory.
-				</li>
-				<li>
-					But if an attacker could get access to user&#39;s browser,
-					this is possible.
-				</li>
-			</ul>
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>

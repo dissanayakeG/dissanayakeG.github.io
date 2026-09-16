@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>React</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
@@ -14,9 +14,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -26,65 +27,31 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br />
-			<h1 id="react">React</h1>
-			<br />
-			<br />
-			<h1 id="describing-the-ui">Describing the UI</h1>
-			<br />
-			<br />
-			<h2 id="jsx">JSX</h2>
-			<br />
-			<ul>
-				<li>
-					JSX is different from HTML: In JSX, we can write JavaScript
-					expressions inside curly braces {}.
-				</li>
-				<li>
-					Example: <code>&lt;h1&gt;Hello, {name}&lt;/h1&gt;</code>
-				</li>
-				<li>
-					Components are the building blocks of a React application:
-					They are just JavaScript functions (or classes) and their
-					names must start with an uppercase letter.
-				</li>
-				<li>
-					Console logging in development: When using React.StrictMode,
-					components may render twice in development mode to help
-					detect potential issues. This does not happen in production
-					builds.
-				</li>
-			</ul>
-			<br />
-			<h2 id="react-rendering-steps">React Rendering Steps</h2>
-			<br />
-			<ul>
-				<li>
-					State Change Occurs - A component&#39;s state or props are
-					updated.
-				</li>
-				<li>
-					Virtual DOM Update - React detects the change and creates a
-					new Virtual DOM tree.
-				</li>
-				<li>
-					Diffing Algorithm Runs - React compares the new Virtual DOM
-					with the previous one to identify changes (DOM diffing).
-				</li>
-				<li>
-					Reconciliation and DOM Update - React updates only the parts
-					of the actual DOM that changed, ensuring efficient
-					rendering.
-				</li>
-			</ul>
-			<br />
-			<h2 id="styling">Styling</h2>
-			<br />
-			<ul>
-				<li>use 3 main ways</li>
-			</ul>
-			<pre><code class="language-javascript"># 1. Inline Styles
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="react">React</h1><br>
+<br><h1 id="describing-the-ui">Describing the UI</h1><br>
+<br><h2 id="jsx">JSX</h2><br>
+<ul>
+<li>JSX is different from HTML: In JSX, we can write JavaScript expressions inside curly braces {}.</li>
+<li>Example: <code>&lt;h1&gt;Hello, {name}&lt;/h1&gt;</code></li>
+<li>Components are the building blocks of a React application: They are just JavaScript functions (or classes) and their names must start with an uppercase letter.</li>
+<li>Console logging in development: When using React.StrictMode, components may render twice in development mode to help detect potential issues. This does not happen in production builds.</li>
+</ul>
+<br><h2 id="react-rendering-steps">React Rendering Steps</h2><br>
+<ul>
+<li>State Change Occurs - A component&#39;s state or props are updated.</li>
+<li>Virtual DOM Update - React detects the change and creates a new Virtual DOM tree.</li>
+<li>Diffing Algorithm Runs - React compares the new Virtual DOM with the previous one to identify changes (DOM diffing).</li>
+<li>Reconciliation and DOM Update - React updates only the parts of the actual DOM that changed, ensuring efficient rendering.</li>
+</ul>
+<p><img src="./assets/images/React-rendering-steps.png" alt="React-rendering-steps"></p>
+<br><h2 id="styling">Styling</h2><br>
+<ul>
+<li>use 3 main ways</li>
+</ul>
+<pre><code class="language-javascript"># 1. Inline Styles
 
 //use the style prop
 //The value is a JavaScript object, not a string.
@@ -110,44 +77,16 @@ function Button() {
   return &lt;button className={styles.btn}&gt;Click Me&lt;/button&gt;;
 }
 </code></pre>
-			<br />
-			<h2 id="props">Props</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						Props are parameters passed to components. They allow
-						data to flow from parent to child components.
-					</p>
-				</li>
-				<li>
-					<p>
-						Example:
-						<code>&lt;Welcome name=&quot;John&quot; /&gt;</code>
-					</p>
-				</li>
-				<li>
-					<p>
-						Props are immutable: You cannot modify props directly
-						inside a component. If you need to change data, use
-						state instead.
-					</p>
-				</li>
-				<li>
-					<p>
-						When you place content within a JSX tag, the parent
-						component automatically receives that content as a
-						<code>children</code> prop. For instance, in the example
-						below, the <strong>Card</strong> component receives the
-						<strong>children</strong> prop containing
-						<strong
-							><strong
-								><code>&lt;Avatar /&gt;</code></strong
-							></strong
-						>
-						and renders it inside a wrapper <strong>div</strong>.
-					</p>
-					<pre><code class="language-javascript">function Card({ myProp, children }) {
+<br><h2 id="props">Props</h2><br>
+<ul>
+<li><p>Props are parameters passed to components. They allow data to flow from parent to child components.</p>
+</li>
+<li><p>Example: <code>&lt;Welcome name=&quot;John&quot; /&gt;</code></p>
+</li>
+<li><p>Props are immutable: You cannot modify props directly inside a component. If you need to change data, use state instead.</p>
+</li>
+<li><p>When you place content within a JSX tag, the parent component automatically receives that content as a <code>children</code> prop. For instance, in the example below, the <strong>Card</strong> component receives the <strong>children</strong> prop containing <strong><strong><code>&lt;Avatar /&gt;</code></strong></strong> and renders it inside a wrapper <strong>div</strong>.</p>
+<pre><code class="language-javascript">function Card({ myProp, children }) {
   return (
     &lt;div className=&quot;card&quot;&gt;
       {children}
@@ -159,73 +98,27 @@ export default function Profile() {
   return ( &lt;Card myProp={...}&gt;  &lt;Avatar/&gt;  &lt;/Card&gt; );
 }
 </code></pre>
-				</li>
-			</ul>
-			<br />
-			<h2 id="react-fragments">React Fragments</h2>
-			<br />
-			<ul>
-				<li>
-					Fragments (&lt;&gt;...&lt;/&gt;) let you group multiple JSX
-					elements without adding extra nodes to the DOM. Unlike
-					wrapping with a <code>&lt;div&gt;</code>, fragments do not
-					produce any HTML tags in the final output.
-				</li>
-			</ul>
-			<br />
-			<h2 id="rendering-a-list">Rendering a List</h2>
-			<br />
-			<ul>
-				<li>
-					When using JSX elements directly inside a
-					<code>map()</code> call, you must always assign them unique
-					<strong>keys</strong>. Keys help React identify and manage
-					elements efficiently. Keep in mind:
-				</li>
-				<li><strong>Keys must be unique among siblings.</strong></li>
-				<li>
-					<strong
-						>Keys should remain stable and not change over
-						time.</strong
-					>
-				</li>
-				<li>
-					<strong
-						>Avoid generating keys dynamically during
-						rendering.</strong
-					>
-				</li>
-			</ul>
-			<br />
-			<h2 id="keeping-components-pure">Keeping Components Pure</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						In general, you should not rely on components being
-						rendered in any specific order.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong
-							>Avoid side effects caused by shared state:</strong
-						>
-						If a component reads and writes to a shared variable
-						(e.g., a <code>guest</code> variable declared outside
-						the component), rendering it multiple times may lead to
-						inconsistent JSX.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Unpredictable behavior:</strong> Other
-						components that access the same shared variable will
-						produce different JSX depending on when they are
-						rendered. This lack of predictability can lead to bugs
-						and unintended behavior.
-					</p>
-					<pre><code class="language-javascript">#Bad
+</li>
+</ul>
+<br><h2 id="react-fragments">React Fragments</h2><br>
+<ul>
+<li>Fragments (&lt;&gt;...&lt;/&gt;) let you group multiple JSX elements without adding extra nodes to the DOM. Unlike wrapping with a <code>&lt;div&gt;</code>, fragments do not produce any HTML tags in the final output.</li>
+</ul>
+<br><h2 id="rendering-a-list">Rendering a List</h2><br>
+<ul>
+<li>When using JSX elements directly inside a <code>map()</code> call, you must always assign them unique <strong>keys</strong>. Keys help React identify and manage elements efficiently. Keep in mind: </li>
+<li><strong>Keys must be unique among siblings.</strong>  </li>
+<li><strong>Keys should remain stable and not change over time.</strong>  </li>
+<li><strong>Avoid generating keys dynamically during rendering.</strong></li>
+</ul>
+<br><h2 id="keeping-components-pure">Keeping Components Pure</h2><br>
+<ul>
+<li><p>In general, you should not rely on components being rendered in any specific order.  </p>
+</li>
+<li><p><strong>Avoid side effects caused by shared state:</strong> If a component reads and writes to a shared variable (e.g., a <code>guest</code> variable declared outside the component), rendering it multiple times may lead to inconsistent JSX.  </p>
+</li>
+<li><p><strong>Unpredictable behavior:</strong> Other components that access the same shared variable will produce different JSX depending on when they are rendered. This lack of predictability can lead to bugs and unintended behavior.</p>
+<pre><code class="language-javascript">#Bad
 let guest = 0;    
 function Cup() {
   guest = guest + 1;// Bad: changing a preexisting variable!
@@ -253,55 +146,29 @@ export default function TeaSet() {
   );
 }
 </code></pre>
-				</li>
-			</ul>
-			<br />
-			<h1 id="adding-interactivity">Adding Interactivity</h1>
-			<br />
-			<br />
-			<h2 id="responding-to-events">Responding to Events</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						Functions passed to event handlers must be passed, not
-						called. For example:
-					</p>
-					<pre><code class="language-javascript">&lt;button onClick={handleClick}&gt; //passing a function (correct)
+</li>
+</ul>
+<br><h1 id="adding-interactivity">Adding Interactivity</h1><br>
+<br><h2 id="responding-to-events">Responding to Events</h2><br>
+<ul>
+<li><p>Functions passed to event handlers must be passed, not called. For example:</p>
+<pre><code class="language-javascript">&lt;button onClick={handleClick}&gt; //passing a function (correct)
 &lt;button onClick={handleClick()}&gt;//calling a function (incorrect)
 </code></pre>
-				</li>
-				<li>
-					<p>
-						This tells React to remember it and only call your
-						function when the user clicks the button.
-					</p>
-				</li>
-				<li>
-					<p>
-						In the second example, the () at the end of
-						handleClick() fires the function immediately during
-						rendering, without any clicks
-					</p>
-					<pre><code class="language-javascript">&lt;button onClick={() =&gt; alert(&#39;...&#39;)}&gt; //passing a function (correct)
+</li>
+<li><p>This tells React to remember it and only call your function when the user clicks the button.</p>
+</li>
+<li><p>In the second example, the () at the end of handleClick() fires the function immediately during rendering, without any clicks</p>
+<pre><code class="language-javascript">&lt;button onClick={() =&gt; alert(&#39;...&#39;)}&gt; //passing a function (correct)
 &lt;button onClick={alert(&#39;...&#39;)}&gt; //calling a function (incorrect)
 </code></pre>
-				</li>
-				<li>
-					<p>In both cases, what you want to pass is a function:</p>
-				</li>
-				<li>
-					<p>
-						Because event handlers are declared inside of a
-						component, they have access to the component’s props.
-					</p>
-				</li>
-				<li>
-					<p>
-						All events propagate in React except onScroll, which
-						only works on the JSX tag you attach it to.
-					</p>
-					<pre><code class="language-javascript">export default function Toolbar() {
+</li>
+<li><p>In both cases, what you want to pass is a function:</p>
+</li>
+<li><p>Because event handlers are declared inside of a component, they have access to the component’s props.</p>
+</li>
+<li><p>All events propagate in React except onScroll, which only works on the JSX tag you attach it to.</p>
+<pre><code class="language-javascript">export default function Toolbar() {
   const handleClick = () =&gt; {
       alert(&#39;You clicked on the toolbar!&#39;);
   };
@@ -319,60 +186,29 @@ export default function TeaSet() {
   );
 }
 </code></pre>
-				</li>
-			</ul>
-			<br />
-			<h2 id="a-components-memory-and-state-in-react">
-				A Component’s Memory and State in React
-			</h2>
-			<br />
-			<ul>
-				<li>
-					State works like a snapshot, so you can’t read the latest
-					state from an asynchronous operation like a timeout.
-				</li>
-			</ul>
-			<ol>
-				<li>
-					<p><strong>State vs. Local Variables</strong>:</p>
-					<ul>
-						<li>
-							<strong>State</strong> retains information between
-							renders, while local variables reset each time a
-							component re*renders.
-						</li>
-						<li>
-							<strong>State updates trigger re*renders</strong>,
-							whereas changes to local variables do not.
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p><strong>Understanding State</strong>:</p>
-					<ul>
-						<li>
-							State is private to a component and cannot be
-							changed by parent components.
-						</li>
-						<li>
-							Use <strong>useState</strong> to declare and manage
-							state in a functional component.
-						</li>
-						<li>
-							State updates are asynchronous and processed after
-							event handlers complete (called
-							<strong>batching</strong>).
-						</li>
-						<li>
-							This means React waits until the current event
-							handler or lifecycle method finishes before
-							processing state changes, improving performance by
-							minimizing re-renders.
-						</li>
-					</ul>
-				</li>
-			</ol>
-			<pre><code class="language-javascript">const [text, setText] = useState(&quot;&quot;);
+</li>
+</ul>
+<br><h2 id="a-components-memory-and-state-in-react">A Component’s Memory and State in React</h2><br>
+<ul>
+<li>State works like a snapshot, so you can’t read the latest state from an asynchronous operation like a timeout.</li>
+</ul>
+<ol>
+<li><p><strong>State vs. Local Variables</strong>:</p>
+<ul>
+<li><strong>State</strong> retains information between renders, while local variables reset each time a component re*renders.</li>
+<li><strong>State updates trigger re*renders</strong>, whereas changes to local variables do not.</li>
+</ul>
+</li>
+<li><p><strong>Understanding State</strong>:</p>
+<ul>
+<li>State is private to a component and cannot be changed by parent components.</li>
+<li>Use <strong>useState</strong> to declare and manage state in a functional component.</li>
+<li>State updates are asynchronous and processed after event handlers complete (called <strong>batching</strong>).</li>
+<li>This means React waits until the current event handler or lifecycle method finishes before processing state changes, improving performance by minimizing re-renders.</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-javascript">const [text, setText] = useState(&quot;&quot;);
 
 const handleClick = () =&gt; {
   setText(&quot;ddd&quot;);
@@ -382,339 +218,148 @@ const handleClick = () =&gt; {
 //console.log(text) will still print the old value (before the update), not &quot;ddd&quot;.
 // React batches state updates during event handlers to optimize performance. It applies all state changes after the handler finishes — //so text hasn&#39;t changed yet at the time of the console.log.
 </code></pre>
-			<ol start="4">
-				<li>
-					<p><strong>How React Handles Renders</strong>:</p>
-					<ul>
-						<li>
-							React calls the component function, which returns a
-							JSX snapshot based on the state (at that time).
-						</li>
-						<li>React updates the UI to match this snapshot.</li>
-						<li>
-							State remains fixed during a render; updates apply
-							only in the next render.
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p><strong>Managing Multiple State Updates</strong>:</p>
-					<ul>
-						<li>
-							<p>
-								Calling <strong>setState</strong> multiple times
-								with the same value may not behave as expected
-								due to state snapshots.
-							</p>
-						</li>
-						<li>
-							<p>
-								Use <strong>updater functions</strong> (e.g.,
-								<strong>setNumber(n =&gt; n + 1)</strong>) to
-								ensure updates are based on the latest state.
-							</p>
-							<pre><code class="language-javascript">&lt;button onClick={() =&gt; {
+<ol start="4">
+<li><p><strong>How React Handles Renders</strong>:</p>
+<ul>
+<li>React calls the component function, which returns a JSX snapshot based on the state (at that time).</li>
+<li>React updates the UI to match this snapshot.</li>
+<li>State remains fixed during a render; updates apply only in the next render.</li>
+</ul>
+</li>
+<li><p><strong>Managing Multiple State Updates</strong>:</p>
+<ul>
+<li><p>Calling <strong>setState</strong> multiple times with the same value may not behave as expected due to state snapshots.</p>
+</li>
+<li><p>Use <strong>updater functions</strong> (e.g., <strong>setNumber(n =&gt; n + 1)</strong>) to ensure updates are based on the latest state.</p>
+<pre><code class="language-javascript">&lt;button onClick={() =&gt; {
   setNumber(number + 1);
   setNumber(number + 1);
   setNumber(number + 1);}}&gt;+3&lt;/button&gt;
 //In each function React prepares to change number to 1 on the next render since initial value is 0
 //Its value was “fixed” when React “took the snapshot” of the UI by calling your component.
 </code></pre>
-							<ul>
-								<li>
-									To summarize, here’s how you can think of
-									what you’re passing to the setNumber state
-									setter:
-									<ol>
-										<li>
-											An updater function (<strong
-												>e.g. n =&gt; n + 1</strong
-											>) gets added to the queue.
-										</li>
-										<li>
-											Any other value (<strong
-												>e.g. number 5</strong
-											>) adds “replace with 5” to the
-											queue, ignoring what’s already
-											queued.
-										</li>
-									</ol>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p>
-						<strong>Updating Objects and Arrays in State</strong>:
-					</p>
-					<ul>
-						<li>
-							State objects and arrays should be treated as
-							<strong>immutable</strong>. Do not modify them
-							directly; instead, create a copy and update it.
-						</li>
-						<li>
-							Example for objects:
-							<pre><code class="language-javascript">setPerson({
+<ul>
+<li>To summarize, here’s how you can think of what you’re passing to the setNumber state setter:<ol>
+<li>An updater function (<strong>e.g. n =&gt; n + 1</strong>) gets added to the queue.</li>
+<li>Any other value (<strong>e.g. number 5</strong>) adds “replace with 5” to the queue, ignoring what’s already queued.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Updating Objects and Arrays in State</strong>:</p>
+<ul>
+<li>State objects and arrays should be treated as <strong>immutable</strong>. Do not modify them directly; instead, create a copy and update it.</li>
+<li>Example for objects:<pre><code class="language-javascript">setPerson({
   ...person,
   firstName: e.target.value,
 });
 </code></pre>
-						</li>
-						<li>
-							Example for arrays:
-							<pre><code class="language-javascript">setArtists([
+</li>
+<li>Example for arrays:<pre><code class="language-javascript">setArtists([
   ...artists,
   { id: nextId++, name: name },
 ]);
 </code></pre>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p><strong>Key Patterns for State Management</strong>:</p>
-					<ul>
-						<li>
-							<strong>Objects</strong>: Use the spread operator
-							(<strong>...</strong>) to copy and update fields.
-						</li>
-						<li>
-							<strong>Arrays</strong>: Use array methods like
-							<strong>map</strong>, <strong>filter</strong>, or
-							<strong>slice</strong> to create a new array and
-							apply changes (e.g., adding, removing, or
-							transforming items).
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p><strong>Best Practices</strong>:</p>
-					<ul>
-						<li>
-							Keep state values immutable to ensure React
-							re*renders correctly.
-						</li>
-						<li>
-							Use updater functions for sequential updates in
-							event handlers.
-						</li>
-						<li>
-							Avoid defining hooks inside conditional blocks or
-							nested functions.
-						</li>
-					</ul>
-				</li>
-			</ol>
-			<ul>
-				<li>
-					<p>
-						State Triggers Re-Renders: Calling a state updater
-						function like setState() doesn&#39;t immediately change
-						the state variable. Instead, it schedules a re-render,
-						during which React provides the updated state. ​
-					</p>
-				</li>
-				<li>
-					<p>
-						State is External to Components: State is maintained by
-						React outside of your component functions. When React
-						re-renders a component, it passes the current state
-						snapshot to the function.
-					</p>
-				</li>
-				<li>
-					<p>
-						Event handlers use the state from when they were
-						created.
-					</p>
-				</li>
-				<li>
-					<p>
-						If you update the state more than once inside the same
-						event (like a button click), all those updates use the
-						same &quot;old&quot; version of the state — not the
-						updated one.
-					</p>
-				</li>
-			</ul>
-			<br />
-			<h1 id="managing-state">Managing State</h1>
-			<br />
-			<br />
-			<h3 id="best-practices-for-managing-state-in-react">
-				Best Practices for Managing State in React
-			</h3>
-			<br />
-			<br />
-			<h3 id="declarative-ui">Declarative UI</h3>
-			<br />
-			<ul>
-				<li>
-					Describe what the UI should look like for each state, not
-					how to update it (declarative &gt; imperative).
-				</li>
-				<li>
-					Declarative programming means describing the UI for each
-					visual state rather than micromanaging the UI (imperative).
-				</li>
-			</ul>
-			<br />
-			<h3 id="state-design-principles">State Design Principles</h3>
-			<br />
-			<ul>
-				<li>
-					<p>
-						<strong>Merge related state</strong>: If two state
-						variables always change together, combine them.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Avoid impossible states</strong>: Choose state
-						structure that naturally prevents invalid combinations.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Reduce mistakes</strong>: Keep state minimal and
-						avoid redundancy.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Don’t mirror props</strong> in state unless
-						intentionally preventing updates.
-					</p>
-				</li>
-				<li>
-					<p>
-						For selections, store IDs/indexes instead of whole
-						objects.
-					</p>
-				</li>
-				<li><p>Flatten deeply nested state for easier updates.</p></li>
-			</ul>
-			<br />
-			<h3 id="lifting-state-up">Lifting State Up</h3>
-			<br />
-			<ul>
-				<li>
-					When two components need shared state:
-					<ol>
-						<li>
-							Move the state to their
-							<strong>common parent</strong>.
-						</li>
-						<li>
-							Pass data and event handlers down via
-							<strong>props</strong>.
-						</li>
-					</ol>
-				</li>
-				<li>
-					This approach ensures synchronization and separation of
-					concerns.
-				</li>
-			</ul>
-			<br />
-			<h3 id="component-identity-and-state-preservation">
-				Component Identity and State Preservation
-			</h3>
-			<br />
-			<ul>
-				<li>
-					React tracks components by
-					<strong>position in the UI tree</strong>, not by their JSX
-					tag.
-				</li>
-			</ul>
-			<ul>
-				<li>
-					<strong>Same component at the same position</strong> = state
-					preserved
-				</li>
-				<li>
-					<strong>Different component or position</strong> = state
-					reset
-				</li>
-			</ul>
-			<ul>
-				<li>
-					To preserve state across renders:
-					<ul>
-						<li>Keep tree structure consistent.</li>
-						<li>
-							Declare components at the
-							<strong>top level</strong> (don’t nest function
-							components).
-						</li>
-						<li>
-							Use <code>key</code> to differentiate components
-							explicitly if needed.
-						</li>
-					</ul>
-				</li>
-			</ul>
-			<br />
-			<h3 id="resetting-state-at-the-same-position">
-				Resetting state at the same position
-			</h3>
-			<br />
-			<p>
-				There are two ways to reset state when switching between them:
-			</p>
-			<ol>
-				<li>Render components in different positions</li>
-				<li>
-					Give each component an explicit identity with key
-					<strong>NOTE:</strong> Remember that keys are not globally
-					unique. They only specify the position within the parent.
-				</li>
-			</ol>
-			<br />
-			<h2 id="extracting-state-logic-into-a-reducer">
-				Extracting State Logic into a Reducer
-			</h2>
-			<br />
-			<br />
-			<h3 id="why-use-a-reducer">Why Use a Reducer?</h3>
-			<br />
-			<ul>
-				<li>
-					As components grow, using multiple
-					<code>useState</code> hooks can make state management messy.
-					A <strong>reducer</strong> centralizes all state logic in a
-					single pure function, improving clarity, maintainability,
-					and debuggability.
-				</li>
-			</ul>
-			<p><strong>Key Points:</strong></p>
-			<p>
-				<strong>Reducers must be pure:</strong> No side effects—just
-				compute and return the new state based on current state +
-				action.
-			</p>
-			<p>
-				<strong>Actions reflect user interactions:</strong> One action
-				should represent one meaningful interaction (e.g., reset_form
-				instead of multiple set_fields).
-			</p>
-			<p>
-				<strong>Better for complex state:</strong> Especially when state
-				updates are spread across many handlers.
-			</p>
-			<p><strong>Steps to convert</strong> useState to useReducer:</p>
-			<ol>
-				<li>Dispatch actions from handlers.</li>
-				<li>Write a pure reducer function.</li>
-				<li>
-					Replace useState with useReducer. 👉 Use Immer if you prefer
-					writing reducers in a mutating style but want to preserve
-					immutability.
-				</li>
-			</ol>
-			<pre><code class="language-js"># From
+</li>
+</ul>
+</li>
+<li><p><strong>Key Patterns for State Management</strong>:</p>
+<ul>
+<li><strong>Objects</strong>: Use the spread operator (<strong>...</strong>) to copy and update fields.</li>
+<li><strong>Arrays</strong>: Use array methods like <strong>map</strong>, <strong>filter</strong>, or <strong>slice</strong> to create a new array and apply changes (e.g., adding, removing, or transforming items).</li>
+</ul>
+</li>
+<li><p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Keep state values immutable to ensure React re*renders correctly.</li>
+<li>Use updater functions for sequential updates in event handlers.</li>
+<li>Avoid defining hooks inside conditional blocks or nested functions.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>State Triggers Re-Renders: Calling a state updater function like setState() doesn&#39;t immediately change the state variable. Instead, it schedules a re-render, during which React provides the updated state. ​</p>
+</li>
+<li><p>State is External to Components: State is maintained by React outside of your component functions. When React re-renders a component, it passes the current state snapshot to the function.</p>
+</li>
+<li><p>Event handlers use the state from when they were created.</p>
+</li>
+<li><p>If you update the state more than once inside the same event (like a button click), all those updates use the same &quot;old&quot; version of the state — not the updated one.</p>
+</li>
+</ul>
+<br><h1 id="managing-state">Managing State</h1><br>
+<br><h3 id="best-practices-for-managing-state-in-react">Best Practices for Managing State in React</h3><br>
+<br><h3 id="declarative-ui">Declarative UI</h3><br>
+<ul>
+<li>Describe what the UI should look like for each state, not how to update it (declarative &gt; imperative).</li>
+<li>Declarative programming means describing the UI for each visual state rather than micromanaging the UI (imperative).</li>
+</ul>
+<br><h3 id="state-design-principles">State Design Principles</h3><br>
+<ul>
+<li><p><strong>Merge related state</strong>: If two state variables always change together, combine them.</p>
+</li>
+<li><p><strong>Avoid impossible states</strong>: Choose state structure that naturally prevents invalid combinations.</p>
+</li>
+<li><p><strong>Reduce mistakes</strong>: Keep state minimal and avoid redundancy.</p>
+</li>
+<li><p><strong>Don’t mirror props</strong> in state unless intentionally preventing updates.</p>
+</li>
+<li><p>For selections, store IDs/indexes instead of whole objects.</p>
+</li>
+<li><p>Flatten deeply nested state for easier updates.</p>
+</li>
+</ul>
+<br><h3 id="lifting-state-up">Lifting State Up</h3><br>
+<ul>
+<li>When two components need shared state:<ol>
+<li>Move the state to their <strong>common parent</strong>.</li>
+<li>Pass data and event handlers down via <strong>props</strong>.</li>
+</ol>
+</li>
+<li>This approach ensures synchronization and separation of concerns.</li>
+</ul>
+<br><h3 id="component-identity-and-state-preservation">Component Identity and State Preservation</h3><br>
+<ul>
+<li>React tracks components by <strong>position in the UI tree</strong>, not by their JSX tag.</li>
+</ul>
+<ul>
+<li><strong>Same component at the same position</strong> = state preserved</li>
+<li><strong>Different component or position</strong> = state reset</li>
+</ul>
+<ul>
+<li>To preserve state across renders:<ul>
+<li>Keep tree structure consistent.</li>
+<li>Declare components at the <strong>top level</strong> (don’t nest function components).</li>
+<li>Use <code>key</code> to differentiate components explicitly if needed.</li>
+</ul>
+</li>
+</ul>
+<br><h3 id="resetting-state-at-the-same-position">Resetting state at the same position</h3><br>
+<p>There are two ways to reset state when switching between them:</p>
+<ol>
+<li>Render components in different positions</li>
+<li>Give each component an explicit identity with key
+<strong>NOTE:</strong> Remember that keys are not globally unique. They only specify the position within the parent.</li>
+</ol>
+<br><h2 id="extracting-state-logic-into-a-reducer">Extracting State Logic into a Reducer</h2><br>
+<br><h3 id="why-use-a-reducer">Why Use a Reducer?</h3><br>
+<ul>
+<li>As components grow, using multiple <code>useState</code> hooks can make state management messy. A <strong>reducer</strong> centralizes all state logic in a single pure function, improving clarity, maintainability, and debuggability.</li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<p><strong>Reducers must be pure:</strong> No side effects—just compute and return the new state based on current state + action.</p>
+<p><strong>Actions reflect user interactions:</strong> One action should represent one meaningful interaction (e.g., reset_form instead of multiple set_fields).</p>
+<p><strong>Better for complex state:</strong> Especially when state updates are spread across many handlers.</p>
+<p><strong>Steps to convert</strong> useState to useReducer:</p>
+<ol>
+<li>Dispatch actions from handlers.</li>
+<li>Write a pure reducer function.</li>
+<li>Replace useState with useReducer.
+👉 Use Immer if you prefer writing reducers in a mutating style but want to preserve immutability.</li>
+</ol>
+<pre><code class="language-js"># From
 const [tasks, setTasks] = useState(initialTasks);
 
 function handleAddTask(text) {
@@ -750,86 +395,37 @@ function tasksReducer(tasks, action) {
 
 //If reducer function is in the same file, then it should be declared before the useReducer hook
 </code></pre>
-			<br />
-			<h2 id="passing-data-deeply-with-context">
-				Passing Data Deeply with Context
-			</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						Context lets a component provide some information to the
-						entire tree below it.
-					</p>
-				</li>
-				<li>
-					<p>
-						This helps avoid &quot;prop drilling,&quot; where props
-						are passed through intermediate components that do not
-						need them.​
-					</p>
-				</li>
-				<li>
-					<p>To pass context:</p>
-					<ol>
-						<li>
-							Create and export it with <code
-								>export const MyContext =
-								createContext(defaultValue)</code
-							>.
-						</li>
-						<li>
-							Pass it to
-							the <code>useContext(MyContext)</code> Hook to read
-							it in any child component, no matter how deep.
-						</li>
-						<li>
-							Wrap children into <code
-								>&lt;MyContext value={...}&gt;</code
-							> to provide it from a parent.
-						</li>
-					</ol>
-				</li>
-				<li>
-					<p>Context passes through any components in the middle.</p>
-				</li>
-				<li>
-					<p>
-						Context lets you write components that “adapt to their
-						surroundings”.
-					</p>
-				</li>
-				<li>
-					<p>
-						Before you use context, try passing props or passing JSX
-						as <code>children</code>.
-					</p>
-				</li>
-			</ul>
-			<br />
-			<h3 id="when-to-use-context">When to Use Context</h3>
-			<br />
-			<ul>
-				<li>When multiple components need access to the same data.</li>
-				<li>
-					To avoid passing props through many layers of components.
-				</li>
-				<li>
-					For global settings like themes, user authentication, or
-					localization.​
-				</li>
-			</ul>
-			<br />
-			<h3 id="example">Example</h3>
-			<br />
-			<ul>
-				<li>
-					Suppose you have a <code>Section</code> component that sets
-					the heading level, and a <code>Heading</code> component that
-					renders a heading based on the current level:​
-				</li>
-			</ul>
-			<pre><code class="language-javascript">#Example 1
+<br><h2 id="passing-data-deeply-with-context">Passing Data Deeply with Context</h2><br>
+<ul>
+<li><p>Context lets a component provide some information to the entire tree below it.</p>
+</li>
+<li><p>This helps avoid &quot;prop drilling,&quot; where props are passed through intermediate components that do not need them.​</p>
+</li>
+<li><p>To pass context:</p>
+<ol>
+<li>Create and export it with <code>export const MyContext = createContext(defaultValue)</code>.</li>
+<li>Pass it to the <code>useContext(MyContext)</code> Hook to read it in any child component, no matter how deep.</li>
+<li>Wrap children into <code>&lt;MyContext value={...}&gt;</code> to provide it from a parent.</li>
+</ol>
+</li>
+<li><p>Context passes through any components in the middle.</p>
+</li>
+<li><p>Context lets you write components that “adapt to their surroundings”.</p>
+</li>
+<li><p>Before you use context, try passing props or passing JSX as <code>children</code>.</p>
+</li>
+</ul>
+<br><h3 id="when-to-use-context">When to Use Context</h3><br>
+<ul>
+<li>When multiple components need access to the same data.</li>
+<li>To avoid passing props through many layers of components.</li>
+<li>For global settings like themes, user authentication, or localization.​</li>
+</ul>
+<br><h3 id="example">Example</h3><br>
+<ul>
+<li>Suppose you have a <code>Section</code> component that sets the heading level, and a <code>Heading</code> component that renders a heading based on the current level:​</li>
+</ul>
+<pre><code class="language-javascript">#Example 1
 
 #STEP 1
 #create a context with initial/default value/s
@@ -933,53 +529,29 @@ const { userName, setUserName } = context;
 	/&gt;
 &lt;/div&gt;
 </code></pre>
-			<p><img src="./assets/ReactContextAPI.png" alt="ReactContextAPI.png" style="width: 400px; height: 300px;" /></p>
-			<br />
-			<h2 id="scaling-up-with-reducer-and-context">
-				Scaling Up with Reducer and Context
-			</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						You can combine
-						<strong><code>useReducer</code></strong> with
-						<strong>React Context</strong> to manage more complex
-						state logic across your component tree.
-					</p>
-				</li>
-				<li>
-					<p>
-						Instead of passing individual event handler functions
-						from the context provider, you can pass a
-						<code>dispatch</code> function returned by
-						<code>useReducer()</code>. This allows deeply nested
-						components to trigger state updates by dispatching
-						actions—making your state management more scalable and
-						maintainable.
-					</p>
-				</li>
-			</ul>
-			<pre><code class="language-javascript">const initialState = {};
+<p><img src="./assets/images/React-context-API.png" alt="React-context-API"></p>
+<br><h2 id="scaling-up-with-reducer-and-context">Scaling Up with Reducer and Context</h2><br>
+<ul>
+<li><p>You can combine <strong><code>useReducer</code></strong> with <strong>React Context</strong> to manage more complex state logic across your component tree.</p>
+</li>
+<li><p>Instead of passing individual event handler functions from the context provider, you can pass a <code>dispatch</code> function returned by <code>useReducer()</code>. This allows deeply nested components to trigger state updates by dispatching actions—making your state management more scalable and maintainable.</p>
+</li>
+</ul>
+<pre><code class="language-javascript">const initialState = {};
 const [state, dispatch] = useReducer(reducerFunction, initialState);
 
 &lt;UserContext.Provider value={{ ...state, dispatch }}&gt;
   &lt;Parent /&gt;
 &lt;/UserContext.Provider&gt;
 </code></pre>
-			<p>This approach is especially useful when:</p>
-			<ul>
-				<li>Your state has multiple properties.</li>
-				<li>You want to centralize your update logic.</li>
-				<li>
-					You’re managing actions like login/logout, form updates,
-					etc.
-				</li>
-			</ul>
-			<br />
-			<h1 id="react-routers">React Routers</h1>
-			<br />
-			<pre><code class="language-javascript">npm install react-router-dom
+<p>This approach is especially useful when:</p>
+<ul>
+<li>Your state has multiple properties.</li>
+<li>You want to centralize your update logic.</li>
+<li>You’re managing actions like login/logout, form updates, etc.</li>
+</ul>
+<br><h1 id="react-routers">React Routers</h1><br>
+<pre><code class="language-javascript">npm install react-router-dom
 
 //In App.tsx
 import { BrowserRouter, Routes, Route } from &quot;react-router-dom&quot;;
@@ -1030,157 +602,59 @@ const onclickHandler = ()=&gt;{
 const location = useLocation();
 const {someState} = location.state || {}
 </code></pre>
-			<br />
-			<h1 id="escape-hatches">Escape Hatches</h1>
-			<br />
-			<br />
-			<h2 id="referencing-values-with-refs">
-				Referencing values with refs
-			</h2>
-			<br />
-			<ul>
-				<li>
-					When you want a component to “remember” some information,
-					but you don’t want that information to trigger new renders,
-					you can use a ref:
-				</li>
-				<li>
-					ref is a plain JavaScript object with the current property
-					that you can read and modify.
-				</li>
-				<li>
-					You can access the current value of that ref through the
-					ref.current property.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">import { useRef } from &#39;react&#39;;
+<br><h1 id="escape-hatches">Escape Hatches</h1><br>
+<br><h2 id="referencing-values-with-refs">Referencing values with refs</h2><br>
+<ul>
+<li>When you want a component to “remember” some information, but you don’t want that information to trigger new renders, you can use a ref:</li>
+<li>ref is a plain JavaScript object with the current property that you can read and modify.</li>
+<li>You can access the current value of that ref through the ref.current property.</li>
+</ul>
+<pre><code class="language-javascript">import { useRef } from &#39;react&#39;;
 let ref = useRef(0);
 </code></pre>
-			<p>
-				<strong>When to use refs:</strong><br />Use refs when your
-				component needs to interact with external APIs (like browser
-				APIs) without affecting rendering. Common cases include:
-			</p>
-			<ul>
-				<li>Storing timeout IDs</li>
-				<li>Accessing or manipulating DOM elements</li>
-				<li>
-					Holding non-JSX-related objects If the value doesn’t affect
-					rendering, use a ref.
-					<strong
-						>Avoid using <code>ref.current</code> during
-						rendering:</strong
-					>
-				</li>
-				<li>
-					Don’t read or write <code>ref.current</code> while
-					rendering. If you need data during rendering, use state
-					instead. React doesn’t track changes to refs, so using them
-					in render can lead to unpredictable behavior.
-				</li>
-			</ul>
-			<br />
-			<h2 id="manipulating-the-dom-with-refs">
-				Manipulating the DOM with Refs
-			</h2>
-			<br />
-			<br />
-			<h3 id="getting-a-ref-to-the-node">Getting a ref to the node</h3>
-			<br />
-			<pre><code class="language-javascript">const myRef = useRef(null);
+<p><strong>When to use refs:</strong><br>Use refs when your component needs to interact with external APIs (like browser APIs) without affecting rendering. Common cases include:</p>
+<ul>
+<li>Storing timeout IDs  </li>
+<li>Accessing or manipulating DOM elements  </li>
+<li>Holding non-JSX-related objects
+If the value doesn’t affect rendering, use a ref.
+<strong>Avoid using <code>ref.current</code> during rendering:</strong>  </li>
+<li>Don’t read or write <code>ref.current</code> while rendering. If you need data during rendering, use state instead. React doesn’t track changes to refs, so using them in render can lead to unpredictable behavior.</li>
+</ul>
+<br><h2 id="manipulating-the-dom-with-refs">Manipulating the DOM with Refs</h2><br>
+<br><h3 id="getting-a-ref-to-the-node">Getting a ref to the node</h3><br>
+<pre><code class="language-javascript">const myRef = useRef(null);
 &lt;div ref={myRef}&gt; //This tells React to put this &lt;div&gt;’s DOM node into myRef.current.
 //You can then access this DOM node from your event handlers and use the built-in browser APIs defined on it.
 myRef.current.scrollIntoView();
 </code></pre>
-			<ul>
-				<li>
-					Usually, you will use refs for non-destructive actions like
-					focusing, scrolling, or measuring DOM elements.
-				</li>
-				<li>
-					You can pass refs from parent component to child components
-					just like any other prop.
-				</li>
-				<li>
-					So can access another component’s DOM nodes, and it can make
-					your code fragile.
-				</li>
-				<li>Avoid changing DOM nodes managed by React.</li>
-				<li>
-					You can safely modify parts of the DOM that React has no
-					reason to update.
-				</li>
-			</ul>
-			<br />
-			<h2 id="synchronizing-with-effects">Synchronizing with Effects</h2>
-			<br />
-			<ul>
-				<li>
-					Unlike events, Effects are caused by rendering itself rather
-					than a particular interaction.
-				</li>
-				<li>
-					Effects let you synchronize a component with some external
-					system (third-party API, network, etc).
-				</li>
-				<li>
-					Effects let you run some code after rendering so that you
-					can synchronize your component with some system outside of
-					React.
-				</li>
-				<li>
-					By default, Effects run after every render (including the
-					initial one).
-				</li>
-				<li>
-					React will skip the Effect if all of its dependencies have
-					the same values as during the last render.
-				</li>
-				<li>
-					You can’t “choose” your dependencies. They are determined by
-					the code inside the Effect.
-				</li>
-				<li>
-					Empty dependency array ([]) corresponds to the component
-					“mounting”, i.e. being added to the screen.
-				</li>
-				<li>
-					In Strict Mode, React mounts components twice (in
-					development only!) to stress-test your Effects.
-				</li>
-				<li>
-					in development React remounts every component once
-					immediately after its initial mount.
-				</li>
-				<li>
-					This is the correct behavior in development. By remounting
-					your component, React verifies that navigating away and back
-					would not break your code.
-				</li>
-				<li>
-					Remounting components only happens in development to help
-					you find Effects that need cleanup.
-				</li>
-				<li>
-					You can turn off Strict Mode to opt out of the development
-					behavior, but we recommend keeping it on.
-				</li>
-				<li>
-					This illustrates that if remounting breaks the logic of your
-					application, this usually uncovers existing bugs. (ex: call
-					buy procut API in an effect is wrong)
-				</li>
-				<li>
-					If your Effect breaks because of remounting, you need to
-					implement a cleanup function.
-				</li>
-				<li>
-					React will call your cleanup function before the Effect runs
-					next time, and during the unmount.
-				</li>
-			</ul>
-			<p>Example:</p>
-			<pre><code class="language-javascript">useEffect(() =&gt; {
+<ul>
+<li>Usually, you will use refs for non-destructive actions like focusing, scrolling, or measuring DOM elements.</li>
+<li>You can pass refs from parent component to child components just like any other prop.</li>
+<li>So can access another component’s DOM nodes, and it can make your code fragile.</li>
+<li>Avoid changing DOM nodes managed by React.</li>
+<li>You can safely modify parts of the DOM that React has no reason to update.</li>
+</ul>
+<br><h2 id="synchronizing-with-effects">Synchronizing with Effects</h2><br>
+<ul>
+<li>Unlike events, Effects are caused by rendering itself rather than a particular interaction.</li>
+<li>Effects let you synchronize a component with some external system (third-party API, network, etc).</li>
+<li>Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.</li>
+<li>By default, Effects run after every render (including the initial one).</li>
+<li>React will skip the Effect if all of its dependencies have the same values as during the last render.</li>
+<li>You can’t “choose” your dependencies. They are determined by the code inside the Effect.</li>
+<li>Empty dependency array ([]) corresponds to the component “mounting”, i.e. being added to the screen.</li>
+<li>In Strict Mode, React mounts components twice (in development only!) to stress-test your Effects.</li>
+<li>in development React remounts every component once immediately after its initial mount.</li>
+<li>This is the correct behavior in development. By remounting your component, React verifies that navigating away and back would not break your code.</li>
+<li>Remounting components only happens in development to help you find Effects that need cleanup.</li>
+<li>You can turn off Strict Mode to opt out of the development behavior, but we recommend keeping it on.</li>
+<li>This illustrates that if remounting breaks the logic of your application, this usually uncovers existing bugs. (ex: call buy procut API in an effect is wrong)</li>
+<li>If your Effect breaks because of remounting, you need to implement a cleanup function.</li>
+<li>React will call your cleanup function before the Effect runs next time, and during the unmount.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
   // This runs after every render
 });
 
@@ -1192,7 +666,7 @@ useEffect(() =&gt; {
   // This runs on mount *and also* if either a or b have changed since the last render
 }, [a, b]);
 </code></pre>
-			<pre><code class="language-javascript">//Some APIs may not allow you to call them twice in a row. For example, the showModal method of the built-in &lt;dialog&gt; element throws if you call it twice. Implement the cleanup function and make it close the dialog:
+<pre><code class="language-javascript">//Some APIs may not allow you to call them twice in a row. For example, the showModal method of the built-in &lt;dialog&gt; element throws if you call it twice. Implement the cleanup function and make it close the dialog:
 
 useEffect(() =&gt; {
   const dialog = dialogRef.current;
@@ -1202,119 +676,46 @@ useEffect(() =&gt; {
 
 //In development, your Effect will call showModal(), then immediately close(), and then showModal() again. This has the same user-visible behavior as calling showModal() once, as you would see in production.
 </code></pre>
-			<br />
-			<h2 id="you-might-not-need-an-effect">
-				You Might Not Need an Effect
-			</h2>
-			<br />
-			<ul>
-				<li>
-					useEffect is intended for synchronizing your component with
-					external systems (like browser APIs, network requests, or
-					third-party libraries). If you&#39;re not interacting with
-					such systems, you likely don&#39;t need useEffect.
-				</li>
-				<li>
-					If you can calculate something during render, you don’t need
-					an Effect.
-				</li>
-				<li>
-					To cache expensive calculations, add useMemo instead of
-					useEffect.
-				</li>
-				<li>
-					To reset the state of an entire component tree, pass a
-					different key to it.
-				</li>
-				<li>
-					To reset a particular bit of state in response to a prop
-					change, set it during rendering.
-				</li>
-				<li>
-					Code that runs because a component was displayed should be
-					in Effects, the rest should be in events.
-				</li>
-				<li>
-					If you need to update the state of several components, it’s
-					better to do it during a single event.
-				</li>
-				<li>
-					Whenever you try to synchronize state variables in different
-					components, consider lifting state up.
-				</li>
-				<li>
-					You can fetch data with Effects, but you need to implement
-					cleanup to avoid race conditions.
-				</li>
-				<li>
-					When you give each component a different key, React knows
-					they are not the same and keeps their data separate.
-				</li>
-				<li>
-					Assigning a unique key to a component instance tells React
-					to fully unmount and remount it when the key changes,
-					preventing shared state and ensuring a fresh internal
-					lifecycle for each instance.
-				</li>
-				<li>
-					When you’re not sure whether some code should be in an
-					Effect or in an event handler, ask yourself why this code
-					needs to run. Use Effects only for code that should run
-					because the component was displayed to the user
-				</li>
-			</ul>
-			<br />
-			<h3 id="usememo">useMemo</h3>
-			<br />
-			<p>🔹 What is useMemo?</p>
-			<ul>
-				<li>
-					useMemo is a React Hook that memoizes the result of a
-					function — it saves the result and only recalculates it when
-					its dependencies change.
-				</li>
-			</ul>
-			<p>🔹 Why use it?</p>
-			<ul>
-				<li>
-					To optimize performance by avoiding expensive recalculations
-					or re-renders of components when the inputs haven&#39;t
-					changed.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">//How to use it?
+<br><h2 id="you-might-not-need-an-effect">You Might Not Need an Effect</h2><br>
+<ul>
+<li>useEffect is intended for synchronizing your component with external systems (like browser APIs, network requests, or third-party libraries). If you&#39;re not interacting with such systems, you likely don&#39;t need useEffect.</li>
+<li>If you can calculate something during render, you don’t need an Effect.</li>
+<li>To cache expensive calculations, add useMemo instead of useEffect.</li>
+<li>To reset the state of an entire component tree, pass a different key to it.</li>
+<li>To reset a particular bit of state in response to a prop change, set it during rendering.</li>
+<li>Code that runs because a component was displayed should be in Effects, the rest should be in events.</li>
+<li>If you need to update the state of several components, it’s better to do it during a single event.</li>
+<li>Whenever you try to synchronize state variables in different components, consider lifting state up.</li>
+<li>You can fetch data with Effects, but you need to implement cleanup to avoid race conditions.</li>
+<li>When you give each component a different key, React knows they are not the same and keeps their data separate.</li>
+<li>Assigning a unique key to a component instance tells React to fully unmount and remount it when the key changes, preventing shared state and ensuring a fresh internal lifecycle for each instance.</li>
+<li>When you’re not sure whether some code should be in an Effect or in an event handler, ask yourself why this code needs to run. Use Effects only for code that should run because the component was displayed to the user</li>
+</ul>
+<br><h3 id="usememo">useMemo</h3><br>
+<p>🔹 What is useMemo?</p>
+<ul>
+<li>useMemo is a React Hook that memoizes the result of a function — it saves the result and only recalculates it when its dependencies change.</li>
+</ul>
+<p>🔹 Why use it?</p>
+<ul>
+<li>To optimize performance by avoiding expensive recalculations or re-renders of components when the inputs haven&#39;t changed.</li>
+</ul>
+<pre><code class="language-javascript">//How to use it?
 const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
 //The function runs only when a or b changes.
 //React skips recalculating if dependencies are the same as the last render.
 </code></pre>
-			<p>🔹 When to use it?</p>
-			<ul>
-				<li>
-					For expensive calculations (e.g., filtering, sorting large
-					lists).
-				</li>
-				<li>
-					When passing stable values to child components to avoid
-					unnecessary re-renders.
-				</li>
-				<li>
-					Only when there&#39;s a real performance issue — don’t
-					overuse it.
-				</li>
-			</ul>
-			<br />
-			<h3 id="race-condition-in-useeffect">
-				Race Condition in useEffect
-			</h3>
-			<br />
-			<ul>
-				<li>
-					A race condition happens when multiple async operations
-					(like API calls) overlap, and a slower one finishes after a
-					newer one, causing outdated data to be used.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">useEffect(() =&gt; {
+<p>🔹 When to use it?</p>
+<ul>
+<li>For expensive calculations (e.g., filtering, sorting large lists).</li>
+<li>When passing stable values to child components to avoid unnecessary re-renders.</li>
+<li>Only when there&#39;s a real performance issue — don’t overuse it.</li>
+</ul>
+<br><h3 id="race-condition-in-useeffect">Race Condition in useEffect</h3><br>
+<ul>
+<li>A race condition happens when multiple async operations (like API calls) overlap, and a slower one finishes after a newer one, causing outdated data to be used.</li>
+</ul>
+<pre><code class="language-javascript">useEffect(() =&gt; {
   fetchData().then(setData);
 }, [query]);
 //If query changes quickly, older fetchData() results might overwrite the newer ones.
@@ -1328,85 +729,33 @@ useEffect(() =&gt; {
   return () =&gt; controller.abort(); // cancels previous request
 }, [query]);
 </code></pre>
-			<br />
-			<h3 id="when-you-do-need-useeffect">When You Do Need useEffect</h3>
-			<br />
-			<ul>
-				<li>
-					Use useEffect when you need to synchronize with external
-					systems, such as:
-				</li>
-				<li>Subscribing to a data stream or event listener.</li>
-				<li>Fetching data from an API when the component mounts.</li>
-				<li>
-					Manually manipulating the DOM (e.g., focusing an input).
-				</li>
-			</ul>
-			<br />
-			<h2 id="lifecycle-of-reactive-effects">
-				Lifecycle of Reactive Effects
-			</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						Each Effect in your code should represent a separate and
-						independent synchronization process.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong
-							>Effects re-synchronize based on the dependency
-							array</strong
-						>. If your Effect contains logic that
-						<strong>doesn&#39;t need to re-synchronize</strong> when
-						a dependency changes, it&#39;s better to
-						<strong>move that logic outside</strong> the Effect.
-						Mixing unrelated concerns can lead to incorrect behavior
-						or unnecessary updates.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong
-							>Props, state, and all variables declared inside the
-							component body are reactive</strong
-						>. These values are recalculated during each render and
-						participate in React&#39;s data flow.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong
-							>Reactive values must be included in the dependency
-							array</strong
-						>. This includes not only props and state but also
-						<strong>any values derived from them</strong>.
-					</p>
-				</li>
-				<li>
-					<p>
-						From the <strong>Effect’s perspective</strong>, you
-						don&#39;t need to think in terms of &quot;mount&quot;
-						and &quot;unmount.&quot; Instead, focus on
-						<strong
-							>what the Effect does to start and stop
-							synchronization</strong
-						>. React will handle cleanup automatically when needed.
-					</p>
-				</li>
-				<li>
-					<p>
-						Any
-						<strong>variable from the component body</strong> that
-						is used inside an Effect should be in its
-						<strong>dependency list</strong>, to ensure the Effect
-						stays in sync with the latest values.
-					</p>
-				</li>
-			</ul>
-			<pre><code class="language-javascript">function ChatRoom({ roomId, selectedServerUrl }) { // roomId is reactive
+<br><h3 id="when-you-do-need-useeffect">When You Do Need useEffect</h3><br>
+<ul>
+<li>Use useEffect when you need to synchronize with external systems, such as:</li>
+<li>Subscribing to a data stream or event listener.</li>
+<li>Fetching data from an API when the component mounts.</li>
+<li>Manually manipulating the DOM (e.g., focusing an input).</li>
+</ul>
+<br><h2 id="lifecycle-of-reactive-effects">Lifecycle of Reactive Effects</h2><br>
+<ul>
+<li><p>Each Effect in your code should represent a separate and independent synchronization process.</p>
+</li>
+<li><p><strong>Effects re-synchronize based on the dependency array</strong>.
+If your Effect contains logic that <strong>doesn&#39;t need to re-synchronize</strong> when a dependency changes, it&#39;s better to <strong>move that logic outside</strong> the Effect. Mixing unrelated concerns can lead to incorrect behavior or unnecessary updates.</p>
+</li>
+<li><p><strong>Props, state, and all variables declared inside the component body are reactive</strong>.
+These values are recalculated during each render and participate in React&#39;s data flow.</p>
+</li>
+<li><p><strong>Reactive values must be included in the dependency array</strong>.
+This includes not only props and state but also <strong>any values derived from them</strong>.</p>
+</li>
+<li><p>From the <strong>Effect’s perspective</strong>, you don&#39;t need to think in terms of &quot;mount&quot; and &quot;unmount.&quot;
+Instead, focus on <strong>what the Effect does to start and stop synchronization</strong>. React will handle cleanup automatically when needed.</p>
+</li>
+<li><p>Any <strong>variable from the component body</strong> that is used inside an Effect should be in its <strong>dependency list</strong>, to ensure the Effect stays in sync with the latest values.</p>
+</li>
+</ul>
+<pre><code class="language-javascript">function ChatRoom({ roomId, selectedServerUrl }) { // roomId is reactive
   const settings = useContext(SettingsContext); // settings is reactive
   const serverUrl = selectedServerUrl ?? settings.defaultServerUrl; // serverUrl is reactive
   useEffect(() =&gt; {
@@ -1419,65 +768,29 @@ useEffect(() =&gt; {
   // ...
 }
 </code></pre>
-			<ul>
-				<li>Effects are not a tool for code reuse.</li>
-				<li>Components can mount, update, and unmount.</li>
-				<li>
-					Each Effect has a separate lifecycle from the surrounding
-					component.
-				</li>
-				<li>
-					Each Effect describes a separate synchronization process
-					that can start and stop.
-				</li>
-				<li>
-					When you write and read Effects, think from each individual
-					Effect’s perspective (how to start and stop synchronization)
-					rather than from the component’s perspective (how it mounts,
-					updates, or unmounts).
-				</li>
-				<li>
-					Values declared inside the component body are “reactive”. Or
-					you could say Props, state, and variables declared inside
-					your component’s body are called reactive values
-				</li>
-				<li>
-					Reactive values should re-synchronize the Effect because
-					they can change over time.
-				</li>
-				<li>
-					The linter verifies that all reactive values used inside the
-					Effect are specified as dependencies.
-				</li>
-				<li>
-					All errors flagged by the linter are legitimate. There’s
-					always a way to fix the code to not break the rules.
-				</li>
-			</ul>
-			<br />
-			<h2 id="separating-events-from-effects">
-				Separating Events from Effects
-			</h2>
-			<br />
-			<ul>
-				<li>
-					Event handlers run in response to specific interactions.
-				</li>
-				<li>Effects run whenever synchronization is needed.</li>
-				<li>Logic inside event handlers is not reactive.</li>
-				<li>Logic inside Effects is reactive.</li>
-				<li>
-					You can move non-reactive logic from Effects into Effect
-					Events.
-				</li>
-				<li>Only call Effect Events from inside Effects.</li>
-				<li>Don’t pass Effect Events to other components or Hooks.</li>
-				<li>
-					You should only extract Effect Events for a specific reason:
-					when you want to make a part of your code non-reactive.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">#Note: This is an experiment tool yet
+<ul>
+<li>Effects are not a tool for code reuse.</li>
+<li>Components can mount, update, and unmount.</li>
+<li>Each Effect has a separate lifecycle from the surrounding component.</li>
+<li>Each Effect describes a separate synchronization process that can start and stop.</li>
+<li>When you write and read Effects, think from each individual Effect’s perspective (how to start and stop synchronization) rather than from the component’s perspective (how it mounts, updates, or unmounts).</li>
+<li>Values declared inside the component body are “reactive”. Or you could say Props, state, and variables declared inside your component’s body are called reactive values</li>
+<li>Reactive values should re-synchronize the Effect because they can change over time.</li>
+<li>The linter verifies that all reactive values used inside the Effect are specified as dependencies.</li>
+<li>All errors flagged by the linter are legitimate. There’s always a way to fix the code to not break the rules.</li>
+</ul>
+<br><h2 id="separating-events-from-effects">Separating Events from Effects</h2><br>
+<ul>
+<li>Event handlers run in response to specific interactions.</li>
+<li>Effects run whenever synchronization is needed.</li>
+<li>Logic inside event handlers is not reactive.</li>
+<li>Logic inside Effects is reactive.</li>
+<li>You can move non-reactive logic from Effects into Effect Events.</li>
+<li>Only call Effect Events from inside Effects.</li>
+<li>Don’t pass Effect Events to other components or Hooks.</li>
+<li>You should only extract Effect Events for a specific reason: when you want to make a part of your code non-reactive.</li>
+</ul>
+<pre><code class="language-javascript">#Note: This is an experiment tool yet
 
 import { useState, useEffect } from &#39;react&#39;;
 import { experimental_useEffectEvent as useEffectEvent } from &#39;react&#39;;
@@ -1523,283 +836,126 @@ export default function Timer() {
   );
 }
 </code></pre>
-			<br />
-			<h2 id="removing-effect-dependencies">
-				Removing Effect Dependencies
-			</h2>
-			<br />
-			<br />
-			<h3 id="core-principle">Core Principle</h3>
-			<br />
-			<p><strong>Dependencies should always match the code</strong></p>
-			<ul>
-				<li>
-					when you&#39;re not happy with your dependencies, edit the
-					code, not the dependency array.
-				</li>
-			</ul>
-			<br />
-			<h3 id="key-questions-to-ask-before-fixing-dependencies">
-				Key Questions to Ask Before Fixing Dependencies
-			</h3>
-			<br />
-			<p>
-				Before adjusting dependencies, evaluate your Effect by asking
-				these critical questions:
-			</p>
-			<p><strong>Should this code move to an event handler?</strong></p>
-			<ul>
-				<li>
-					If code should run in response to specific user
-					interactions, move it to an event handler instead of an
-					Effect
-				</li>
-			</ul>
-			<p>
-				<strong>Is your Effect doing several unrelated things?</strong>
-			</p>
-			<ul>
-				<li>
-					Each Effect should represent one independent synchronization
-					process
-				</li>
-				<li>
-					Split complex Effects into multiple focused Effects if they
-					handle different concerns
-				</li>
-			</ul>
-			<p>
-				<strong
-					>Are you reading state to calculate the next state?</strong
-				>
-			</p>
-			<ul>
-				<li>
-					Use updater functions instead of reading current state as a
-					dependency
-				</li>
-				<li>
-					Pass <code>setState(prev =&gt; prev + 1)</code> rather than
-					<code>setState(count + 1)</code>
-				</li>
-			</ul>
-			<p>
-				<strong
-					>Do you want to read a value without &quot;reacting&quot; to
-					its changes?</strong
-				>
-			</p>
-			<ul>
-				<li>
-					Extract an Effect Event when you need to access current
-					values without triggering re-runs
-				</li>
-				<li>
-					Use Effect Events for reading latest values without making
-					them dependencies
-				</li>
-			</ul>
-			<p>
-				<strong
-					>Does some reactive value change unintentionally?</strong
-				>
-			</p>
-			<ul>
-				<li>
-					Objects and functions recreated on every render cause
-					unnecessary re-synchronizations
-				</li>
-				<li>
-					This is the most common cause of excessive Effect re-runs
-				</li>
-			</ul>
-			<br />
-			<h3 id="the-object-and-function-problem">
-				The Object and Function Problem
-			</h3>
-			<br />
-			<p><strong>Why Objects and Functions Cause Issues:</strong></p>
-			<ul>
-				<li>
-					In JavaScript, each newly created object/function is
-					considered distinct from all others
-				</li>
-				<li>
-					Content doesn&#39;t matter - <code>{}</code> !==
-					<code>{}</code> and <code>() =&gt; {}</code> !==
-					<code>() =&gt; {}</code>
-				</li>
-				<li>
-					Components recreate objects/functions on every render,
-					triggering Effects unnecessarily
-				</li>
-			</ul>
-			<p><strong>Impact on Performance:</strong></p>
-			<ul>
-				<li>Effect re-synchronizes more often than needed</li>
-				<li>Can cause performance issues and infinite loops</li>
-				<li>Makes debugging more difficult</li>
-			</ul>
-			<br />
-			<h3 id="solutions-for-different-scenarios">
-				Solutions for Different Scenarios
-			</h3>
-			<br />
-			<p><strong>Move Code to Event Handlers:</strong></p>
-			<ul>
-				<li>Use when code should respond to specific interactions</li>
-				<li>Event handlers don&#39;t need dependency arrays</li>
-				<li>Better separation of concerns</li>
-			</ul>
-			<p><strong>Split Effects:</strong></p>
-			<ul>
-				<li>Separate unrelated synchronization logic</li>
-				<li>Each Effect handles one specific concern</li>
-				<li>Easier to debug and maintain</li>
-			</ul>
-			<p><strong>Use Updater Functions:</strong></p>
-			<ul>
-				<li>
-					Replace <code>setState(count + 1)</code> with
-					<code>setState(prev =&gt; prev + 1)</code>
-				</li>
-				<li>Removes state variables from dependencies</li>
-				<li>Prevents stale closure issues</li>
-			</ul>
-			<p><strong>Extract Effect Events:</strong></p>
-			<ul>
-				<li>Access latest values without making them dependencies</li>
-				<li>
-					Useful for reading props/state without triggering re-runs
-				</li>
-				<li>
-					Maintains access to current values while avoiding
-					re-synchronization
-				</li>
-			</ul>
-			<p><strong>Restructure Object/Function Dependencies:</strong></p>
-			<ul>
-				<li>
-					<strong>Move outside component:</strong> Define constants
-					outside component scope
-				</li>
-				<li>
-					<strong>Move inside Effect:</strong> Create
-					objects/functions within the Effect body
-				</li>
-				<li>
-					<strong>Extract primitive values:</strong> Use only the
-					specific primitive values you need
-				</li>
-				<li>
-					<strong>Use primitive props:</strong> Structure component
-					APIs around primitives when possible
-				</li>
-			</ul>
-			<br />
-			<h3 id="best-practices">Best Practices</h3>
-			<br />
-			<p><strong>Avoid Suppressing the Linter:</strong></p>
-			<ul>
-				<li>
-					Never ignore dependency warnings without proper
-					justification
-				</li>
-				<li>Suppressing leads to confusing bugs and stale closures</li>
-				<li>
-					Always &quot;prove&quot; to the linter that a dependency
-					isn&#39;t necessary
-				</li>
-			</ul>
-			<p><strong>Prefer Primitive Dependencies:</strong></p>
-			<ul>
-				<li>
-					Use strings, numbers, booleans instead of objects when
-					possible
-				</li>
-				<li>Primitive values are compared by value, not reference</li>
-				<li>Makes components easier to optimize later</li>
-			</ul>
-			<p><strong>Structure for Success:</strong></p>
-			<ul>
-				<li>Design component APIs around primitive props</li>
-				<li>
-					Keep object creation outside render cycles when possible
-				</li>
-				<li>
-					Consider memoization for complex objects that must be
-					dependencies
-				</li>
-			</ul>
-			<br />
-			<h3 id="debugging-strategy">Debugging Strategy</h3>
-			<br />
-			<p>When an Effect runs too often:</p>
-			<ol>
-				<li>
-					Check if objects/functions are being recreated unnecessarily
-				</li>
-				<li>
-					Verify each dependency is actually needed for the
-					Effect&#39;s logic
-				</li>
-				<li>
-					Consider if the Effect is doing too many unrelated things
-				</li>
-				<li>
-					Evaluate whether some code belongs in event handlers instead
-				</li>
-				<li>
-					Look for opportunities to extract primitive values from
-					complex dependencies
-				</li>
-			</ol>
-			<p>
-				This systematic approach ensures Effects run only when necessary
-				while maintaining code clarity and performance.
-			</p>
-			<br />
-			<h2 id="reusing-logic-with-custom-hooks">
-				Reusing Logic with Custom Hooks
-			</h2>
-			<br />
-			<ul>
-				<li>Custom Hooks let you share logic between components.</li>
-				<li>
-					Custom Hooks must be named starting with use followed by a
-					capital letter.
-				</li>
-				<li>
-					Custom Hooks only share stateful logic, not state itself.
-				</li>
-				<li>
-					You can pass reactive values from one Hook to another, and
-					they stay up-to-date.
-				</li>
-				<li>All Hooks re-run every time your component re-renders.</li>
-				<li>
-					The code of your custom Hooks should be pure, like your
-					component’s code.
-				</li>
-				<li>
-					Wrap event handlers received by custom Hooks into Effect
-					Events.
-				</li>
-				<li>
-					Don’t create custom Hooks like useMount. Keep their purpose
-					specific.
-				</li>
-				<li>
-					It’s up to you how and where to choose the boundaries of
-					your code.
-				</li>
-			</ul>
-			<br />
-			<h3 id="extracting-your-own-custom-hook-from-a-component">
-				Extracting your own custom Hook from a component
-			</h3>
-			<br />
-			<pre><code class="language-javascript">function StatusBar() {
+<br><h2 id="removing-effect-dependencies">Removing Effect Dependencies</h2><br>
+<br><h3 id="core-principle">Core Principle</h3><br>
+<p><strong>Dependencies should always match the code</strong></p>
+<ul>
+<li>when you&#39;re not happy with your dependencies, edit the code, not the dependency array.</li>
+</ul>
+<br><h3 id="key-questions-to-ask-before-fixing-dependencies">Key Questions to Ask Before Fixing Dependencies</h3><br>
+<p>Before adjusting dependencies, evaluate your Effect by asking these critical questions:</p>
+<p><strong>Should this code move to an event handler?</strong></p>
+<ul>
+<li>If code should run in response to specific user interactions, move it to an event handler instead of an Effect</li>
+</ul>
+<p><strong>Is your Effect doing several unrelated things?</strong></p>
+<ul>
+<li>Each Effect should represent one independent synchronization process</li>
+<li>Split complex Effects into multiple focused Effects if they handle different concerns</li>
+</ul>
+<p><strong>Are you reading state to calculate the next state?</strong></p>
+<ul>
+<li>Use updater functions instead of reading current state as a dependency</li>
+<li>Pass <code>setState(prev =&gt; prev + 1)</code> rather than <code>setState(count + 1)</code></li>
+</ul>
+<p><strong>Do you want to read a value without &quot;reacting&quot; to its changes?</strong></p>
+<ul>
+<li>Extract an Effect Event when you need to access current values without triggering re-runs</li>
+<li>Use Effect Events for reading latest values without making them dependencies</li>
+</ul>
+<p><strong>Does some reactive value change unintentionally?</strong></p>
+<ul>
+<li>Objects and functions recreated on every render cause unnecessary re-synchronizations</li>
+<li>This is the most common cause of excessive Effect re-runs</li>
+</ul>
+<br><h3 id="the-object-and-function-problem">The Object and Function Problem</h3><br>
+<p><strong>Why Objects and Functions Cause Issues:</strong></p>
+<ul>
+<li>In JavaScript, each newly created object/function is considered distinct from all others</li>
+<li>Content doesn&#39;t matter - <code>{}</code> !== <code>{}</code> and <code>() =&gt; {}</code> !== <code>() =&gt; {}</code></li>
+<li>Components recreate objects/functions on every render, triggering Effects unnecessarily</li>
+</ul>
+<p><strong>Impact on Performance:</strong></p>
+<ul>
+<li>Effect re-synchronizes more often than needed</li>
+<li>Can cause performance issues and infinite loops</li>
+<li>Makes debugging more difficult</li>
+</ul>
+<br><h3 id="solutions-for-different-scenarios">Solutions for Different Scenarios</h3><br>
+<p><strong>Move Code to Event Handlers:</strong></p>
+<ul>
+<li>Use when code should respond to specific interactions</li>
+<li>Event handlers don&#39;t need dependency arrays</li>
+<li>Better separation of concerns</li>
+</ul>
+<p><strong>Split Effects:</strong></p>
+<ul>
+<li>Separate unrelated synchronization logic</li>
+<li>Each Effect handles one specific concern</li>
+<li>Easier to debug and maintain</li>
+</ul>
+<p><strong>Use Updater Functions:</strong></p>
+<ul>
+<li>Replace <code>setState(count + 1)</code> with <code>setState(prev =&gt; prev + 1)</code></li>
+<li>Removes state variables from dependencies</li>
+<li>Prevents stale closure issues</li>
+</ul>
+<p><strong>Extract Effect Events:</strong></p>
+<ul>
+<li>Access latest values without making them dependencies</li>
+<li>Useful for reading props/state without triggering re-runs</li>
+<li>Maintains access to current values while avoiding re-synchronization</li>
+</ul>
+<p><strong>Restructure Object/Function Dependencies:</strong></p>
+<ul>
+<li><strong>Move outside component:</strong> Define constants outside component scope</li>
+<li><strong>Move inside Effect:</strong> Create objects/functions within the Effect body</li>
+<li><strong>Extract primitive values:</strong> Use only the specific primitive values you need</li>
+<li><strong>Use primitive props:</strong> Structure component APIs around primitives when possible</li>
+</ul>
+<br><h3 id="best-practices">Best Practices</h3><br>
+<p><strong>Avoid Suppressing the Linter:</strong></p>
+<ul>
+<li>Never ignore dependency warnings without proper justification</li>
+<li>Suppressing leads to confusing bugs and stale closures</li>
+<li>Always &quot;prove&quot; to the linter that a dependency isn&#39;t necessary</li>
+</ul>
+<p><strong>Prefer Primitive Dependencies:</strong></p>
+<ul>
+<li>Use strings, numbers, booleans instead of objects when possible</li>
+<li>Primitive values are compared by value, not reference</li>
+<li>Makes components easier to optimize later</li>
+</ul>
+<p><strong>Structure for Success:</strong></p>
+<ul>
+<li>Design component APIs around primitive props</li>
+<li>Keep object creation outside render cycles when possible</li>
+<li>Consider memoization for complex objects that must be dependencies</li>
+</ul>
+<br><h3 id="debugging-strategy">Debugging Strategy</h3><br>
+<p>When an Effect runs too often:</p>
+<ol>
+<li>Check if objects/functions are being recreated unnecessarily</li>
+<li>Verify each dependency is actually needed for the Effect&#39;s logic</li>
+<li>Consider if the Effect is doing too many unrelated things</li>
+<li>Evaluate whether some code belongs in event handlers instead</li>
+<li>Look for opportunities to extract primitive values from complex dependencies</li>
+</ol>
+<p>This systematic approach ensures Effects run only when necessary while maintaining code clarity and performance.</p>
+<br><h2 id="reusing-logic-with-custom-hooks">Reusing Logic with Custom Hooks</h2><br>
+<ul>
+<li>Custom Hooks let you share logic between components.</li>
+<li>Custom Hooks must be named starting with use followed by a capital letter.</li>
+<li>Custom Hooks only share stateful logic, not state itself.</li>
+<li>You can pass reactive values from one Hook to another, and they stay up-to-date.</li>
+<li>All Hooks re-run every time your component re-renders.</li>
+<li>The code of your custom Hooks should be pure, like your component’s code.</li>
+<li>Wrap event handlers received by custom Hooks into Effect Events.</li>
+<li>Don’t create custom Hooks like useMount. Keep their purpose specific.</li>
+<li>It’s up to you how and where to choose the boundaries of your code.</li>
+</ul>
+<br><h3 id="extracting-your-own-custom-hook-from-a-component">Extracting your own custom Hook from a component</h3><br>
+<pre><code class="language-javascript">function StatusBar() {
   const isOnline = useOnlineStatus();
   return &lt;h1&gt;{isOnline ? &#39;✅ Online&#39; : &#39;❌ Disconnected&#39;}&lt;/h1&gt;;
 }
@@ -1880,37 +1036,20 @@ export function useFormInput(initialValue) {
   return inputProps; //Returns an object { value, onChange } — just like the props an &lt;input&gt; expects.
 }
 </code></pre>
-			<ul>
-				<li>
-					Custom Hooks let you share stateful logic but not state
-					itself. Each call to a Hook is completely independent from
-					every other call to the same Hook.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">function Form() {
+<ul>
+<li>Custom Hooks let you share stateful logic but not state itself. Each call to a Hook is completely independent from every other call to the same Hook.</li>
+</ul>
+<pre><code class="language-javascript">function Form() {
   const firstNameProps = useFormInput(&#39;Mary&#39;);
   const lastNameProps = useFormInput(&#39;Poppins&#39;);
 </code></pre>
-			<ul>
-				<li>
-					The React team&#39;s goal is to minimize the use of Effects
-					as much as possible. Instead of manually writing useEffect
-					logic in every component, it&#39;s better to encapsulate
-					that logic inside custom hooks. This approach makes it
-					easier to adapt to future React features, as you&#39;ll only
-					need to update the custom hooks—without making significant
-					changes to the components that use them.
-				</li>
-			</ul>
-			<br />
-			<h2 id="portal">Portal</h2>
-			<br />
-			<br />
-			<h2 id="suspension">Suspension</h2>
-			<br />
-			<br />
-			<h2 id="errorboundary">ErrorBoundary</h2>
-			<br />
+<ul>
+<li>The React team&#39;s goal is to minimize the use of Effects as much as possible. Instead of manually writing useEffect logic in every component, it&#39;s better to encapsulate that logic inside custom hooks. This approach makes it easier to adapt to future React features, as you&#39;ll only need to update the custom hooks—without making significant changes to the components that use them.</li>
+</ul>
+<br><h2 id="portal">Portal</h2><br>
+<br><h2 id="suspension">Suspension</h2><br>
+<br><h2 id="errorboundary">ErrorBoundary</h2><br>
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>
