@@ -1,42 +1,47 @@
-# how to prepare a `.md` file as a html
+# Publish Markdown articles
 
-# step 1
+Articles are built into static HTML from Markdown files stored in this repository.
+Visitors receive ordinary HTML, so articles work on GitHub Pages and when opened
+directly from your computer.
 
-copy and paste `_structure.html`
-rename the new file as you wanted
-remove this style from newly created html file
+Keep article sources in the root `mds/` folder. The source file path determines
+the generated HTML path.
 
-```css
-<style>
-	h1 {
-		height: 200px;
-		width: 600px;
-		border: 1px solid blue;
-	}
-</style>
-```
+## Create an article
 
-if your markdown has a code blocks, add necessary script tags from `Prism.js`
+1. Add the source file under `mds/`, for example `mds/article1.md`.
+2. Build every article from the repository root:
 
-# step 2
+   ```sh
+   npm --prefix node_scripts run build:articles
+   ```
 
-cd into node_scripts
-copy paste the markdown file into this folder
-edit and replace the input file name of `convertMdToHtml.js` from your md file's name
+   The Markdown path determines the generated URL. For example,
+   `mds/article1.md` becomes `article1.html`, while
+   `mds/backend/article1.md` becomes `backend/article1.html`.
 
-run
+   Files named `README.md` inside `mds/` are ignored by the build, so reserve
+   other filenames for published articles.
+3. Optionally add an `article1.html` link to `index.html`.
+4. Commit the Markdown file and its generated HTML file together.
 
-```sh
-cp /path /path
-cd node_scripts
-node convertMdToHtml.js
-```
+The first Markdown `# heading` becomes the browser-page title. The contents menu is
+built from its level-one and level-two headings. Fenced code blocks are highlighted
+by Prism; its autoloader supports the language named after the opening backticks,
+such as ```` ```javascript ```` or ```` ```dart ````.
 
-this will create a html from the input markdown file and add ids for each h tag
+## Markdown links and images
 
-# step 3
+Relative paths in Markdown are resolved from the Markdown file's own folder. For
+example, a link to `images/example.png` inside `mds/article1.md` points to
+`mds/images/example.png`.
 
-copy these into newly created html file's `<section class="content">` section
-save the file
+## Local preview
 
-Done!
+After running the build, open `index.html` directly by double-clicking it and use
+its links as you do today. The pages are static, so they do not need a local web
+server. Re-run the build whenever you change a Markdown source file.
+
+## First-time setup
+
+If dependencies are not installed yet, run `npm --prefix node_scripts ci` once.
