@@ -1,8 +1,9 @@
 {
   "name": "node_scripts",
   "version": "1.0.0",
-  "main": "addHeadings.js",
+  "main": "buildArticles.js",
   "scripts": {
+    "build:articles": "node buildArticles.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

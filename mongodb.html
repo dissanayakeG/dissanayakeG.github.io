@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>MongoDB Guide: Fundamentals to Advanced Usage</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
@@ -14,9 +14,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -26,100 +27,42 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br />
-			<h1 id="mongodb-guide-fundamentals-to-advanced-usage">
-				MongoDB Guide: Fundamentals to Advanced Usage
-			</h1>
-			<br />
-			<br />
-			<h2 id="introduction-to-mongodb">Introduction to MongoDB</h2>
-			<br />
-			<p>
-				MongoDB is a popular NoSQL database that stores data in
-				flexible, JSON-like documents. Unlike traditional relational
-				databases that use tables and rows, MongoDB uses collections and
-				documents, making it ideal for handling unstructured or
-				semi-structured data.
-			</p>
-			<br />
-			<h3 id="key-features">Key Features</h3>
-			<br />
-			<ul>
-				<li>
-					<strong>Document-oriented</strong>: Stores data in flexible,
-					JSON-like documents
-				</li>
-				<li>
-					<strong>Schema-less</strong>: No predefined schema required
-				</li>
-				<li>
-					<strong>Scalable</strong>: Horizontal scaling through
-					sharding
-				</li>
-				<li>
-					<strong>High performance</strong>: Indexing, replication,
-					and aggregation capabilities
-				</li>
-				<li>
-					<strong>Flexible query language</strong>: Rich query
-					capabilities
-				</li>
-			</ul>
-			<br />
-			<h3 id="mongodb-structure-hierarchy">
-				MongoDB Structure Hierarchy
-			</h3>
-			<br />
-			<pre><code>Database → Collections → Documents → Fields
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="mongodb-guide-fundamentals-to-advanced-usage">MongoDB Guide: Fundamentals to Advanced Usage</h1><br>
+<br><h2 id="introduction-to-mongodb">Introduction to MongoDB</h2><br>
+<p>MongoDB is a popular NoSQL database that stores data in flexible, JSON-like documents. Unlike traditional relational databases that use tables and rows, MongoDB uses collections and documents, making it ideal for handling unstructured or semi-structured data.</p>
+<br><h3 id="key-features">Key Features</h3><br>
+<ul>
+<li><strong>Document-oriented</strong>: Stores data in flexible, JSON-like documents</li>
+<li><strong>Schema-less</strong>: No predefined schema required</li>
+<li><strong>Scalable</strong>: Horizontal scaling through sharding</li>
+<li><strong>High performance</strong>: Indexing, replication, and aggregation capabilities</li>
+<li><strong>Flexible query language</strong>: Rich query capabilities</li>
+</ul>
+<br><h3 id="mongodb-structure-hierarchy">MongoDB Structure Hierarchy</h3><br>
+<pre><code>Database → Collections → Documents → Fields
 </code></pre>
-			<ul>
-				<li><strong>Database</strong>: Container for collections</li>
-				<li>
-					<strong>Collection</strong>: Group of MongoDB documents
-					(similar to a table in RDBMS)
-				</li>
-				<li>
-					<strong>Document</strong>: Set of key-value pairs stored in
-					BSON format (Binary JSON)
-				</li>
-				<li><strong>Field</strong>: A key-value pair in a document</li>
-			</ul>
-			<br />
-			<h3 id="bson-format">BSON Format</h3>
-			<br />
-			<p>
-				MongoDB uses BSON (Binary JSON) for storing documents. BSON
-				extends JSON with additional data types and is optimized for:
-			</p>
-			<ul>
-				<li>Data traversal</li>
-				<li>Encoding/decoding</li>
-				<li>Space efficiency</li>
-			</ul>
-			<p>
-				BSON supports data types like Date, ObjectID, Binary, etc. that
-				aren&#39;t available in JSON.
-			</p>
-			<br />
-			<h2 id="installation-and-setup">Installation and Setup</h2>
-			<br />
-			<br />
-			<h3 id="installing-mongodb-community-edition">
-				Installing MongoDB Community Edition
-			</h3>
-			<br />
-			<br />
-			<h4 id="on-ubuntudebian">On Ubuntu/Debian:</h4>
-			<br />
-			<p>
-				Reference :
-				<a
-					href="https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/"
-					>https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/</a
-				>
-			</p>
-			<pre><code class="language-bash"># Import the MongoDB public GPG key
+<ul>
+<li><strong>Database</strong>: Container for collections</li>
+<li><strong>Collection</strong>: Group of MongoDB documents (similar to a table in RDBMS)</li>
+<li><strong>Document</strong>: Set of key-value pairs stored in BSON format (Binary JSON)</li>
+<li><strong>Field</strong>: A key-value pair in a document</li>
+</ul>
+<br><h3 id="bson-format">BSON Format</h3><br>
+<p>MongoDB uses BSON (Binary JSON) for storing documents. BSON extends JSON with additional data types and is optimized for:</p>
+<ul>
+<li>Data traversal</li>
+<li>Encoding/decoding</li>
+<li>Space efficiency</li>
+</ul>
+<p>BSON supports data types like Date, ObjectID, Binary, etc. that aren&#39;t available in JSON.</p>
+<br><h2 id="installation-and-setup">Installation and Setup</h2><br>
+<br><h3 id="installing-mongodb-community-edition">Installing MongoDB Community Edition</h3><br>
+<br><h4 id="on-ubuntudebian">On Ubuntu/Debian:</h4><br>
+<p>Reference : <a href="https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/">https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/</a></p>
+<pre><code class="language-bash"># Import the MongoDB public GPG key
 wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
 
 # Create a list file for MongoDB
@@ -137,10 +80,8 @@ sudo systemctl start mongod
 # Enable MongoDB to start on boot
 sudo systemctl enable mongod
 </code></pre>
-			<br />
-			<h3 id="verifying-installation">Verifying Installation</h3>
-			<br />
-			<pre><code class="language-bash"># Check MongoDB version
+<br><h3 id="verifying-installation">Verifying Installation</h3><br>
+<pre><code class="language-bash"># Check MongoDB version
 mongod --version
 
 # Check service status
@@ -149,74 +90,41 @@ sudo systemctl status mongod
 # List installed MongoDB packages
 dpkg -l | grep mongodb
 </code></pre>
-			<br />
-			<h2 id="mongodb-tools">MongoDB Tools</h2>
-			<br />
-			<br />
-			<h3 id="mongodb-shell-mongosh">MongoDB Shell (mongosh)</h3>
-			<br />
-			<p>
-				The MongoDB Shell is an interactive JavaScript interface to
-				MongoDB. It&#39;s used for querying and updating data as well as
-				performing administrative operations.
-			</p>
-			<pre><code class="language-bash"># Connect to MongoDB instance
+<br><h2 id="mongodb-tools">MongoDB Tools</h2><br>
+<br><h3 id="mongodb-shell-mongosh">MongoDB Shell (mongosh)</h3><br>
+<p>The MongoDB Shell is an interactive JavaScript interface to MongoDB. It&#39;s used for querying and updating data as well as performing administrative operations.</p>
+<pre><code class="language-bash"># Connect to MongoDB instance
 mongosh
 </code></pre>
-			<br />
-			<h3 id="mongodb-compass">MongoDB Compass</h3>
-			<br />
-			<p>
-				Reference :
-				<a href="https://www.mongodb.com/docs/compass/current/install/"
-					>https://www.mongodb.com/docs/compass/current/install/</a
-				>
-			</p>
-			<pre><code class="language-bash">wget https://downloads.mongodb.com/compass/mongodb-compass_1.45.4_amd64.deb
+<br><h3 id="mongodb-compass">MongoDB Compass</h3><br>
+<p>Reference : <a href="https://www.mongodb.com/docs/compass/current/install/">https://www.mongodb.com/docs/compass/current/install/</a></p>
+<pre><code class="language-bash">wget https://downloads.mongodb.com/compass/mongodb-compass_1.45.4_amd64.deb
 sudo apt install ./mongodb-compass_1.45.4_amd64.deb
 mongodb-compass
 </code></pre>
-			<p>MongoDB Compass is a GUI for MongoDB that allows you to:</p>
-			<ul>
-				<li>Visualize and explore your data</li>
-				<li>Run ad hoc queries</li>
-				<li>Perform CRUD operations</li>
-				<li>View performance metrics</li>
-				<li>Create and manage indexes</li>
-			</ul>
-			<br />
-			<h3 id="mongodb-atlas-vs-mongodb-compass">
-				MongoDB Atlas vs MongoDB Compass
-			</h3>
-			<br />
-			<ul>
-				<li>
-					<strong>MongoDB Atlas</strong>: Cloud database service for
-					MongoDB, offering automated deployments, backups, and
-					scaling.
-				</li>
-				<li>
-					<strong>MongoDB Compass</strong>: GUI tool for interacting
-					with MongoDB databases, whether they&#39;re local or in the
-					cloud.
-				</li>
-			</ul>
-			<br />
-			<h2 id="basic-mongodb-operations">Basic MongoDB Operations</h2>
-			<br />
-			<br />
-			<h3 id="connecting-to-mongodb">Connecting to MongoDB</h3>
-			<br />
-			<pre><code class="language-javascript">// Connect to local MongoDB instance
+<p>MongoDB Compass is a GUI for MongoDB that allows you to:</p>
+<ul>
+<li>Visualize and explore your data</li>
+<li>Run ad hoc queries</li>
+<li>Perform CRUD operations</li>
+<li>View performance metrics</li>
+<li>Create and manage indexes</li>
+</ul>
+<br><h3 id="mongodb-atlas-vs-mongodb-compass">MongoDB Atlas vs MongoDB Compass</h3><br>
+<ul>
+<li><strong>MongoDB Atlas</strong>: Cloud database service for MongoDB, offering automated deployments, backups, and scaling.</li>
+<li><strong>MongoDB Compass</strong>: GUI tool for interacting with MongoDB databases, whether they&#39;re local or in the cloud.</li>
+</ul>
+<br><h2 id="basic-mongodb-operations">Basic MongoDB Operations</h2><br>
+<br><h3 id="connecting-to-mongodb">Connecting to MongoDB</h3><br>
+<pre><code class="language-javascript">// Connect to local MongoDB instance
 mongosh
 
 // Connect to a specific database
 mongosh &quot;mongodb://localhost:27017/databaseName&quot;
 </code></pre>
-			<br />
-			<h3 id="database-operations">Database Operations</h3>
-			<br />
-			<pre><code class="language-javascript">// Show all databases
+<br><h3 id="database-operations">Database Operations</h3><br>
+<pre><code class="language-javascript">// Show all databases
 show dbs
 
 // Switch to a specific database (creates it if doesn&#39;t exist)
@@ -228,13 +136,9 @@ db.getName()
 // Drop current database
 db.dropDatabase()
 </code></pre>
-			<br />
-			<h3 id="running-javascript-in-mongosh">
-				Running JavaScript in mongosh
-			</h3>
-			<br />
-			<p>MongoDB shell allows you to execute JavaScript code:</p>
-			<pre><code class="language-javascript">// Define variables
+<br><h3 id="running-javascript-in-mongosh">Running JavaScript in mongosh</h3><br>
+<p>MongoDB shell allows you to execute JavaScript code:</p>
+<pre><code class="language-javascript">// Define variables
 const x = 10;
 const y = 5;
 print(x + y);
@@ -249,18 +153,10 @@ print(calculateAverage([1, 2, 3, 4, 5]));
 const now = new Date();
 print(now);
 </code></pre>
-			<br />
-			<h2 id="crud-operations-create-read-update-delete">
-				CRUD Operations (Create, Read, Update, Delete)
-			</h2>
-			<br />
-			<br />
-			<h3 id="creating-documents">Creating Documents</h3>
-			<br />
-			<br />
-			<h4 id="insert-one-document">Insert One Document</h4>
-			<br />
-			<pre><code class="language-javascript">// Insert a single document
+<br><h2 id="crud-operations-create-read-update-delete">CRUD Operations (Create, Read, Update, Delete)</h2><br>
+<br><h3 id="creating-documents">Creating Documents</h3><br>
+<br><h4 id="insert-one-document">Insert One Document</h4><br>
+<pre><code class="language-javascript">// Insert a single document
 db.collectionName.insertOne({field1: value1, field2: value2})
 
 // Example
@@ -269,10 +165,8 @@ db.movies.insertOne({&quot;name&quot;: &quot;Foo&quot;, &quot;rating&quot;: 10})
 // View available options
 db.movies.insertOne.help()
 </code></pre>
-			<br />
-			<h4 id="insert-multiple-documents">Insert Multiple Documents</h4>
-			<br />
-			<pre><code class="language-javascript">// Create documents
+<br><h4 id="insert-multiple-documents">Insert Multiple Documents</h4><br>
+<pre><code class="language-javascript">// Create documents
 m1 = {&quot;name&quot;: &quot;A Foo 1&quot;, &quot;rating&quot;: 4}
 m2 = {&quot;name&quot;: &quot;B Foo 2&quot;, &quot;rating&quot;: 5}
 m3 = {&quot;name&quot;: &quot;C Foo 3&quot;, &quot;rating&quot;: 6}
@@ -283,10 +177,8 @@ db.movies.insertMany([m1, m2, m3])
 // View available options
 db.movies.insertMany.help()
 </code></pre>
-			<br />
-			<h3 id="reading-documents">Reading Documents</h3>
-			<br />
-			<pre><code class="language-javascript">// Show all collections in the current database
+<br><h3 id="reading-documents">Reading Documents</h3><br>
+<pre><code class="language-javascript">// Show all collections in the current database
 show collections
 
 // Find all documents in a collection
@@ -328,10 +220,8 @@ db.movies.find({&quot;rating&quot;: {$in: [3, 5, 7]}}) // rating is 3, 5, or 7
 db.movies.find({$and: [{&quot;rating&quot;: {$gt: 5}}, {&quot;name&quot;: /^A/}]}) // rating &gt; 5 AND name starts with &quot;A&quot;
 db.movies.find({$or: [{&quot;rating&quot;: {$lt: 3}}, {&quot;rating&quot;: {$gt: 7}}]}) // rating &lt; 3 OR rating &gt; 7
 </code></pre>
-			<br />
-			<h3 id="updating-documents">Updating Documents</h3>
-			<br />
-			<pre><code class="language-javascript">// Update a single document
+<br><h3 id="updating-documents">Updating Documents</h3><br>
+<pre><code class="language-javascript">// Update a single document
 db.movies.updateOne({&quot;name&quot;: &quot;Foo 1&quot;}, {$set: {rating: 6}})
 
 // Update multiple documents
@@ -347,10 +237,8 @@ db.movies.updateOne({&quot;name&quot;: &quot;Foo 1&quot;}, {$push: {genres: &quo
 db.movies.updateOne({&quot;name&quot;: &quot;Foo 1&quot;}, {$pull: {genres: &quot;Comedy&quot;}}) // Remove from array
 db.movies.updateOne({&quot;name&quot;: &quot;Foo 1&quot;}, {$unset: {director: &quot;&quot;}}) // Remove field
 </code></pre>
-			<br />
-			<h3 id="deleting-documents">Deleting Documents</h3>
-			<br />
-			<pre><code class="language-javascript">// Delete a single document
+<br><h3 id="deleting-documents">Deleting Documents</h3><br>
+<pre><code class="language-javascript">// Delete a single document
 db.movies.deleteOne({&quot;name&quot;: &quot;Foo 1&quot;})
 
 // Delete multiple documents
@@ -363,13 +251,9 @@ db.movies.deleteMany.help()
 // Delete all documents in a collection
 db.movies.deleteMany({})
 </code></pre>
-			<br />
-			<h2 id="advanced-mongodb-features">Advanced MongoDB Features</h2>
-			<br />
-			<br />
-			<h3 id="indexes">Indexes</h3>
-			<br />
-			<pre><code class="language-javascript">// Create an index
+<br><h2 id="advanced-mongodb-features">Advanced MongoDB Features</h2><br>
+<br><h3 id="indexes">Indexes</h3><br>
+<pre><code class="language-javascript">// Create an index
 db.movies.createIndex({&quot;name&quot;: 1}) // 1 for ascending, -1 for descending
 
 // Create a compound index
@@ -384,10 +268,8 @@ db.movies.getIndexes()
 // Drop an index
 db.movies.dropIndex(&quot;name_1&quot;)
 </code></pre>
-			<br />
-			<h3 id="aggregation-framework">Aggregation Framework</h3>
-			<br />
-			<pre><code class="language-javascript">// Simple aggregation example: group and count
+<br><h3 id="aggregation-framework">Aggregation Framework</h3><br>
+<pre><code class="language-javascript">// Simple aggregation example: group and count
 db.movies.aggregate([
   {$group: {_id: &quot;$rating&quot;, count: {$sum: 1}}}
 ])
@@ -399,12 +281,8 @@ db.movies.aggregate([
   {$sort: {avgRating: -1}} // Sort by average rating descending
 ])
 </code></pre>
-			<br />
-			<h3 id="working-with-javascript-in-mongodb-shell">
-				Working with JavaScript in MongoDB Shell
-			</h3>
-			<br />
-			<pre><code class="language-javascript">// Convert find cursor to an array for processing
+<br><h3 id="working-with-javascript-in-mongodb-shell">Working with JavaScript in MongoDB Shell</h3><br>
+<pre><code class="language-javascript">// Convert find cursor to an array for processing
 const results = db.movies.find().toArray()
 
 // Display results in a table format
@@ -419,10 +297,8 @@ results.forEach(movie =&gt; {
 const avg = results.reduce((acc, movie) =&gt; acc + movie.rating, 0) / results.length
 print(`Average Rating: ${avg}`)
 </code></pre>
-			<br />
-			<h3 id="data-importexport">Data Import/Export</h3>
-			<br />
-			<pre><code class="language-bash"># Import JSON data
+<br><h3 id="data-importexport">Data Import/Export</h3><br>
+<pre><code class="language-bash"># Import JSON data
 mongoimport --db=myDB --collection=movies --file=movies.json
 
 # Export to JSON
@@ -434,24 +310,18 @@ mongorestore --db=myDB dump/myDB/
 # Export to BSON (for backup)
 mongodump --db=myDB
 </code></pre>
-			<br />
-			<h2 id="mongodb-security-best-practices">
-				MongoDB Security Best Practices
-			</h2>
-			<br />
-			<ul>
-				<li>Enable authentication</li>
-				<li>Create specific users with appropriate privileges</li>
-				<li>Use TLS/SSL for encrypted connections</li>
-				<li>Enable role-based access control</li>
-				<li>Regularly update MongoDB to the latest version</li>
-				<li>Use firewalls to restrict access to MongoDB ports</li>
-				<li>Audit database access and operations</li>
-			</ul>
-			<br />
-			<h3 id="enable-authentication">Enable Authentication</h3>
-			<br />
-			<pre><code class="language-javascript">// Create admin user
+<br><h2 id="mongodb-security-best-practices">MongoDB Security Best Practices</h2><br>
+<ul>
+<li>Enable authentication</li>
+<li>Create specific users with appropriate privileges</li>
+<li>Use TLS/SSL for encrypted connections</li>
+<li>Enable role-based access control</li>
+<li>Regularly update MongoDB to the latest version</li>
+<li>Use firewalls to restrict access to MongoDB ports</li>
+<li>Audit database access and operations</li>
+</ul>
+<br><h3 id="enable-authentication">Enable Authentication</h3><br>
+<pre><code class="language-javascript">// Create admin user
 use admin
 db.createUser({
   user: &quot;adminUser&quot;,
@@ -467,100 +337,36 @@ db.createUser({
   roles: [{ role: &quot;readWrite&quot;, db: &quot;myDatabase&quot; }]
 })
 </code></pre>
-			<br />
-			<h2 id="mongodb-atlas">MongoDB Atlas</h2>
-			<br />
-			<p>
-				MongoDB Atlas is the cloud-hosted database service provided by
-				MongoDB, Inc. It offers:
-			</p>
-			<ul>
-				<li>Automated deployment and scaling</li>
-				<li>Backup and restoration</li>
-				<li>Monitoring and alerts</li>
-				<li>Security features (encryption, VPC peering, etc.)</li>
-				<li>Global clusters for low-latency access worldwide</li>
-			</ul>
-			<br />
-			<h3 id="setting-up-mongodb-atlas">Setting up MongoDB Atlas</h3>
-			<br />
-			<ol>
-				<li>
-					Create an account on
-					<a href="https://www.mongodb.com/cloud/atlas"
-						>MongoDB Atlas</a
-					>
-				</li>
-				<li>Create a new cluster (free tier available)</li>
-				<li>Configure network access (whitelist IP addresses)</li>
-				<li>Create database users</li>
-				<li>Connect to your cluster via connection string</li>
-			</ol>
-			<br />
-			<h2 id="tips-and-best-practices">Tips and Best Practices</h2>
-			<br />
-			<ol>
-				<li>
-					<p>
-						<strong>Design your schema for your queries</strong>:
-						Unlike relational databases, MongoDB performs best when
-						your schema design matches your access patterns.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use appropriate indexing</strong>: Create
-						indexes for frequently queried fields, but be mindful
-						that each index adds overhead to write operations.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Embed or reference</strong>: Choose between
-						embedding related data or using references based on your
-						access patterns and the size/volatility of the data.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Limit document size</strong>: Keep documents
-						under the 16MB limit and consider references for larger
-						data.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use the aggregation framework</strong>: For
-						complex queries involving multiple operations.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Implement data validation</strong>: Use JSON
-						Schema validation to enforce document structure.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Monitor performance</strong>: Use MongoDB&#39;s
-						built-in tools to identify slow queries and optimize
-						them.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use appropriate write concern</strong>: Balance
-						between performance and data durability based on your
-						application needs.
-					</p>
-				</li>
-			</ol>
-			<br />
-			<h2 id="common-mongodb-commands-cheat-sheet">
-				Common MongoDB Commands Cheat Sheet
-			</h2>
-			<br />
-			<pre><code>// Database Operations
+<br><h2 id="mongodb-atlas">MongoDB Atlas</h2><br>
+<p>MongoDB Atlas is the cloud-hosted database service provided by MongoDB, Inc. It offers:</p>
+<ul>
+<li>Automated deployment and scaling</li>
+<li>Backup and restoration</li>
+<li>Monitoring and alerts</li>
+<li>Security features (encryption, VPC peering, etc.)</li>
+<li>Global clusters for low-latency access worldwide</li>
+</ul>
+<br><h3 id="setting-up-mongodb-atlas">Setting up MongoDB Atlas</h3><br>
+<ol>
+<li>Create an account on <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a></li>
+<li>Create a new cluster (free tier available)</li>
+<li>Configure network access (whitelist IP addresses)</li>
+<li>Create database users</li>
+<li>Connect to your cluster via connection string</li>
+</ol>
+<br><h2 id="tips-and-best-practices">Tips and Best Practices</h2><br>
+<ol>
+<li><strong>Design your schema for your queries</strong>: Unlike relational databases, MongoDB performs best when your schema design matches your access patterns.</li>
+<li><strong>Use appropriate indexing</strong>: Create indexes for frequently queried fields, but be mindful that each index adds overhead to write operations.</li>
+<li><strong>Embed or reference</strong>: Choose between embedding related data or using references based on your access patterns and the size/volatility of the data.</li>
+<li><strong>Limit document size</strong>: Keep documents under the 16MB limit and consider references for larger data.</li>
+<li><strong>Use the aggregation framework</strong>: For complex queries involving multiple operations.</li>
+<li><strong>Implement data validation</strong>: Use JSON Schema validation to enforce document structure.</li>
+<li><strong>Monitor performance</strong>: Use MongoDB&#39;s built-in tools to identify slow queries and optimize them.</li>
+<li><strong>Use appropriate write concern</strong>: Balance between performance and data durability based on your application needs.</li>
+</ol>
+<br><h2 id="common-mongodb-commands-cheat-sheet">Common MongoDB Commands Cheat Sheet</h2><br>
+<pre><code>// Database Operations
 show dbs                  - List all databases
 use &lt;db&gt;                  - Switch to database (creates if not exists)
 db                        - Show current database
@@ -589,59 +395,23 @@ db.getUsers()             - List all users in current database
 db.createUser()           - Create new user
 db.runCommand({})         - Run database command
 </code></pre>
-			<br />
-			<h2 id="mongoose-odm-for-mongodb">Mongoose: ODM for MongoDB</h2>
-			<br />
-			<p>
-				Mongoose is an Object Data Modeling (ODM) library for Node.js
-				and MongoDB. It provides a higher-level abstraction layer on top
-				of MongoDB&#39;s native driver, making it easier to work with
-				MongoDB in a Node.js environment.
-			</p>
-			<br />
-			<h3 id="key-features-of-mongoose">Key Features of Mongoose</h3>
-			<br />
-			<ul>
-				<li>
-					<strong>Schema Definition</strong>: Define structured
-					schemas for your MongoDB documents
-				</li>
-				<li>
-					<strong>Data Validation</strong>: Enforce data integrity
-					with built-in and custom validators
-				</li>
-				<li>
-					<strong>Middleware</strong>: Implement pre and post hooks
-					for database operations
-				</li>
-				<li>
-					<strong>Query Building</strong>: Create complex queries with
-					a chainable API
-				</li>
-				<li>
-					<strong>Relationship Management</strong>: Define and work
-					with relationships between documents
-				</li>
-				<li>
-					<strong>Type Casting</strong>: Automatically convert data
-					types as specified in the schema
-				</li>
-				<li>
-					<strong>Business Logic Hooks</strong>: Attach methods to
-					models for document instances
-				</li>
-			</ul>
-			<br />
-			<h3 id="installing-mongoose">Installing Mongoose</h3>
-			<br />
-			<pre><code class="language-bash">npm install mongoose
+<br><h2 id="mongoose-odm-for-mongodb">Mongoose: ODM for MongoDB</h2><br>
+<p>Mongoose is an Object Data Modeling (ODM) library for Node.js and MongoDB. It provides a higher-level abstraction layer on top of MongoDB&#39;s native driver, making it easier to work with MongoDB in a Node.js environment.</p>
+<br><h3 id="key-features-of-mongoose">Key Features of Mongoose</h3><br>
+<ul>
+<li><strong>Schema Definition</strong>: Define structured schemas for your MongoDB documents</li>
+<li><strong>Data Validation</strong>: Enforce data integrity with built-in and custom validators</li>
+<li><strong>Middleware</strong>: Implement pre and post hooks for database operations</li>
+<li><strong>Query Building</strong>: Create complex queries with a chainable API</li>
+<li><strong>Relationship Management</strong>: Define and work with relationships between documents</li>
+<li><strong>Type Casting</strong>: Automatically convert data types as specified in the schema</li>
+<li><strong>Business Logic Hooks</strong>: Attach methods to models for document instances</li>
+</ul>
+<br><h3 id="installing-mongoose">Installing Mongoose</h3><br>
+<pre><code class="language-bash">npm install mongoose
 </code></pre>
-			<br />
-			<h3 id="connecting-to-mongodb-with-mongoose">
-				Connecting to MongoDB with Mongoose
-			</h3>
-			<br />
-			<pre><code class="language-javascript">const mongoose = require(&#39;mongoose&#39;);
+<br><h3 id="connecting-to-mongodb-with-mongoose">Connecting to MongoDB with Mongoose</h3><br>
+<pre><code class="language-javascript">const mongoose = require(&#39;mongoose&#39;);
 
 // Connect to local MongoDB
 mongoose.connect(&#39;mongodb://localhost:27017/mydatabase&#39;, {
@@ -656,10 +426,8 @@ db.once(&#39;open&#39;, function() {
   console.log(&quot;Connected to MongoDB!&quot;);
 });
 </code></pre>
-			<br />
-			<h3 id="creating-a-schema">Creating a Schema</h3>
-			<br />
-			<pre><code class="language-javascript">const mongoose = require(&#39;mongoose&#39;);
+<br><h3 id="creating-a-schema">Creating a Schema</h3><br>
+<pre><code class="language-javascript">const mongoose = require(&#39;mongoose&#39;);
 const { Schema } = mongoose;
 
 // Define a schema
@@ -691,26 +459,22 @@ const movieSchema = new Schema({
 // Create a model from the schema
 const Movie = mongoose.model(&#39;Movie&#39;, movieSchema);
 </code></pre>
-			<br />
-			<h3 id="schema-data-types">Schema Data Types</h3>
-			<br />
-			<p>Mongoose supports various data types:</p>
-			<ul>
-				<li>String</li>
-				<li>Number</li>
-				<li>Date</li>
-				<li>Buffer</li>
-				<li>Boolean</li>
-				<li>Mixed</li>
-				<li>ObjectId</li>
-				<li>Array</li>
-				<li>Decimal128</li>
-				<li>Map</li>
-			</ul>
-			<br />
-			<h3 id="schema-validation">Schema Validation</h3>
-			<br />
-			<pre><code class="language-javascript">const userSchema = new Schema({
+<br><h3 id="schema-data-types">Schema Data Types</h3><br>
+<p>Mongoose supports various data types:</p>
+<ul>
+<li>String</li>
+<li>Number</li>
+<li>Date</li>
+<li>Buffer</li>
+<li>Boolean</li>
+<li>Mixed</li>
+<li>ObjectId</li>
+<li>Array</li>
+<li>Decimal128</li>
+<li>Map</li>
+</ul>
+<br><h3 id="schema-validation">Schema Validation</h3><br>
+<pre><code class="language-javascript">const userSchema = new Schema({
   username: {
     type: String,
     required: [true, &#39;Username is required&#39;],
@@ -742,15 +506,9 @@ const Movie = mongoose.model(&#39;Movie&#39;, movieSchema);
   }
 });
 </code></pre>
-			<br />
-			<h3 id="crud-operations-with-mongoose">
-				CRUD Operations with Mongoose
-			</h3>
-			<br />
-			<br />
-			<h4 id="creating-documents">Creating Documents</h4>
-			<br />
-			<pre><code class="language-javascript">// Create a new document
+<br><h3 id="crud-operations-with-mongoose">CRUD Operations with Mongoose</h3><br>
+<br><h4 id="creating-documents-2">Creating Documents</h4><br>
+<pre><code class="language-javascript">// Create a new document
 const movie = new Movie({
   name: &#39;Inception&#39;,
   rating: 8.8,
@@ -785,10 +543,8 @@ Movie.create({
     console.error(&#39;Error creating movie:&#39;, err);
   });
 </code></pre>
-			<br />
-			<h4 id="reading-documents">Reading Documents</h4>
-			<br />
-			<pre><code class="language-javascript">// Find all documents
+<br><h4 id="reading-documents-2">Reading Documents</h4><br>
+<pre><code class="language-javascript">// Find all documents
 Movie.find()
   .then(movies =&gt; {
     console.log(&#39;All movies:&#39;, movies);
@@ -827,10 +583,8 @@ Movie.find()
     console.log(&#39;Query result:&#39;, movies);
   });
 </code></pre>
-			<br />
-			<h4 id="updating-documents">Updating Documents</h4>
-			<br />
-			<pre><code class="language-javascript">// Update one document
+<br><h4 id="updating-documents-2">Updating Documents</h4><br>
+<pre><code class="language-javascript">// Update one document
 Movie.updateOne(
   { name: &#39;Inception&#39; },
   { rating: 9.0 }
@@ -858,10 +612,8 @@ Movie.updateMany(
     console.log(&#39;Bulk update result:&#39;, result);
   });
 </code></pre>
-			<br />
-			<h4 id="deleting-documents">Deleting Documents</h4>
-			<br />
-			<pre><code class="language-javascript">// Delete one document
+<br><h4 id="deleting-documents-2">Deleting Documents</h4><br>
+<pre><code class="language-javascript">// Delete one document
 Movie.deleteOne({ name: &#39;Inception&#39; })
   .then(result =&gt; {
     console.log(&#39;Delete result:&#39;, result);
@@ -879,14 +631,9 @@ Movie.deleteMany({ isAvailable: false })
     console.log(&#39;Bulk delete result:&#39;, result);
   });
 </code></pre>
-			<br />
-			<h3 id="middleware-hooks">Middleware (Hooks)</h3>
-			<br />
-			<p>
-				Mongoose middleware (pre and post hooks) functions let you
-				execute code before or after specific operations.
-			</p>
-			<pre><code class="language-javascript">// Pre-save hook
+<br><h3 id="middleware-hooks">Middleware (Hooks)</h3><br>
+<p>Mongoose middleware (pre and post hooks) functions let you execute code before or after specific operations.</p>
+<pre><code class="language-javascript">// Pre-save hook
 movieSchema.pre(&#39;save&#39;, function(next) {
   // &#39;this&#39; refers to the document being saved
   console.log(`Saving movie: ${this.name}`);
@@ -916,12 +663,8 @@ movieSchema.post(&#39;find&#39;, function(docs) {
   console.log(`Query took ${Date.now() - this.start}ms`);
 });
 </code></pre>
-			<br />
-			<h3 id="instance-and-static-methods">
-				Instance and Static Methods
-			</h3>
-			<br />
-			<pre><code class="language-javascript">// Instance method (available on document instances)
+<br><h3 id="instance-and-static-methods">Instance and Static Methods</h3><br>
+<pre><code class="language-javascript">// Instance method (available on document instances)
 movieSchema.methods.getSummary = function() {
   return `${this.name} (${this.rating}/10)`;
 };
@@ -938,14 +681,9 @@ movieSchema.statics.findByGenre = function(genre) {
 // Use static method
 const actionMovies = await Movie.findByGenre(&#39;Action&#39;);
 </code></pre>
-			<br />
-			<h3 id="virtual-properties">Virtual Properties</h3>
-			<br />
-			<p>
-				Virtual properties are not stored in MongoDB but computed from
-				other fields.
-			</p>
-			<pre><code class="language-javascript">// Define a virtual property
+<br><h3 id="virtual-properties">Virtual Properties</h3><br>
+<p>Virtual properties are not stored in MongoDB but computed from other fields.</p>
+<pre><code class="language-javascript">// Define a virtual property
 movieSchema.virtual(&#39;nameAndRating&#39;).get(function() {
   return `${this.name} (${this.rating}/10)`;
 });
@@ -954,11 +692,9 @@ movieSchema.virtual(&#39;nameAndRating&#39;).get(function() {
 const movie = await Movie.findOne();
 console.log(movie.nameAndRating); // &quot;Inception (8.8/10)&quot;
 </code></pre>
-			<br />
-			<h3 id="populate-references">Populate (References)</h3>
-			<br />
-			<p>Mongoose can populate references to other documents.</p>
-			<pre><code class="language-javascript">// Define schemas with references
+<br><h3 id="populate-references">Populate (References)</h3><br>
+<p>Mongoose can populate references to other documents.</p>
+<pre><code class="language-javascript">// Define schemas with references
 const directorSchema = new Schema({
   name: String,
   bio: String,
@@ -991,16 +727,9 @@ await Film.create({
 const films = await Film.find().populate(&#39;director&#39;);
 console.log(films[0].director.name); // &quot;Christopher Nolan&quot;
 </code></pre>
-			<br />
-			<h3 id="using-asyncawait-with-mongoose">
-				Using Async/Await with Mongoose
-			</h3>
-			<br />
-			<p>
-				Modern Node.js applications typically use async/await with
-				Mongoose:
-			</p>
-			<pre><code class="language-javascript">// Connect to MongoDB
+<br><h3 id="using-asyncawait-with-mongoose">Using Async/Await with Mongoose</h3><br>
+<p>Modern Node.js applications typically use async/await with Mongoose:</p>
+<pre><code class="language-javascript">// Connect to MongoDB
 async function connectToMongoDB() {
   try {
     await mongoose.connect(&#39;mongodb://localhost:27017/mydatabase&#39;, {
@@ -1054,10 +783,8 @@ async function safeOperation() {
   }
 }
 </code></pre>
-			<br />
-			<h3 id="schema-options">Schema Options</h3>
-			<br />
-			<pre><code class="language-javascript">const movieSchema = new Schema({
+<br><h3 id="schema-options">Schema Options</h3><br>
+<pre><code class="language-javascript">const movieSchema = new Schema({
   name: String,
   rating: Number
 }, {
@@ -1069,110 +796,42 @@ async function safeOperation() {
   toObject: { virtuals: true }  // Include virtuals when converting to object
 });
 </code></pre>
-			<br />
-			<h3 id="mongoose-best-practices">Mongoose Best Practices</h3>
-			<br />
-			<ol>
-				<li>
-					<p>
-						<strong>Always handle connection errors</strong>: Set up
-						error listeners on the mongoose connection.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use schema validation</strong>: Define strict
-						schemas with validation rules.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use middleware wisely</strong>: Avoid complex
-						logic in middleware that could impact performance.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Lean queries for better performance</strong>:
-						Use <code>.lean()</code> when you only need data and not
-						full Mongoose documents.
-					</p>
-					<pre><code class="language-javascript">const movies = await Movie.find().lean();
+<br><h3 id="mongoose-best-practices">Mongoose Best Practices</h3><br>
+<ol>
+<li><strong>Always handle connection errors</strong>: Set up error listeners on the mongoose connection.</li>
+<li><strong>Use schema validation</strong>: Define strict schemas with validation rules.</li>
+<li><strong>Use middleware wisely</strong>: Avoid complex logic in middleware that could impact performance.</li>
+<li><strong>Lean queries for better performance</strong>: Use <code>.lean()</code> when you only need data and not full Mongoose documents.</li>
+</ol>
+<pre><code class="language-javascript">const movies = await Movie.find().lean();
 </code></pre>
-				</li>
-				<li>
-					<p>
-						<strong>Index fields you query frequently</strong>: Add
-						indexes to fields used in queries.
-					</p>
-					<pre><code class="language-javascript">movieSchema.index({ name: 1 });
+<ol start="5">
+<li><strong>Index fields you query frequently</strong>: Add indexes to fields used in queries.</li>
+</ol>
+<pre><code class="language-javascript">movieSchema.index({ name: 1 });
 movieSchema.index({ rating: -1, name: 1 });
 </code></pre>
-				</li>
-				<li>
-					<p>
-						<strong>Use projection to limit fields returned</strong
-						>: Only request the fields you need.
-					</p>
-					<pre><code class="language-javascript">const movies = await Movie.find().select(&#39;name rating&#39;);
+<ol start="6">
+<li><strong>Use projection to limit fields returned</strong>: Only request the fields you need.</li>
+</ol>
+<pre><code class="language-javascript">const movies = await Movie.find().select(&#39;name rating&#39;);
 </code></pre>
-				</li>
-				<li>
-					<p>
-						<strong>Batch operations for better performance</strong
-						>: Use <code>insertMany</code>, <code>updateMany</code>,
-						or <code>deleteMany</code> for bulk operations.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Be careful with unbounded arrays</strong>: Large
-						arrays within documents can degrade performance.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Handle duplicate key errors</strong>: Implement
-						proper error handling for unique constraint violations.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>Use transactions for complex operations</strong
-						>: For operations that need to be atomic across multiple
-						documents.
-					</p>
-				</li>
-			</ol>
-			<br />
-			<h2 id="advanced-mongodb-use-cases">Advanced MongoDB Use Cases</h2>
-			<br />
-			<ul>
-				<li>
-					<strong>Real-time analytics</strong>: Use change streams to
-					track and react to data changes
-				</li>
-				<li>
-					<strong>Full-text search</strong>: Implement text search and
-					text indexing for content-heavy applications
-				</li>
-				<li>
-					<strong>Geospatial queries</strong>: Build location-based
-					services with geospatial indexes
-				</li>
-				<li>
-					<strong>Time series data</strong>: Store and query time
-					series data with time series collections
-				</li>
-				<li>
-					<strong>Graph relationships</strong>: Model hierarchical
-					data and graph relationships
-				</li>
-				<li>
-					<strong>Data archiving</strong>: Implement data lifecycle
-					management with TTL indexes
-				</li>
-			</ul>
+<ol start="7">
+<li><strong>Batch operations for better performance</strong>: Use <code>insertMany</code>, <code>updateMany</code>, or <code>deleteMany</code> for bulk operations.</li>
+<li><strong>Be careful with unbounded arrays</strong>: Large arrays within documents can degrade performance.</li>
+<li><strong>Handle duplicate key errors</strong>: Implement proper error handling for unique constraint violations.</li>
+<li><strong>Use transactions for complex operations</strong>: For operations that need to be atomic across multiple documents.</li>
+</ol>
+<br><h2 id="advanced-mongodb-use-cases">Advanced MongoDB Use Cases</h2><br>
+<ul>
+<li><strong>Real-time analytics</strong>: Use change streams to track and react to data changes</li>
+<li><strong>Full-text search</strong>: Implement text search and text indexing for content-heavy applications</li>
+<li><strong>Geospatial queries</strong>: Build location-based services with geospatial indexes</li>
+<li><strong>Time series data</strong>: Store and query time series data with time series collections</li>
+<li><strong>Graph relationships</strong>: Model hierarchical data and graph relationships</li>
+<li><strong>Data archiving</strong>: Implement data lifecycle management with TTL indexes</li>
+</ul>
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>

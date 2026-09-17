@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>NodeJs</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
@@ -14,9 +14,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -26,30 +27,17 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br />
-			<h1 id="nodejs">NodeJs</h1>
-			<br />
-			<br />
-			<h2 id="overview">Overview</h2>
-			<br />
-			<ul>
-				<li>
-					When Node.js performs an I/O operation, like reading from
-					the network, accessing a database or the filesystem, instead
-					of blocking the thread and wasting CPU cycles waiting,
-					Node.js will resume the operations when the response comes
-					back.
-				</li>
-				<li>
-					Whenever a new request is received, the request event is
-					called, providing two objects: a request (an
-					http.IncomingMessage object) and a response (an
-					http.ServerResponse object).
-				</li>
-			</ul>
-			<p><strong>Simplest NodeJs Server</strong></p>
-			<pre><code class="language-javascript">const { createServer } = require(&#39;node:http&#39;)
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="nodejs">NodeJs</h1><br>
+<br><h2 id="overview">Overview</h2><br>
+<ul>
+<li>When Node.js performs an I/O operation, like reading from the network, accessing a database or the filesystem, instead of blocking the thread and wasting CPU cycles waiting, Node.js will resume the operations when the response comes back.</li>
+<li>Whenever a new request is received, the request event is called, providing two objects: a request (an http.IncomingMessage object) and a response (an http.ServerResponse object).</li>
+</ul>
+<p> <strong>Simplest NodeJs Server</strong></p>
+<pre><code class="language-javascript">const { createServer } = require(&#39;node:http&#39;)
 //import { createServer } from &#39;node:http&#39; 
 //If you use import instead require, you need to add this in package.json -&gt;&quot;type&quot;: &quot;module&quot;,
 
@@ -64,53 +52,29 @@ const server = createServer((req, res) =&gt; {
 
 server.listen(port, hostname, () =&gt; { console.log(`server is running a http://${hostname}:${port}/`) })
 </code></pre>
-			<br />
-			<h2 id="modules">Modules</h2>
-			<br />
-			<ul>
-				<li>
-					Before executing a module, Node.js wraps all the code inside
-					that module with a function wrapper
-				</li>
-			</ul>
-			<pre><code class="language-javascript">(function(exports, require, module, __filename, __dirname) {
+<br><h2 id="modules">Modules</h2><br>
+<ul>
+<li>Before executing a module, Node.js wraps all the code inside that module with a function wrapper</li>
+</ul>
+<pre><code class="language-javascript">(function(exports, require, module, __filename, __dirname) {
     // Module code
 });
 </code></pre>
-			<br />
-			<h3 id="iife---immediately-invoked-function-expression">
-				IIFE - Immediately Invoked Function Expression
-			</h3>
-			<br />
-			<ul>
-				<li>
-					In Node.js, every module is wrapped in an Immediately
-					Invoked Function Expression (IIFE) behind the scenes. This
-					provides module scope isolation and gives access to special
-					local variables like exports, require, module, __filename,
-					and __dirname.
-				</li>
-				<li>
-					This pattern ensures that variables defined in one module do
-					not pollute the global scope, and it enables the CommonJS
-					module system.
-				</li>
-				<li></li>
-			</ul>
-			<pre><code class="language-javascript">(function (exports, require, module, __filename, __dirname) {
+<br><h3 id="iife-immediately-invoked-function-expression">IIFE - Immediately Invoked Function Expression</h3><br>
+<ul>
+<li>In Node.js, every module is wrapped in an Immediately Invoked Function Expression (IIFE) behind the scenes. This provides module scope isolation and gives access to special local variables like exports, require, module, __filename, and __dirname.</li>
+<li>This pattern ensures that variables defined in one module do not pollute the global scope, and it enables the CommonJS module system.</li>
+<li></li>
+</ul>
+<pre><code class="language-javascript">(function (exports, require, module, __filename, __dirname) {
     // Your module code here
 })();
 </code></pre>
-			<ul>
-				<li>
-					Node.js supports two module systems. CommonJS Modules and ES
-					modules
-				</li>
-			</ul>
-			<br />
-			<h3 id="commonjs-modules">CommonJS Modules</h3>
-			<br />
-			<pre><code class="language-javascript">
+<ul>
+<li>Node.js supports two module systems. CommonJS Modules and  ES modules</li>
+</ul>
+<br><h3 id="commonjs-modules">CommonJS Modules</h3><br>
+<pre><code class="language-javascript">
 // math.js - Multiple exports using module.exports object
 module.exports = {
   add: function(a, b) {
@@ -146,41 +110,19 @@ module.exports = anotherFunction;
 const math = require(&#39;./math&#39;);
 const add = math;
 </code></pre>
-			<ul>
-				<li>
-					When you use the require() function to import the same
-					module multiple times, the require() function evaluates the
-					module once only at the first call and places it in a cache.
-				</li>
-				<li>
-					From the subsequent calls, the require() function uses the
-					exports object from the cache instead of executing the
-					module again.
-				</li>
-				<li>
-					File extensions are optional (but recommended for clarity)
-				</li>
-				<li>Always use relative paths for local modules (./ or ../)</li>
-			</ul>
-			<br />
-			<h3 id="es-modules-node-1400">ES modules (Node ≥ 14.0.0)</h3>
-			<br />
-			<ul>
-				<li>
-					Extention is <strong>.mjs</strong> or set
-					<strong>&quot;type&quot; : &quot;module&quot;</strong> in
-					<strong>nearest parent package.json</strong>
-				</li>
-				<li>
-					<strong>File extensions are mandatory</strong> in import
-					path
-				</li>
-				<li>
-					<strong>Always use relative paths</strong> for local modules
-					(<code>./</code> or <code>../</code>)
-				</li>
-			</ul>
-			<pre><code class="language-javascript">//Exports
+<ul>
+<li>When you use the require() function to import the same module multiple times, the require() function evaluates the module once only at the first call and places it in a cache.</li>
+<li>From the subsequent calls, the require() function uses the exports object from the cache instead of executing the module again.</li>
+<li>File extensions are optional (but recommended for clarity)</li>
+<li>Always use relative paths for local modules (./ or ../)</li>
+</ul>
+<br><h3 id="es-modules-node-1400">ES modules (Node ≥ 14.0.0)</h3><br>
+<ul>
+<li>Extention is <strong>.mjs</strong> or set <strong>&quot;type&quot; : &quot;module&quot;</strong> in <strong>nearest parent package.json</strong></li>
+<li><strong>File extensions are mandatory</strong> in import path</li>
+<li><strong>Always use relative paths</strong> for local modules (<code>./</code> or <code>../</code>)</li>
+</ul>
+<pre><code class="language-javascript">//Exports
 export { add, subtract };
 export default class User {}
 
@@ -196,13 +138,11 @@ import { add, subtract } from &#39;./math.js&#39;;
 import * as math from &#39;./math.js&#39;;
 console.log(math.add(5, 3));
 </code></pre>
-			<p><strong>Top-level await</strong></p>
-			<ul>
-				<li>
-					ES Modules support top-level await (without async function):
-				</li>
-			</ul>
-			<pre><code class="language-javascript">// data.js
+<p><strong>Top-level await</strong></p>
+<ul>
+<li>ES Modules support top-level await (without async function):</li>
+</ul>
+<pre><code class="language-javascript">// data.js
 export const data = await fetch(&#39;https://api.example.com/data&#39;)
   .then(response =&gt; response.json());
 
@@ -211,10 +151,8 @@ import { data } from &#39;./data.js&#39;;
 // data is already resolved when imported
 console.log(data);
 </code></pre>
-			<br />
-			<h3 id="path-module">Path Module</h3>
-			<br />
-			<pre><code class="language-javascript">const path = require(&#39;path&#39;); //For common
+<br><h3 id="path-module">Path Module</h3><br>
+<pre><code class="language-javascript">const path = require(&#39;path&#39;); //For common
 import path from &#39;path&#39;; //For ES
 
 //Properties
@@ -233,15 +171,13 @@ path.parse(path) //return an object -&gt; path.parse(&quot;c://mad/react/app.js&
 path.relative(from, to)
 path.resolve(...path)
 </code></pre>
-			<br />
-			<h3 id="fs-module">FS Module</h3>
-			<br />
-			<ul>
-				<li>There are 3 types</li>
-				<li>Promise API | Callback API | Sync API</li>
-			</ul>
-			<p><strong>Promise API</strong></p>
-			<pre><code class="language-javascript">import * as fs from &quot;fs/promises&quot;
+<br><h3 id="fs-module">FS Module</h3><br>
+<ul>
+<li>There are 3 types</li>
+<li>Promise API | Callback API | Sync API</li>
+</ul>
+<p><strong>Promise API</strong></p>
+<pre><code class="language-javascript">import * as fs from &quot;fs/promises&quot;
 import * as fs from &quot;fs/promises&quot;
 
 try{
@@ -275,40 +211,28 @@ try{
     console.log(error)
 }
 </code></pre>
-			<p><strong>Callback API</strong></p>
-			<ul>
-				<li>
-					all the above function can be used, but import is changes
-					and no need try catch, instead we use callback function
-				</li>
-			</ul>
-			<pre><code class="language-javascript">import * as fs from &quot;fs&quot;
+<p><strong>Callback API</strong></p>
+<ul>
+<li>all the above function can be used, but import is changes and no need try catch, instead we use callback function</li>
+</ul>
+<pre><code class="language-javascript">import * as fs from &quot;fs&quot;
 
 fs.mkdir(&quot;/home/intervest/DEVS/FS Module/new directory&quot;, function(error, data){
     if(error) throw error;
 })
 </code></pre>
-			<p><strong>Sync APi</strong></p>
-			<ul>
-				<li>
-					no need to add callback as well, but use
-					<code>Sync</code> at the end of the method name
-				</li>
-			</ul>
-			<pre><code class="language-javascript">import * as fs from &quot;fs&quot;
+<p><strong>Sync APi</strong></p>
+<ul>
+<li>no need to add callback as well, but use <code>Sync</code> at the end of the method name</li>
+</ul>
+<pre><code class="language-javascript">import * as fs from &quot;fs&quot;
 fs.mkdirSync(&quot;/home/intervest/DEVS/FS Module/new directory&quot;, {recursive:true})
 </code></pre>
-			<br />
-			<h3 id="os-module">Os Module</h3>
-			<br />
-			<ul>
-				<li>
-					The os module provides you with many useful properties and
-					methods for interacting with the operating system and
-					server.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">const os = require(&#39;os&#39;);
+<br><h3 id="os-module">Os Module</h3><br>
+<ul>
+<li>The os module provides you with many useful properties and methods for interacting with the operating system and server.</li>
+</ul>
+<pre><code class="language-javascript">const os = require(&#39;os&#39;);
 import os from &#39;os&#39;;
 
 os.type()
@@ -323,10 +247,8 @@ os.freemem()
 os.cpus() //cpu as an object
 os.networkInterfaces()
 </code></pre>
-			<br />
-			<h3 id="url-module">URL Module</h3>
-			<br />
-			<pre><code class="language-javascript">import {URL} from &#39;url&#39;
+<br><h3 id="url-module">URL Module</h3><br>
+<pre><code class="language-javascript">import {URL} from &#39;url&#39;
 
 const myUrl = new URL(&quot;https://yahoo.com:8080?query=someQuery#someHash&quot;)
 
@@ -343,21 +265,12 @@ console.log(myUrl.searchParams)
 console.log(myUrl.toString())
 console.log(myUrl.toJSON())
 </code></pre>
-			<br />
-			<h3 id="event-module">Event Module</h3>
-			<br />
-			<ul>
-				<li>
-					Node.js is event-driven. It relies on the events core module
-					to achieve the event-driven architecture.
-				</li>
-				<li>
-					In the event-driven model, an EventEmitter object raises an
-					event that causes the previously attached listeners of the
-					event to execute.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">const EventEmitter = require(&#39;events&#39;);
+<br><h3 id="event-module">Event Module</h3><br>
+<ul>
+<li>Node.js is event-driven. It relies on the events core module to achieve the event-driven architecture.</li>
+<li>In the event-driven model, an EventEmitter object raises an event that causes the previously attached listeners of the event to execute.</li>
+</ul>
+<pre><code class="language-javascript">const EventEmitter = require(&#39;events&#39;);
 //import EventEmitter from  &#39;events&#39;;
 
 const emitter = new EventEmitter();
@@ -375,28 +288,17 @@ emitter.emit(&#39;saved&#39;,{...someData});//A saved event occurred.
 // remove the event listener
 emitter.off(&#39;saved&#39;, log); //After removing, no effect on reemiting the same event
 </code></pre>
-			<ul>
-				<li>
-					The <strong>EventEmitter</strong> class can be extended as
-					you need
-				</li>
-			</ul>
-			<pre><code class="language-javascript">class Stock extends EventEmitter {....code}
+<ul>
+<li>The <strong>EventEmitter</strong> class can be extended as you need</li>
+</ul>
+<pre><code class="language-javascript">class Stock extends EventEmitter {....code}
 </code></pre>
-			<br />
-			<h3 id="http-module">HTTP Module</h3>
-			<br />
-			<ul>
-				<li>
-					The http module is a core module of Node designed to support
-					many features of the HTTP protocol.
-				</li>
-				<li>
-					in real world we use Express like frameworks to create
-					NodeJs servers
-				</li>
-			</ul>
-			<pre><code class="language-javascript">import http from &#39;http&#39;
+<br><h3 id="http-module">HTTP Module</h3><br>
+<ul>
+<li>The http module is a core module of Node designed to support many features of the HTTP protocol.</li>
+<li>in real world we use Express like frameworks to create NodeJs servers</li>
+</ul>
+<pre><code class="language-javascript">import http from &#39;http&#39;
 
 const server = http.createServer((req,res)=&gt;{
     // console.log(req)
@@ -412,10 +314,8 @@ const server = http.createServer((req,res)=&gt;{
 
 server.listen(8000, ()=&gt;console.log(&quot;Server is Up!&quot;))
 </code></pre>
-			<br />
-			<h3 id="routing">Routing</h3>
-			<br />
-			<pre><code class="language-javascript">import http from &#39;http&#39;
+<br><h3 id="routing">Routing</h3><br>
+<pre><code class="language-javascript">import http from &#39;http&#39;
 
 const server = http.createServer((req, res) =&gt; {
     if (req.url === &quot;/&quot;) {
@@ -429,10 +329,8 @@ const server = http.createServer((req, res) =&gt; {
 
 server.listen(8000, () =&gt; console.log(&quot;Server is Up!&quot;))
 </code></pre>
-			<br />
-			<h3 id="serving-files">Serving Files</h3>
-			<br />
-			<pre><code class="language-javascript">import http from &#39;http&#39;
+<br><h3 id="serving-files">Serving Files</h3><br>
+<pre><code class="language-javascript">import http from &#39;http&#39;
 import * as fs from &#39;fs&#39;
 
 const server = http.createServer((req, res) =&gt; {
@@ -450,77 +348,30 @@ const server = http.createServer((req, res) =&gt; {
 
 server.listen(8000, () =&gt; console.log(&quot;Server is Up!&quot;))
 </code></pre>
-			<br />
-			<h3 id="process-module">Process module</h3>
-			<br />
-			<ul>
-				<li>
-					The process module has the env property that contains all
-					the environment variables.
-				</li>
-				<li>Setting and getting an environment variable</li>
-			</ul>
-			<pre><code class="language-javascript">SET NODE_ENV=development //Windows
+<br><h3 id="process-module">Process module</h3><br>
+<ul>
+<li>The process module has the env property that contains all the environment variables.</li>
+<li>Setting and getting an environment variable</li>
+</ul>
+<pre><code class="language-javascript">SET NODE_ENV=development //Windows
 EXPORT NODE_ENV=development //Mac/Linux
 process.env.NODE_ENV
 </code></pre>
-			<br />
-			<h2 id="stream">Stream</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						Node.js streams provide an efficient way to work with
-						large amounts of data (such as files or network
-						responses)
-						<strong
-							>without loading the entire dataset into
-							memory</strong
-						>. Streams handle data in chunks and can be in one of
-						four types:
-						<strong>Readable, Writable, Duplex</strong> (both
-						readable and writable), or
-						<strong>Transform</strong> (modifies data as it passes
-						through). Streams are ideal for performance-critical
-						applications.
-					</p>
-				</li>
-				<li>
-					<p>
-						Streams can <strong>pipe</strong> data between sources
-						and destinations (e.g., reading from a file and writing
-						to another).
-					</p>
-				</li>
-				<li>
-					<p>
-						By default, the internal buffer size is
-						<strong>64 KB (65536 bytes)</strong> for streams using
-						binary mode.
-					</p>
-				</li>
-				<li>
-					<p>
-						The buffer size can be customized using the
-						<code>highWaterMark</code> option.
-					</p>
-				</li>
-				<li>
-					<p>
-						This streaming approach improves memory usage and
-						application responsiveness, especially with large data.
-					</p>
-				</li>
-			</ul>
-			<br />
-			<h3
-				id="example-reading-a-large-file-using-codecreatereadstreamcode"
-			>
-				Example: Reading a Large File Using
-				<code>createReadStream</code>
-			</h3>
-			<br />
-			<pre><code class="language-javascript">// Step 1: Generate a file with a large dataset
+<br><h2 id="stream">Stream</h2><br>
+<ul>
+<li><p>Node.js streams provide an efficient way to work with large amounts of data (such as files or network responses) <strong>without loading the entire dataset into memory</strong>. Streams handle data in chunks and can be in one of four types: <strong>Readable, Writable, Duplex</strong> (both readable and writable), or <strong>Transform</strong> (modifies data as it passes through). Streams are ideal for performance-critical applications.</p>
+</li>
+<li><p>Streams can <strong>pipe</strong> data between sources and destinations (e.g., reading from a file and writing to another).</p>
+</li>
+<li><p>By default, the internal buffer size is <strong>64 KB (65536 bytes)</strong> for streams using binary mode.</p>
+</li>
+<li><p>The buffer size can be customized using the <code>highWaterMark</code> option.</p>
+</li>
+<li><p>This streaming approach improves memory usage and application responsiveness, especially with large data.</p>
+</li>
+</ul>
+<br><h3 id="example-reading-a-large-file-using-createreadstream">Example: Reading a Large File Using <code>createReadStream</code></h3><br>
+<pre><code class="language-javascript">// Step 1: Generate a file with a large dataset
 import fs from &#39;fs&#39;;
 
 for (let i = 0; i &lt; 10000; i++) {
@@ -543,27 +394,16 @@ stream.on(&quot;data&quot;, (chunk) =&gt; {
   console.log(chunk); // Logs each chunk of data
 });
 </code></pre>
-			<ul>
-				<li>
-					&#39;data&#39; is a built-in event name defined by Node.js
-					core, specifically for Readable streams. It&#39;s not an
-					arbitrary name — it must be &#39;data&#39; to work as
-					expected.
-				</li>
-				<li>
-					if you&#39;re using Node.js streams, you must use the
-					core-defined event names like:
-				</li>
-			</ul>
-			<p>
-				&#39;data&#39; — when a chunk is available &#39;end&#39; — when
-				the stream ends &#39;error&#39; — if something goes wrong
-				&#39;close&#39; — when the stream is closed
-			</p>
-			<br />
-			<h1 id="expressjs">ExpressJs</h1>
-			<br />
-			<pre><code class="language-javascript">const express = require(&#39;express&#39;)
+<ul>
+<li>&#39;data&#39; is a built-in event name defined by Node.js core, specifically for Readable streams. It&#39;s not an arbitrary name — it must be &#39;data&#39; to work as expected.</li>
+<li>if you&#39;re using Node.js streams, you must use the core-defined event names like:</li>
+</ul>
+<p>&#39;data&#39; — when a chunk is available
+&#39;end&#39; — when the stream ends
+&#39;error&#39; — if something goes wrong
+&#39;close&#39; — when the stream is closed</p>
+<br><h1 id="expressjs">ExpressJs</h1><br>
+<pre><code class="language-javascript">const express = require(&#39;express&#39;)
 const app = express()
 const port = 3000
 
@@ -575,84 +415,47 @@ app.listen(port, () =&gt; {
   console.log(`Example app listening on port ${port}`)
 })
 </code></pre>
-			<br />
-			<h2 id="routing">Routing</h2>
-			<br />
-			<ul>
-				<li>
-					Each route can have one or more handler functions, which are
-					executed when the route is matched.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">app.get(&#39;/&#39;, (req, res) =&gt; {
+<br><h2 id="routing-2">Routing</h2><br>
+<ul>
+<li>Each route can have one or more handler functions, which are executed when the route is matched.</li>
+</ul>
+<pre><code class="language-javascript">app.get(&#39;/&#39;, (req, res) =&gt; {
   res.send(&#39;Hello World!&#39;)
 })
 </code></pre>
-			<ul>
-				<li>
-					<strong>app.all(),</strong> used to load middleware
-					functions at a path for all HTTP request methods.
-				</li>
-				<li>
-					Route paths can be strings, string patterns, or regular
-					expressions.
-				</li>
-			</ul>
-			<br />
-			<h3 id="route-paths">Route paths</h3>
-			<br />
-			<pre><code class="language-javascript">app.get(&#39;/ab?cd&#39;, (req, res) =&gt; { }) //match acd and abcd.
+<ul>
+<li><strong>app.all(),</strong> used to load middleware functions at a path for all HTTP request methods.</li>
+<li>Route paths can be strings, string patterns, or regular expressions.</li>
+</ul>
+<br><h3 id="route-paths">Route paths</h3><br>
+<pre><code class="language-javascript">app.get(&#39;/ab?cd&#39;, (req, res) =&gt; { }) //match acd and abcd.
 app.get(&#39;/ab+cd&#39;, (req, res) =&gt; { }) //match abcd, abbcd, abbbcd, and so on.
 app.get(&#39;/ab*cd&#39;, (req, res) =&gt; { }) //match abcd, abxcd, abRANDOMcd, ab123cd, and so on.
 app.get(&#39;/ab(cd)?e&#39;, (req, res) =&gt; { }) //match /abe and /abcde.
 app.get(&#39;/a/&#39;, (req, res) =&gt; { }) //match anything with an “a” in it.
 app.get(&#39;/.*fly$/&#39;, (req, res) =&gt; { }) //match butterfly and dragonfly, but not butterflyman, dragonflyman, and so on.
 </code></pre>
-			<br />
-			<h3 id="route-parameters">Route parameters</h3>
-			<br />
-			<ul>
-				<li>
-					The name of route parameters must be made up of “word
-					characters” ([A-Za-z0-9_]).
-				</li>
-				<li>
-					In express 5, Regexp characters are not supported in route
-					path
-				</li>
-			</ul>
-			<pre><code class="language-javascript">app.get(&#39;/users/:userId/books/:bookId&#39;, (req, res) =&gt; {})
+<br><h3 id="route-parameters">Route parameters</h3><br>
+<ul>
+<li>The name of route parameters must be made up of “word characters” ([A-Za-z0-9_]).</li>
+<li>In express 5, Regexp characters are not supported in route path</li>
+</ul>
+<pre><code class="language-javascript">app.get(&#39;/users/:userId/books/:bookId&#39;, (req, res) =&gt; {})
 </code></pre>
-			<ul>
-				<li>
-					To have more control over the exact string that can be
-					matched by a route parameter, you can append a regular
-					expression in parentheses (()):
-				</li>
-			</ul>
-			<pre><code class="language-javascript">Route path: /user/:userId(\d+)
+<ul>
+<li>To have more control over the exact string that can be matched by a route parameter, you can append a regular expression in parentheses (()):</li>
+</ul>
+<pre><code class="language-javascript">Route path: /user/:userId(\d+)
 Request URL: http://localhost:3000/user/42
 req.params: {&quot;userId&quot;: &quot;42&quot;}
 </code></pre>
-			<br />
-			<h3 id="route-handlers">Route handlers</h3>
-			<br />
-			<ul>
-				<li>
-					You can provide multiple callback functions that behave like
-					middleware to handle a request.
-				</li>
-				<li>
-					Route handlers can be in the form of a function, an array of
-					functions, or combinations of both
-				</li>
-				<li>
-					If the next() method is not called within a particular
-					middleware function in Express.js, the subsequent middleware
-					and route handlers will not be executed.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">const cb0 = function (req, res, next) {
+<br><h3 id="route-handlers">Route handlers</h3><br>
+<ul>
+<li>You can provide multiple callback functions that behave like middleware to handle a request.</li>
+<li>Route handlers can be in the form of a function, an array of functions, or combinations of both</li>
+<li>If the next() method is not called within a particular middleware function in Express.js, the subsequent middleware and route handlers will not be executed.</li>
+</ul>
+<pre><code class="language-javascript">const cb0 = function (req, res, next) {
   console.log(&#39;CB0&#39;)
   next() //Passing controll no next middleware or handler
 }
@@ -669,16 +472,11 @@ app.get(&#39;/example/d&#39;, [cb0, cb1], (req, res, next) =&gt; {
   res.send(&#39;Hello from D!&#39;)
 })
 </code></pre>
-			<br />
-			<h3 id="approute">app.route()</h3>
-			<br />
-			<ul>
-				<li>
-					You can create chainable route handlers for a route path by
-					using <code>app.route()</code>
-				</li>
-			</ul>
-			<pre><code class="language-javascript">app.route(&#39;/book&#39;)
+<br><h3 id="approute">app.route()</h3><br>
+<ul>
+<li>You can create chainable route handlers for a route path by using <code>app.route()</code></li>
+</ul>
+<pre><code class="language-javascript">app.route(&#39;/book&#39;)
   .get((req, res) =&gt; {
     res.send(&#39;Get a random book&#39;)
   })
@@ -689,16 +487,11 @@ app.get(&#39;/example/d&#39;, [cb0, cb1], (req, res, next) =&gt; {
     res.send(&#39;Update the book&#39;)
   })
 </code></pre>
-			<br />
-			<h3 id="expressrouter">express.Router</h3>
-			<br />
-			<ul>
-				<li>
-					Use the <code>express.Router</code> class to create modular,
-					mountable route handlers.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">#Birds.js
+<br><h3 id="expressrouter">express.Router</h3><br>
+<ul>
+<li>Use the <code>express.Router</code> class to create modular, mountable route handlers.</li>
+</ul>
+<pre><code class="language-javascript">#Birds.js
 
 const express = require(&#39;express&#39;) //or import if you use &quot;type&quot;:&quot;module&quot; in nearest parent package.json
 const router = express.Router()
@@ -730,37 +523,22 @@ module.exports = router ////or export default router, if you use &quot;type&quot
 const birds = require(&#39;./birds&#39;) //or import if you use &quot;type&quot;:&quot;module&quot; in nearest parent package.json
 app.use(&#39;/birds&#39;, birds)
 </code></pre>
-			<br />
-			<h2 id="serving-static-files">Serving static files</h2>
-			<br />
-			<ul>
-				<li>
-					For more refer
-					<a
-						href="https://expressjs.com/id/resources/middleware/serve-static.html"
-						>Doc</a
-					>
-				</li>
-			</ul>
-			<pre><code class="language-javascript">app.use(express.static(&#39;public&#39;))
+<br><h2 id="serving-static-files">Serving static files</h2><br>
+<ul>
+<li>For more refer <a href="https://expressjs.com/id/resources/middleware/serve-static.html">Doc</a></li>
+</ul>
+<pre><code class="language-javascript">app.use(express.static(&#39;public&#39;))
 app.use(express.static(&#39;files&#39;))
 app.use(&#39;/static&#39;, express.static(&#39;public&#39;)) //To create a virtual path prefix
 //path is relative to the directory from where you launch your node process
 //If you run the express app from another directory, it’s safer to use the absolute path of the directory that you want to serve
 app.use(&#39;/static&#39;, express.static(path.join(__dirname, &#39;public&#39;)))
 </code></pre>
-			<br />
-			<h2 id="middlewares">Middlewares</h2>
-			<br />
-			<ul>
-				<li>
-					<code>next(&#39;route&#39;)</code> will work only in
-					middleware functions that were loaded by using the
-					<code>app.METHOD()</code> or
-					<code>router.METHOD()</code> functions.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">app.get(&#39;/user/:id&#39;, (req, res, next) =&gt; {
+<br><h2 id="middlewares">Middlewares</h2><br>
+<ul>
+<li><code>next(&#39;route&#39;)</code> will work only in middleware functions that were loaded by using the <code>app.METHOD()</code> or <code>router.METHOD()</code> functions.</li>
+</ul>
+<pre><code class="language-javascript">app.get(&#39;/user/:id&#39;, (req, res, next) =&gt; {
   // if the user ID is 0, skip to the next route
   if (req.params.id === &#39;0&#39;) next(&#39;route&#39;)
   // otherwise pass the control to the next middleware function in this stack
@@ -781,21 +559,11 @@ app.use((err, req, res, next) =&gt; {
   res.status(500).send(&#39;Something broke!&#39;)
 })
 </code></pre>
-			<ul>
-				<li>
-					<strong>Error-handling middleware</strong> always takes
-					<strong>four</strong> arguments. You must provide four
-					arguments to identify it as an error-handling middleware
-					function. Even if you don’t need to use the next object, you
-					must specify it to maintain the signature. Otherwise, the
-					next object will be interpreted as regular middleware and
-					will fail to handle errors.
-				</li>
-			</ul>
-			<br />
-			<h2 id="template-engins">Template Engins</h2>
-			<br />
-			<pre><code class="language-javascript">npm install ejs
+<ul>
+<li><strong>Error-handling middleware</strong> always takes <strong>four</strong> arguments. You must provide four arguments to identify it as an error-handling middleware function. Even if you don’t need to use the next object, you must specify it to maintain the signature. Otherwise, the next object will be interpreted as regular middleware and will fail to handle errors.</li>
+</ul>
+<br><h2 id="template-engins">Template Engins</h2><br>
+<pre><code class="language-javascript">npm install ejs
 
 #index.js
 import { router as viewRouter } from &#39;./routes/views.js&#39;
@@ -820,6 +588,7 @@ export { homePage };
 #create a `views` directory in the root folder and add index.html with simple html template, now go to the
 #http://localhost:5000/views/home and you can see the html file
 </code></pre>
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>

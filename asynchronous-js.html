@@ -4,26 +4,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Markdown article</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
 		/>
 		<link rel="stylesheet" href="./util/styles.css" />
-		<style>
-			h1 {
-				height: 200px;
-				width: 600px;
-				border: 1px solid blue;
-			}
-		</style>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -33,121 +27,33 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-			<br />
-			<h2 id="fundamentals">Fundamentals</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						At its core,
-						<strong>JavaScript is a synchronous</strong> programming
-						language.
-					</p>
-				</li>
-				<li>
-					<p>
-						That means
-						<strong
-							>code statements run one after another
-							sequentially</strong
-						>. So time-consuming tasks block the rest of the
-						execution flow and the program can be unresponsive until
-						the execution is finished.
-					</p>
-				</li>
-				<li>
-					<p>
-						<strong>ex)</strong> The browser may be unresponsive
-						while a time-consuming task is undergoing (browser
-						freez... when aleart popup, other area not works).
-					</p>
-				</li>
-				<li>
-					<p>
-						At its heart,
-						<strong>JS is a single-threaded language</strong>.
-					</p>
-				</li>
-				<li>
-					<p>
-						But JS environments like Browser and Node.js have
-						<strong>provided asynchronous behavior</strong> to the
-						language.
-					</p>
-				</li>
-				<li>
-					<p>
-						Once the time-consuming task is pushed into the call
-						stack, its execution on the call stack is brief.It
-						initiates the asynchronous operation (delegating it to
-						the web API/Node.js API).
-					</p>
-				</li>
-				<li>
-					<p>
-						It then immediately pops off the call stack, allowing
-						the rest of the synchronous code to run. This actual
-						asynchronous operation happens outside the call stack,
-						in the browser and Node.js environments.
-					</p>
-				</li>
-				<li>
-					<p>
-						Once the time-consuming task is handled, then its
-						associated callback function will be moved into the
-						callback queue(event queue),
-					</p>
-				</li>
-				<li>
-					<p>
-						and once the call stack is empty, then this process will
-						be pushed into the call stack.
-					</p>
-				</li>
-				<li>
-					<p>
-						This process is done by the event loop, which is
-						basically responsible for keeping an eye on both the
-						call stack and the event queue...
-					</p>
-				</li>
-			</ul>
-			<br />
-			<h2 id="asynchronous-operation">asynchronous operation</h2>
-			<br />
-			<ul>
-				<li>
-					An asynchronous operation is a task that starts now but
-					finishes later.
-				</li>
-			</ul>
-			<br />
-			<h2 id="promises-and-asyncawaits">promises and async/awaits</h2>
-			<br />
-			<ul>
-				<li>
-					<p>
-						A Promise is typically used to wrap operations that are
-						asynchronous, such as non-blocking, IO-bound tasks.
-					</p>
-				</li>
-				<li>
-					<p>
-						in JavaScript, there are two primary methods to handle
-						asynchronous operations (Promises):
-					</p>
-				</li>
-			</ul>
-			<ol>
-				<li>then() /catch()</li>
-				<li>async, await</li>
-			</ol>
-			<br />
-			<h2 id="then-catch">then() /catch()</h2>
-			<br />
-			<p>// Promise-based function</p>
-			<pre><code class="language-javascript">const promiseFunction = (): Promise&lt;string&gt; =&gt; {
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h2 id="fundamentals">Fundamentals</h2><br>
+<p>At its core, <strong>JavaScript is a synchronous</strong> programming language.</p>
+<p>That means <strong>code statements run one after another sequentially</strong>. So time-consuming tasks block the rest of the execution flow and the program can be unresponsive until the execution is finished. </p>
+<p><strong>ex)</strong> The browser may be unresponsive while a time-consuming task is undergoing (browser freez... when aleart popup, other area not works).</p>
+<p>At its heart, <strong>JS is a single-threaded language</strong>.</p>
+<p>But JS environments like Browser and Node.js have <strong>provided asynchronous behavior</strong> to the language.</p>
+<p>Once the time-consuming task is pushed into the call stack, its execution on the call stack is brief.It initiates the asynchronous operation (delegating it to the web API/Node.js API).</p>
+<p>It then immediately pops off the call stack, allowing the rest of the synchronous code to run.
+This actual asynchronous operation happens outside the call stack, in the browser and Node.js environments.</p>
+<p>Once the time-consuming task is handled, then its associated callback function will be moved into the callback queue(event queue),
+and once the call stack is empty, then this process will be pushed into the call stack.</p>
+<p>This process is done by the event loop, which is basically responsible for keeping an eye on both the call stack and the event queue...</p>
+<br><h2 id="asynchronous-operation">asynchronous operation</h2><br>
+<p>An asynchronous operation is a task that starts now but finishes later.</p>
+<br><h2 id="promises-and-asyncawaits">promises and async/awaits</h2><br>
+<p>A Promise is typically used to wrap operations that are asynchronous, such as non-blocking, IO-bound tasks.</p>
+<p>in JavaScript, there are two primary methods to handle asynchronous operations (Promises):</p>
+<ol>
+<li>then() /catch()</li>
+<li>async, await</li>
+</ol>
+<br><h2 id="then-catch">then() /catch()</h2><br>
+<p>// Promise-based function</p>
+<pre><code class="language-javascript">const promiseFunction = (): Promise&lt;string&gt; =&gt; {
     return new Promise((resolve, reject) =&gt; {
         const success = true;
 
@@ -161,10 +67,8 @@
     });
 };
 </code></pre>
-			<br />
-			<h3 id="usage">usage</h3>
-			<br />
-			<pre><code class="language-javascript">promiseFunction()
+<br><h3 id="usage">usage</h3><br>
+<pre><code class="language-javascript">promiseFunction()
     .then(result =&gt; {
         console.log(&quot;Success:&quot;, result);
     })
@@ -172,11 +76,9 @@
         console.error(&quot;Error:&quot;, error.message);
 });
 </code></pre>
-			<br />
-			<h2 id="async-await">async, await</h2>
-			<br />
-			<p>// Async function calling the promise</p>
-			<pre><code class="language-javascript">async function myFunc() {
+<br><h2 id="async-await">async, await</h2><br>
+<p>// Async function calling the promise</p>
+<pre><code class="language-javascript">async function myFunc() {
     try {
         const result = await promiseFunction();
         console.log(&quot;Success:&quot;, result);
@@ -185,23 +87,17 @@
     }
 }
 </code></pre>
-			<ul>
-				<li>
-					<strong
-						>Any function declared with async automatically returns
-						a Promise, even if it doesn&#39;t explicitly return
-						one.</strong
-					>
-				</li>
-				<li>
-					The caller of this async function can then handle its result
-					using .then() / .catch() or async/await.
-				</li>
-			</ul>
-			<pre><code class="language-javascript">async function fetchData() {
+<ul>
+<li><strong>Any function declared with async automatically returns a Promise, even if it doesn&#39;t explicitly return one.</strong><ul>
+<li>The caller of this async function can then handle its result using .then() / .catch() or async/await.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-javascript">async function fetchData() {
     return &quot;data&quot;; //Even though fetchData just returns a string, it implicitly returns a Promise that resolves to &quot;data&quot;.
 }
 </code></pre>
+<!-- MARKDOWN_CONTENT_END -->
 		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>

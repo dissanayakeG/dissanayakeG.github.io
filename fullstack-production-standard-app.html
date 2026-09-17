@@ -4,23 +4,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>SETUP A NODE/EXPRESS API LIKE A PRO</title>
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
 		/>
 		<link rel="stylesheet" href="./util/styles.css" />
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 	</head>
 
-	<body>
+	<body data-site-root="./">
 		<div id="nav-icon" class="nav-icon">
 			<div class="nav-icon-row"></div>
 			<div class="nav-icon-row"></div>
@@ -30,8 +27,10 @@
 
 		<div id="nav-container" class="nav-container"></div>
 
+		<!-- This region is replaced by node_scripts/buildArticles.js. -->
 		<section class="content">
-      <br><h1 id="setup-a-nodeexpress-api-like-a-pro">SETUP A NODE/EXPRESS API LIKE A PRO</h1><br>
+			<!-- MARKDOWN_CONTENT_START -->
+<br><h1 id="setup-a-nodeexpress-api-like-a-pro">SETUP A NODE/EXPRESS API LIKE A PRO</h1><br>
 <br><h2 id="install-required-packages">INSTALL REQUIRED PACKAGES</h2><br>
 <pre><code class="language-bash">mkdir server
 cd server
@@ -512,7 +511,7 @@ export const validateQuery = (schema: ZodSchema) =&gt; {
   };
 };
 </code></pre>
-<br><h3 id="use-it">use it</h3><br>
+<br><h3 id="use-it-2">use it</h3><br>
 <pre><code class="language-ts">router.post(&#39;/test-route&#39;, validate(createUserSchema), testController.testMethod);
 </code></pre>
 <br><h2 id="setup-auth-middleware">SETUP AUTH MIDDLEWARE</h2><br>
@@ -608,7 +607,7 @@ pnpm add -D tsc-alias
   }
 }
 </code></pre>
-<br><h3 id="packagejson">package.json</h3><br>
+<br><h3 id="packagejson-2">package.json</h3><br>
 <pre><code class="language-json">&quot;scripts&quot;: {
     &quot;lint&quot;: &quot;eslint .&quot;,
     &quot;lint:fix&quot;: &quot;eslint . --fix&quot;,
@@ -617,7 +616,7 @@ pnpm add -D tsc-alias
   },
 </code></pre>
 <br><h2 id="final-appts-and-serverts-setup">FINAL app.ts and server.ts SETUP</h2><br>
-<br><h3 id="srcappts">src/app.ts</h3><br>
+<br><h3 id="srcappts-2">src/app.ts</h3><br>
 <pre><code class="language-ts">//import this top of all other imports, that guarantee the config is loaded first before anything else
 //so we can validate the scema and decide if we can load the appor not
 import Environment from &#39;./config/env.config&#39;;
@@ -689,7 +688,7 @@ export default app;
 
 bootstrap();
 </code></pre>
-<br><h3 id="packagejson">package.json</h3><br>
+<br><h3 id="packagejson-3">package.json</h3><br>
 <pre><code class="language-json">  &quot;scripts&quot;: {
     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,
     &quot;dev&quot;: &quot;tsx watch src/index.ts&quot;,
@@ -706,7 +705,7 @@ bootstrap();
   }
 </code></pre>
 <br><h1 id="setup-a-react-client-like-a-pro">SETUP A REACT CLIENT LIKE A PRO</h1><br>
-<br><h2 id="install-required-packages">INSTALL REQUIRED PACKAGES</h2><br>
+<br><h2 id="install-required-packages-2">INSTALL REQUIRED PACKAGES</h2><br>
 <pre><code class="language-bash">mkdir client
 cd client
 pnpm create vite react-fe --template react-ts
@@ -724,7 +723,7 @@ pnpm add -D @types/node @types/react @types/react-dom
 <pre><code class="language-bash">cd client
 then import &quot;./App.css&quot; in App.tsx
 </code></pre>
-<br><h2 id="setup-eslint-and-prettier">SETUP eslint AND PRETTIER</h2><br>
+<br><h2 id="setup-eslint-and-prettier-2">SETUP eslint AND PRETTIER</h2><br>
 <pre><code class="language-bash">pnpm add eslint prettier
 pnpm add -D @eslint/js globals typescript-eslint eslint-config-prettier eslint-plugin-prettier
 </code></pre>
@@ -771,7 +770,7 @@ node_modules
 pnpm-lock.yaml
 *.min.js
 </code></pre>
-<br><h3 id="packagejson">package.json</h3><br>
+<br><h3 id="packagejson-4">package.json</h3><br>
 <pre><code class="language-json">  &quot;scripts&quot;: {
     &quot;lint&quot;: &quot;eslint .&quot;,
     &quot;lint:fix&quot;: &quot;eslint . --fix&quot;,
@@ -780,7 +779,7 @@ pnpm-lock.yaml
     &quot;preview&quot;: &quot;vite preview&quot;
   },
 </code></pre>
-<br><h2 id="setup-imports">SETUP @ IMPORTS</h2><br>
+<br><h2 id="setup-imports-2">SETUP @ IMPORTS</h2><br>
 <br><h3 id="viteconfigts">vite.config.ts</h3><br>
 <pre><code class="language-js">export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -791,7 +790,7 @@ pnpm-lock.yaml
   },
 });
 </code></pre>
-<br><h3 id="tsconfigjson">tsconfig.json</h3><br>
+<br><h3 id="tsconfigjson-2">tsconfig.json</h3><br>
 <pre><code class="language-json">{
   &quot;files&quot;: [],
   &quot;references&quot;: [{ &quot;path&quot;: &quot;./tsconfig.app.json&quot; }, { &quot;path&quot;: &quot;./tsconfig.node.json&quot; }],
@@ -1064,7 +1063,7 @@ export const useAuth = (): AuthContextType =&gt; {
 //use it
 const { user, logout } = useAuth();
 </code></pre>
-<br><h3 id="packagejson">package.json</h3><br>
+<br><h3 id="packagejson-5">package.json</h3><br>
 <pre><code class="language-json">  &quot;scripts&quot;: {
     &quot;dev&quot;: &quot;vite&quot;,
     &quot;build&quot;: &quot;tsc -b &amp;&amp; vite build&quot;,
@@ -1111,8 +1110,8 @@ function App() {
   );
 }
 </code></pre>
-
-    </section>
+<!-- MARKDOWN_CONTENT_END -->
+		</section>
 		<script src="./util/createMenuBar.js"></script>
 	</body>
 </html>
