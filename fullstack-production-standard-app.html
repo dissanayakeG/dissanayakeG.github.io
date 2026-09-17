@@ -710,7 +710,7 @@ bootstrap();
 cd client
 pnpm create vite react-fe --template react-ts
 pnpm add axios react-router-dom @tanstack/react-query lucide-react react-error-boundary
-sonar nuqs
+pnpm add nuqs
 
 pnpm run dev
 </code></pre>
@@ -1079,7 +1079,9 @@ const { user, logout } = useAuth();
 <li>NuqsProvider enables type-safe URL query string state management across the app</li>
 </ul>
 <br><h3 id="clientsrcprovidersnuqs-providertsx">client/src/providers/nuqs-provider.tsx</h3><br>
-<pre><code class="language-tsx">interface NuqsProviderProps {
+<pre><code class="language-tsx">import { NuqsAdapter } from &#39;nuqs/adapters/react-router/v6&#39;;
+
+interface NuqsProviderProps {
   children: React.ReactNode;
 }
 

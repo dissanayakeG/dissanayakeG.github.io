@@ -804,7 +804,7 @@ mkdir client
 cd client
 pnpm create vite react-fe --template react-ts
 pnpm add axios react-router-dom @tanstack/react-query lucide-react react-error-boundary
-sonar nuqs
+pnpm add nuqs
 
 pnpm run dev
 ```
@@ -1226,6 +1226,8 @@ const { user, logout } = useAuth();
 ### client/src/providers/nuqs-provider.tsx
 
 ```tsx
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v6';
+
 interface NuqsProviderProps {
   children: React.ReactNode;
 }
